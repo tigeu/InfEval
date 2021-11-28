@@ -4,6 +4,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # custom settings #
 DATA_DIR = BASE_DIR / "data"
+IMAGE_ENDINGS = {".jpg", ".png"}
 ###################
 
 SECRET_KEY = 'django-insecure-j6i_zudz8xu@z4&y$l^31i5521hgq!atqy-v1e&p%f9d3n=-=)'

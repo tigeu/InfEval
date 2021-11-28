@@ -24,8 +24,12 @@ export class ImageComponent implements OnInit {
       })
   }
 
+  onSelectedImageChanged($event: MouseEvent) {
+    const target = $event.target as HTMLElement
+    this.getImage(target.innerText)
+  }
+
   ngOnInit(): void {
-    this.getImage("2018_0714_112610_059.JPG"); // TODO remove when directory view is ready
   }
 
 }

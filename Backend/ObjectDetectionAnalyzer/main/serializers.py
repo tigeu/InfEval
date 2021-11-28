@@ -21,3 +21,8 @@ class HeartbeatSerializer(serializers.Serializer):
 class ImageSerializer(serializers.Serializer):
     name = serializers.CharField()
     file = serializers.CharField()
+
+
+class FileSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    

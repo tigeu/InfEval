@@ -1,12 +1,13 @@
 import base64
+import os
 
 from django.contrib.auth.models import User, Group
 from django.http import JsonResponse
 from rest_framework import viewsets, permissions
 
 from ObjectDetectionAnalyzer.main.serializers import UserSerializer, GroupSerializer, HeartbeatSerializer, \
-    ImageSerializer
-from ObjectDetectionAnalyzer.settings import DATA_DIR
+    ImageSerializer, FileSerializer
+from ObjectDetectionAnalyzer.settings import DATA_DIR, IMAGE_ENDINGS
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -55,3 +56,22 @@ def image(request, image_name):
 
     if request.method == 'GET':
         return JsonResponse(serializer.data, status=201)
+
+
+def image_files(request):
+    all_file_names = os.listdir(DATA_DIR)
+    image_names = []
+    for file_name in all_file_names:
+        base_name = os.path.basename(file_name)
+        extension = os.path.splitext(file_name)[1]
+        if extension.lower() in IMAGE_ENDINGS:
+            image_names.append(base_name)
+
+    response_data = [
+        {'name': image_name} for image_name in image_names
+    ]
+
+    serializer = FileSerializer(response_data, many=True)
+
+    if request.method == 'GET':
+        return JsonResponse(serializer.data, status=201, safe=False)  # TODO how to do without making it "unsafe"
