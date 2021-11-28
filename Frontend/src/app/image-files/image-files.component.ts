@@ -1,14 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ImageFile} from "./ImageFile";
 import {ImageFilesService} from "./image-files.service";
 import {ImageService} from "../image/image.service";
 
 @Component({
-  selector: 'app-files',
+  selector: 'app-image-files',
   templateUrl: './image-files.component.html',
   styleUrls: ['./image-files.component.css']
 })
 export class ImageFilesComponent implements OnInit {
+
+  @Output()
+  onSelectedImageChanged: EventEmitter<any> = new EventEmitter<any>();
 
   imageFiles!: ImageFile[];
 
@@ -24,5 +27,10 @@ export class ImageFilesComponent implements OnInit {
       .subscribe((imageFiles: ImageFile[]) => {
         this.imageFiles = imageFiles
       })
+  }
+
+  onSelectedImageFileChanged($event: MouseEvent) {
+    const target = $event.target as HTMLElement;
+    this.onSelectedImageChanged.emit(target.innerText);
   }
 }

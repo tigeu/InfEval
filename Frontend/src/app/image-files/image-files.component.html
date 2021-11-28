@@ -1,6 +1,5 @@
-<ul (click)="imageComponent.onSelectedImageChanged($event)">
+<ul (click)="onSelectedImageFileChanged($event)">
   <li *ngFor="let imageFile of imageFiles">
     {{imageFile.name}}
   </li>
 </ul>
-<app-image #imageComponent></app-image>

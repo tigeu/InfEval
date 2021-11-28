@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ImageService} from "./image.service";
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser'
 import {Image} from "./image";
@@ -9,6 +9,11 @@ import {Image} from "./image";
   styleUrls: ['./image.component.css']
 })
 export class ImageComponent implements OnInit {
+
+  @Input() set currentImage(newImage: String) {
+    if (newImage)
+      this.getImage(newImage)
+  }
 
   image!: Image;
   imageUrl!: SafeResourceUrl;
@@ -24,12 +29,6 @@ export class ImageComponent implements OnInit {
       })
   }
 
-  onSelectedImageChanged($event: MouseEvent) {
-    const target = $event.target as HTMLElement
-    this.getImage(target.innerText)
-  }
-
   ngOnInit(): void {
   }
-
 }

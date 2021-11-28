@@ -12,6 +12,8 @@ import {Heartbeat} from "./heartbeat";
 export class AppComponent {
   title = 'Object Detection Analyzer';
 
+  selectedImageFile: any;
+
   heartbeat: Heartbeat = {count: 1};
   heartbeatSubscription: Subscription = new Subscription;
 
