@@ -16,3 +16,8 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
 class HeartbeatSerializer(serializers.Serializer):
     count = serializers.IntegerField()
+
+
+class ImageSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    file = serializers.CharField()

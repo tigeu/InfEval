@@ -20,8 +20,7 @@ export class AppComponent {
 
   getHeartbeat(): void {
     this.heartbeatService.getHeartbeat(this.heartbeat)
-      .subscribe(heartbeat =>
-        this.heartbeat = heartbeat);
+      .subscribe(heartbeat => this.heartbeat = heartbeat);
   }
 
   ngOnInit(): void {

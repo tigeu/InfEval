@@ -11,5 +11,6 @@ router.register(r'groups', views.GroupViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('heartbeat/<int:count>', views.heartbeat),
+    path('image/<str:image_name>', views.image),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
