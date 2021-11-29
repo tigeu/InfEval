@@ -1,7 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ImageService} from "./image.service";
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser'
 import {Image} from "./image";
+import {Subscription} from "rxjs";
+import {SelectedImageChangedService} from "../SharedServices/SelectedImageChangedService";
 
 @Component({
   selector: 'app-image',
@@ -10,15 +12,16 @@ import {Image} from "./image";
 })
 export class ImageComponent implements OnInit {
 
-  @Input() set currentImage(newImage: String) {
-    if (newImage)
-      this.getImage(newImage)
-  }
+  mySubscription!: Subscription;
 
   image!: Image;
   imageUrl!: SafeResourceUrl;
 
-  constructor(private imageService: ImageService, private domSanitizer: DomSanitizer) {
+  constructor(private imageService: ImageService, private domSanitizer: DomSanitizer,
+              private selectedImageChangedService: SelectedImageChangedService) {
+    this.mySubscription = this.selectedImageChangedService.newData.subscribe((data: any) => {
+      this.getImage(data)
+    })
   }
 
   getImage(imageName: String): void {

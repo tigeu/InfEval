@@ -1,7 +1,8 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ImageFile} from "./ImageFile";
 import {ImageFilesService} from "./image-files.service";
 import {ImageService} from "../image/image.service";
+import {SelectedImageChangedService} from "../SharedServices/SelectedImageChangedService";
 
 @Component({
   selector: 'app-image-files',
@@ -10,12 +11,10 @@ import {ImageService} from "../image/image.service";
 })
 export class ImageFilesComponent implements OnInit {
 
-  @Output()
-  onSelectedImageChanged: EventEmitter<any> = new EventEmitter<any>();
-
   imageFiles!: ImageFile[];
 
-  constructor(private imageFilesService: ImageFilesService, private imageService: ImageService) {
+  constructor(private imageFilesService: ImageFilesService, private imageService: ImageService,
+              private selectedImageChangedService: SelectedImageChangedService) {
   }
 
   ngOnInit(): void {
@@ -31,6 +30,6 @@ export class ImageFilesComponent implements OnInit {
 
   onSelectedImageFileChanged($event: MouseEvent) {
     const target = $event.target as HTMLElement;
-    this.onSelectedImageChanged.emit(target.innerText);
+    this.selectedImageChangedService.publish(target.innerText);
   }
 }
