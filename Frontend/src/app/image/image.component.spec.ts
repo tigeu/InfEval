@@ -1,6 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ImageComponent } from './image.component';
+import {ImageComponent} from './image.component';
+import {HttpClientModule} from "@angular/common/http";
+import {SelectedImageChangedService} from "../SharedServices/SelectedImageChangedService";
 
 describe('ImageComponent', () => {
   let component: ImageComponent;
@@ -8,9 +10,15 @@ describe('ImageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImageComponent ]
+      imports: [
+        HttpClientModule,
+      ],
+      providers: [
+        SelectedImageChangedService
+      ],
+      declarations: [ImageComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

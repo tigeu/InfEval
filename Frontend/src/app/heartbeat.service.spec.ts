@@ -1,12 +1,17 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { HeartbeatService } from './heartbeat.service';
+import {HeartbeatService} from './heartbeat.service';
+import {HttpClientModule} from "@angular/common/http";
 
 describe('HeartbeatService', () => {
   let service: HeartbeatService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientModule
+      ]
+    });
     service = TestBed.inject(HeartbeatService);
   });
 
