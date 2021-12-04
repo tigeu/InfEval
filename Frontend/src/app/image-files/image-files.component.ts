@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ImageFile} from "./ImageFile";
+import {ImageFile} from "./image-file";
 import {ImageFilesService} from "./image-files.service";
 import {ImageService} from "../image/image.service";
-import {SelectedImageChangedService} from "../SharedServices/SelectedImageChangedService";
+import {SelectedImageChangedService} from "../shared-services/selected-image-changed-service";
 
 @Component({
   selector: 'app-image-files',

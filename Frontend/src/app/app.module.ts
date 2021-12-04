@@ -6,7 +6,7 @@ import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
 import {ImageComponent} from './image/image.component';
 import {ImageFilesComponent} from './image-files/image-files.component';
-import {SelectedImageChangedService} from "./SharedServices/SelectedImageChangedService";
+import {SelectedImageChangedService} from "./shared-services/selected-image-changed-service";
 
 @NgModule({
   declarations: [
