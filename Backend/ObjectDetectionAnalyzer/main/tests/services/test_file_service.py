@@ -1,11 +1,12 @@
 import os
-import unittest
 from unittest.mock import MagicMock, patch, mock_open
+
+from rest_framework.test import APITestCase
 
 from ObjectDetectionAnalyzer.main.services.FileService import FileService
 
 
-class test_file_service(unittest.TestCase):
+class test_file_service(APITestCase):
     """
     Test FileService.py in module services
     """
