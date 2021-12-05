@@ -13,8 +13,8 @@ router.register(r'groups', GroupViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('heartbeat/<int:count>', Heartbeat.as_view()),
-    path('image/<str:image_name>', Image.as_view()),
-    path('image-files', ImageFiles.as_view()),
+    path('heartbeat/<int:count>', Heartbeat.as_view(), name="heartbeat"),
+    path('image/<str:image_name>', Image.as_view(), name="image"),
+    path('image-files/', ImageFiles.as_view(), name="image-files"),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

@@ -1,10 +1,9 @@
-import base64
-
-from django.http import JsonResponse
 from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ObjectDetectionAnalyzer.main.serializers.ImageSerializer import ImageSerializer
+from ObjectDetectionAnalyzer.main.services.FileService import FileService
 from ObjectDetectionAnalyzer.settings import DATA_DIR
 
 
@@ -17,9 +16,10 @@ class Image(APIView):
         """
         Send image based on url.
         """
+        image_base64 = FileService().encode_image(DATA_DIR / image_name)
 
-        with open(DATA_DIR / image_name, mode='rb') as file:
-            image_base64 = base64.b64encode(file.read()).decode('utf-8')
+        if not image_base64:
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
 
         response_data = {
             'name': image_name,
@@ -28,4 +28,4 @@ class Image(APIView):
 
         serializer = ImageSerializer(response_data)
 
-        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
