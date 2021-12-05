@@ -8,7 +8,7 @@ import {ImageFile} from "./image-file";
   providedIn: 'root'
 })
 export class ImageFilesService {
-  private imageFilesUrl = `${environment.apiUrl}/image-files`;
+  private imageFilesUrl = `${environment.apiUrl}/image-files/`;
 
   constructor(private http: HttpClient) {
   }
