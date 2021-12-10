@@ -1,4 +1,6 @@
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -9,12 +11,19 @@ class Heartbeat(APIView):
     """
     Handle requests sent to /heartbeat
     """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, count):
         """
         Take incoming number and increment it.
         """
         count += 1
+
+        if request.user:
+            print(request.user)
+        else:
+            print("Not authenticated")
 
         response_data = {'count': count}
 
