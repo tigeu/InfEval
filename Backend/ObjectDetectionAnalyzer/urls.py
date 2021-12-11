@@ -3,10 +3,10 @@ from django.urls import path
 from rest_framework import routers
 from rest_framework_simplejwt import views as jwt_views
 
-from ObjectDetectionAnalyzer.main.views.HeartbeatView import Heartbeat
-from ObjectDetectionAnalyzer.main.views.ImageFilesView import ImageFiles
-from ObjectDetectionAnalyzer.main.views.ImageView import Image
-from ObjectDetectionAnalyzer.main.views.RegisterView import Register
+from ObjectDetectionAnalyzer.image.views import Image
+from ObjectDetectionAnalyzer.imagefiles.views import ImageFiles
+from ObjectDetectionAnalyzer.main.views import Heartbeat
+from ObjectDetectionAnalyzer.register.views import Register
 
 router = routers.DefaultRouter()
 

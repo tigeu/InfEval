@@ -3,8 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ObjectDetectionAnalyzer.main.serializers.ImageSerializer import ImageSerializer
-from ObjectDetectionAnalyzer.main.services.FileService import FileService
+from ObjectDetectionAnalyzer.image.serializers import ImageSerializer
+from ObjectDetectionAnalyzer.image.services import ImageService
 from ObjectDetectionAnalyzer.settings import DATA_DIR
 
 
@@ -19,7 +19,7 @@ class Image(APIView):
         """
         Send image based on url.
         """
-        image_base64 = FileService().encode_image(DATA_DIR / image_name)
+        image_base64 = ImageService().encode_image(DATA_DIR / image_name)
 
         if not image_base64:
             return Response({}, status=status.HTTP_404_NOT_FOUND)

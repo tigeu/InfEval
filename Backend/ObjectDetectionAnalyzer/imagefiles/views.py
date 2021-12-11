@@ -3,8 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ObjectDetectionAnalyzer.main.serializers.ImageFilesSerializer import ImageFilesSerializer
-from ObjectDetectionAnalyzer.main.services.FileService import FileService
+from ObjectDetectionAnalyzer.imagefiles.serializers import ImageFilesSerializer
+from ObjectDetectionAnalyzer.imagefiles.services import ImageFilesService
 from ObjectDetectionAnalyzer.settings import DATA_DIR, IMAGE_ENDINGS
 
 
@@ -19,7 +19,7 @@ class ImageFiles(APIView):
         """
         Send image with name image_name from data directory.
         """
-        image_names = FileService().get_image_file_names(DATA_DIR, IMAGE_ENDINGS)
+        image_names = ImageFilesService().get_image_file_names(DATA_DIR, IMAGE_ENDINGS)
 
         if not image_names:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
