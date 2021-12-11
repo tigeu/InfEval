@@ -1,7 +1,11 @@
-<h1>{{title}}</h1>
-<div id="heartbeat">Heartbeat counter: {{heartbeat.count}}</div>
-<div class="container">
-  <app-image-files class="image-files"></app-image-files>
-  <app-image class="image"></app-image>
-</div>
+<nav class="navigation">
+  <ul>
+    <li><a routerLink="/" routerLinkActive="active">Main</a></li>
+    <li><a routerLink="/login" routerLinkActive="active">
+      <span *ngIf="!isLoggedIn()">Login</span>
+      <span *ngIf="isLoggedIn()" (click)="logout()">Logout</span>
+    </a></li>
+  </ul>
+</nav>
 
+<router-outlet class="container"></router-outlet>

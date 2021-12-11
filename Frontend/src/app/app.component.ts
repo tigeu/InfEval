@@ -1,7 +1,5 @@
 import {Component} from '@angular/core';
-import {HeartbeatService} from "./heartbeat.service";
-import {interval, Subscription} from "rxjs";
-import {Heartbeat} from "./heartbeat";
+import {LoginService} from "./login/login.service";
 
 @Component({
   selector: 'app-root',
@@ -10,29 +8,14 @@ import {Heartbeat} from "./heartbeat";
 })
 
 export class AppComponent {
-  title = 'Object Detection Analyzer';
-
-  heartbeat: Heartbeat = {count: 1};
-  heartbeatSubscription: Subscription = new Subscription;
-
-  constructor(private heartbeatService: HeartbeatService) {
+  constructor(private loginService: LoginService) {
   }
 
-  getHeartbeat(): void {
-    this.heartbeatService.getHeartbeat(this.heartbeat)
-      .subscribe(heartbeat => this.heartbeat = heartbeat);
+  isLoggedIn(): Boolean {
+    return this.loginService.isLoggedIn()
   }
 
-  ngOnInit(): void {
-    this.heartbeatSubscription = interval(5000)
-      .subscribe(
-        intervalResponse => {
-          this.getHeartbeat();
-        }
-      );
-  }
-
-  ngOnDestroy(): void {
-    this.heartbeatSubscription.unsubscribe()
+  logout() {
+    this.loginService.logout();
   }
 }

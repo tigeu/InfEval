@@ -1,15 +1,7 @@
-.container {
-  display: grid;
-  grid-template-rows: 100%;
-  grid-template-columns: 20% auto;
+.navigation li {
+  display: inline;
 }
 
-.image-files {
-  grid-row-start: 1;
-  grid-column-start: 1;
-}
-
-.image {
-  grid-row-start: 1;
-  grid-column-start: 2;
+.navigation a {
+  padding: 10px;
 }

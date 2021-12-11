@@ -3,6 +3,7 @@ import {ImageFile} from "./image-file";
 import {ImageFilesService} from "./image-files.service";
 import {ImageService} from "../image/image.service";
 import {SelectedImageChangedService} from "../shared-services/selected-image-changed-service";
+import {interval, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-image-files',
@@ -11,14 +12,26 @@ import {SelectedImageChangedService} from "../shared-services/selected-image-cha
 })
 export class ImageFilesComponent implements OnInit {
 
-  imageFiles!: ImageFile[];
+  imageFiles: ImageFile[] = [];
+  private imageFilesSubscription: Subscription = new Subscription;
 
-  constructor(private imageFilesService: ImageFilesService, private imageService: ImageService,
+  constructor(private imageFilesService: ImageFilesService,
+              private imageService: ImageService,
               private selectedImageChangedService: SelectedImageChangedService) {
+    this.getImageFiles();
   }
 
   ngOnInit(): void {
-    this.getImageFiles();
+    this.imageFilesSubscription = interval(10000)
+      .subscribe(
+        intervalResponse => {
+          this.getImageFiles();
+        }
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.imageFilesSubscription.unsubscribe()
   }
 
   getImageFiles(): void {

@@ -12,13 +12,13 @@ import {SelectedImageChangedService} from "../shared-services/selected-image-cha
 })
 export class ImageComponent implements OnInit {
 
-  mySubscription!: Subscription;
+  selectedImageChanged: Subscription;
 
   image: Image = {file: new File([""], "")};
   imageUrl: SafeResourceUrl = "";
 
   constructor(private imageService: ImageService, private selectedImageChangedService: SelectedImageChangedService) {
-    this.mySubscription = this.selectedImageChangedService.newData.subscribe((data: any) => {
+    this.selectedImageChanged = this.selectedImageChangedService.newData.subscribe((data: any) => {
       this.getImage(data)
     })
   }
