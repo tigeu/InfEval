@@ -23,7 +23,13 @@ export class RegisterComponent implements OnInit {
   }
 
   register(username: String, email: String, password: String) {
-    this.registerService.register(username, email, password);
+    this.registerService.register(username, email, password).subscribe({
+      next: this.successfulRegister.bind(this)
+    });
+  }
+
+  successfulRegister() {
+    this.router.navigate(['/login/'])
   }
 
   ngOnInit(): void {
@@ -31,7 +37,6 @@ export class RegisterComponent implements OnInit {
 
   onRegister() {
     this.register(this.registerForm.value.username, this.registerForm.value.email, this.registerForm.value.password);
-    this.router.navigate(['/login/'])
   }
 
 }
