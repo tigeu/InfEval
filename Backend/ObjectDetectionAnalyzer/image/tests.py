@@ -1,6 +1,7 @@
-import os
-from unittest.mock import MagicMock, patch, mock_open
+from unittest import TestCase
+from unittest.mock import patch, mock_open
 
+from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -13,16 +14,18 @@ class test_image(APITestCase):
     Test Image app
     """
 
-    def __init__(self, methodName='runTest'):
-        super(test_image, self).__init__(methodName)
-
+    def setUp(self):
         self.url = reverse('image', kwargs={'image_name': "test_image.jpg"})
 
-    def test_image_with_data(self):
+    @patch('ObjectDetectionAnalyzer.image.services.ImageService.encode_image')
+    def test_image_with_data(self, encode_image):
         """
         Test that correct image is returned
         """
-        ImageService.encode_image = MagicMock(return_value=["dGVzdA=="])
+        user = User.objects.create_user("test", "test@test.test", "test")
+        self.client.force_authenticate(user=user)
+
+        encode_image.return_value = ["dGVzdA=="]
 
         response = self.client.get(self.url)
 
@@ -30,37 +33,50 @@ class test_image(APITestCase):
         self.assertEqual(response.data['name'], "test_image.jpg")
         self.assertEqual(response.data['file'], "['dGVzdA==']")
 
-    def test_image_without_data(self):
+    @patch('ObjectDetectionAnalyzer.image.services.ImageService.encode_image')
+    def test_image_without_data(self, encode_image):
         """
         Test that 404 not found is returned
         """
-        ImageService.encode_image = MagicMock(return_value=None)
+        user = User.objects.create_user("test", "test@test.test", "test")
+        self.client.force_authenticate(user=user)
+
+        encode_image.return_value = None
 
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_no_authentication_image(self):
+        """
+        Test that user without authentication gets 401
+        """
+        response = self.client.get(self.url)
 
-class test_image_service(APITestCase):
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class test_image_service(TestCase):
     """
     Test image service
     """
 
-    def __init__(self, methodName='runTest'):
-        super(test_image_service, self).__init__(methodName)
+    def setUp(self):
         self.image_service = ImageService()
         self.directory = "sample/directory/"
 
-    def test_encode_image_with_data(self):
-        os.path.exists = MagicMock(return_value=True)
+    @patch("os.path.exists")
+    def test_encode_image_with_data(self, path_exists):
+        path_exists.return_value = True
 
         with patch("builtins.open", mock_open(read_data=b"test")) as mock:
             encoded_file = self.image_service.encode_image("file1.jpg")
 
         self.assertEqual(encoded_file, "dGVzdA==")
 
-    def test_encode_image_with_wrong_directory(self):
-        os.path.exists = MagicMock(return_value=False)
+    @patch("os.path.exists")
+    def test_encode_image_with_wrong_directory(self, path_exists):
+        path_exists.return_value = False
 
         encoded_file = self.image_service.encode_image("file1.jpg")
 
