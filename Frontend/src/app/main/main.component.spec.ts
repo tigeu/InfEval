@@ -6,6 +6,8 @@ import {HeartbeatService} from "./heartbeat.service";
 import {of} from "rxjs";
 import {By} from "@angular/platform-browser";
 import {HttpClientModule} from "@angular/common/http";
+import {ImageComponent} from "../image/image.component";
+import {ImageFilesComponent} from "../image-files/image-files.component";
 
 describe('MainComponent', () => {
   let component: MainComponent;
@@ -13,9 +15,13 @@ describe('MainComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MainComponent],
+      declarations: [
+        MainComponent,
+        ImageComponent,
+        ImageFilesComponent
+      ],
       imports: [
-        HttpClientModule
+        HttpClientModule,
       ],
     })
       .compileComponents();

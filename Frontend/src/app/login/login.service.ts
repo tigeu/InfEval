@@ -12,6 +12,7 @@ import {UserLoggedInService} from "../shared-services/user-logged-in-service";
 export class LoginService {
   private loginUrl = `${environment.apiUrl}/login/`;
   private cookieName: string = 'access';
+  jwtDecode = jwtDecode; // for testing
 
   constructor(private http: HttpClient,
               private cookieService: CookieService,
@@ -20,7 +21,7 @@ export class LoginService {
 
   login(username: String, password: String) {
     this.http.post<any>(this.loginUrl, {username, password}).subscribe(res => {
-      const decoded = jwtDecode<Token>(res.access)
+      const decoded = this.jwtDecode<Token>(res.access)
       this.cookieService.set(this.cookieName, res.access, decoded.exp)
       this.userLoggedInService.publish(true);
     });
@@ -32,14 +33,16 @@ export class LoginService {
 
   getToken(): String {
     if (this.isLoggedIn()) {
-      return this.cookieService.get('access');
+      return this.cookieService.get(this.cookieName);
     }
 
     return "";
   }
 
   logout(): void {
-    this.cookieService.delete(this.cookieName)
-    this.userLoggedInService.publish(false);
+    if (this.isLoggedIn()) {
+      this.cookieService.delete(this.cookieName)
+      this.userLoggedInService.publish(false);
+    }
   }
 }

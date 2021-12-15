@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   constructor(private loginService: LoginService,
               private formBuilder: FormBuilder,
               private router: Router,
-              private userLoggedInService: UserLoggedInService,) {
+              private userLoggedInService: UserLoggedInService) {
     this.userLoggedIn = this.userLoggedInService.newData.subscribe((data: any) => {
       if (data)
         this.onLoggedIn()
@@ -27,6 +27,9 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+
+    if (this.loginService.isLoggedIn())
+      this.loginService.logout();
   }
 
   login(username: String, password: String) {
@@ -37,7 +40,9 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
-    this.login(this.loginForm.value.username, this.loginForm.value.password);
+    const value = this.loginForm.value;
+    if (value.username && value.password)
+      this.login(value.username, value.password);
   }
 
   onLoggedIn() {

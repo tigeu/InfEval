@@ -13,8 +13,6 @@ export class RegisterService {
   }
 
   register(username: String, email: String, password: String): Observable<any> {
-    console.log(this.registerUrl)
-    console.log(username, email, password)
     return this.http.post(this.registerUrl, {
       "username": username,
       "email": email,

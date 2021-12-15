@@ -2,8 +2,8 @@
   <ul>
     <li><a routerLink="/" routerLinkActive="active">Main</a></li>
     <li><a routerLink="/login" routerLinkActive="active">
-      <span *ngIf="!isLoggedIn()">Login</span>
-      <span *ngIf="isLoggedIn()" (click)="logout()">Logout</span>
+      <span id="login" *ngIf="!isLoggedIn()">Login</span>
+      <span id="logout" *ngIf="isLoggedIn()">Logout</span>
     </a></li>
   </ul>
 </nav>

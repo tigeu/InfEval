@@ -1,11 +1,11 @@
-<form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+<form id="loginForm" [formGroup]="loginForm" (ngSubmit)="onLogin()">
   <div>
     <label for="username">Username</label>
-    <input id="username" name="username" type="text" formControlName="username"/>
+    <input id="username" name="username" type="text" formControlName="username">
   </div>
   <div>
     <label for="password">Password</label>
-    <input id="password" type="password" formControlName="password"/>
+    <input id="password" type="password" formControlName="password">
   </div>
   <div>
     <button>Login</button>

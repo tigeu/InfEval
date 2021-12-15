@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {ImageFilesComponent} from './image-files.component';
 import {HttpClientModule} from "@angular/common/http";
@@ -101,4 +101,14 @@ describe('ImageFilesComponent', () => {
     const queriedElements = fixture.debugElement.query(By.css('#image-files')).children;
     expect(queriedElements.length).toBe(0);
   });
+
+  it('fetch image-files in an interval of 10000ms', fakeAsync(() => {
+    const spy = spyOn(component, 'getImageFiles');
+    component.ngOnInit();
+    tick(10000);
+    expect(spy).toHaveBeenCalledTimes(1);
+    tick(10000);
+    expect(spy).toHaveBeenCalledTimes(2);
+    discardPeriodicTasks();
+  }));
 });

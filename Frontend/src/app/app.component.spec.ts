@@ -2,8 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from "@angular/common/http";
-import {ImageComponent} from "./image/image.component";
-import {ImageFilesComponent} from "./image-files/image-files.component";
 import {SelectedImageChangedService} from "./shared-services/selected-image-changed-service";
 
 describe('AppComponent', () => {
@@ -21,8 +19,6 @@ describe('AppComponent', () => {
       ],
       declarations: [
         AppComponent,
-        ImageComponent,
-        ImageFilesComponent,
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
