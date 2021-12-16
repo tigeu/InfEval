@@ -8,7 +8,7 @@ import {ImageComponent} from './image/image.component';
 import {ImageFilesComponent} from './image-files/image-files.component';
 import {LoginComponent} from './login/login.component';
 import {CookieService} from 'ngx-cookie-service';
-import {JwtInterceptor} from "./login/JwtInterceptor";
+import {JwtInterceptor} from "./interceptors/jwt-interceptor";
 import {RegisterComponent} from './register/register.component';
 import {MainComponent} from './main/main.component';
 import {ReactiveFormsModule} from "@angular/forms";
