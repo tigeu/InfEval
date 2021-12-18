@@ -1,10 +1,8 @@
-<nav class="navigation">
+<nav class="navigation" *ngIf="isLoggedIn()">
   <ul>
     <li><a routerLink="/" routerLinkActive="active">Main</a></li>
-    <li><a routerLink="/login" routerLinkActive="active">
-      <span id="login" *ngIf="!isLoggedIn()">Login</span>
-      <span id="logout" *ngIf="isLoggedIn()">Logout</span>
-    </a></li>
+    <li><a routerLink="/upload" routerLinkActive="active">Upload</a></li>
+    <li><a routerLink="/login" routerLinkActive="active">Logout</a></li>
   </ul>
 </nav>
 

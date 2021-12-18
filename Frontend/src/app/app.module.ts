@@ -12,6 +12,10 @@ import {JwtInterceptor} from "./interceptors/jwt-interceptor";
 import {RegisterComponent} from './register/register.component';
 import {MainComponent} from './main/main.component';
 import {ReactiveFormsModule} from "@angular/forms";
+import {UploadComponent} from './upload/upload.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -20,13 +24,17 @@ import {ReactiveFormsModule} from "@angular/forms";
     ImageFilesComponent,
     LoginComponent,
     RegisterComponent,
-    MainComponent
+    MainComponent,
+    UploadComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatProgressBarModule,
+    MatIconModule
   ],
   providers: [
     CookieService,
