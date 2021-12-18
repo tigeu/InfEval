@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -19,7 +21,10 @@ class Image(APIView):
         """
         Send image based on url.
         """
-        image_base64 = ImageService().encode_image(DATA_DIR / image_name)
+        user_dir = DATA_DIR / request.user.username
+        Path(user_dir).mkdir(parents=True, exist_ok=True)
+
+        image_base64 = ImageService().encode_image(user_dir / image_name)
 
         if not image_base64:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
