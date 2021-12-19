@@ -1,23 +1,20 @@
-from unittest import TestCase
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 
 from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ObjectDetectionAnalyzer.image.services import ImageService
 
-
-class test_image(APITestCase):
+class TestImageView(APITestCase):
     """
-    Test Image app
+    Test ImageView
     """
 
     def setUp(self):
         self.url = reverse('image', kwargs={'image_name': "test_image.jpg"})
 
-    @patch('ObjectDetectionAnalyzer.image.services.ImageService.encode_image')
+    @patch('ObjectDetectionAnalyzer.image.ImageService.ImageService.encode_image')
     def test_image_with_data(self, encode_image):
         """
         Test that correct image is returned
@@ -33,7 +30,7 @@ class test_image(APITestCase):
         self.assertEqual(response.data['name'], "test_image.jpg")
         self.assertEqual(response.data['file'], "['dGVzdA==']")
 
-    @patch('ObjectDetectionAnalyzer.image.services.ImageService.encode_image')
+    @patch('ObjectDetectionAnalyzer.image.ImageService.ImageService.encode_image')
     def test_image_without_data(self, encode_image):
         """
         Test that 404 not found is returned
@@ -54,30 +51,3 @@ class test_image(APITestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
-class test_image_service(TestCase):
-    """
-    Test image service
-    """
-
-    def setUp(self):
-        self.image_service = ImageService()
-        self.directory = "sample/directory/"
-
-    @patch("os.path.exists")
-    def test_encode_image_with_data(self, path_exists):
-        path_exists.return_value = True
-
-        with patch("builtins.open", mock_open(read_data=b"test")) as mock:
-            encoded_file = self.image_service.encode_image("file1.jpg")
-
-        self.assertEqual(encoded_file, "dGVzdA==")
-
-    @patch("os.path.exists")
-    def test_encode_image_with_wrong_directory(self, path_exists):
-        path_exists.return_value = False
-
-        encoded_file = self.image_service.encode_image("file1.jpg")
-
-        self.assertEqual(encoded_file, None)

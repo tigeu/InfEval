@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 
-class test_heartbeat(APITestCase):
+class TestHeartbeatView(APITestCase):
     def test_increment_heartbeat(self):
         """
         Test that an incoming number is incremented and sent back with code 200

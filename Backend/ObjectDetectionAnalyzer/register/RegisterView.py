@@ -3,10 +3,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ObjectDetectionAnalyzer.register.serializers import UserSerializer
+from ObjectDetectionAnalyzer.register.UserSerializer import UserSerializer
 
 
-class Register(APIView):
+class RegisterView(APIView):
     """
     Handle requests sent to /register
     """

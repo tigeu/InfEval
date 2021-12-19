@@ -5,12 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ObjectDetectionAnalyzer.image.serializers import ImageSerializer
-from ObjectDetectionAnalyzer.image.services import ImageService
+from ObjectDetectionAnalyzer.image.ImageSerializer import ImageSerializer
+from ObjectDetectionAnalyzer.image.ImageService import ImageService
 from ObjectDetectionAnalyzer.settings import DATA_DIR
 
 
-class Image(APIView):
+class ImageView(APIView):
     """
     Handle requests sent to /image
     """
