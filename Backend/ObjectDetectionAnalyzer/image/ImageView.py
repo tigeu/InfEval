@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -7,6 +5,7 @@ from rest_framework.views import APIView
 
 from ObjectDetectionAnalyzer.image.ImageSerializer import ImageSerializer
 from ObjectDetectionAnalyzer.image.ImageService import ImageService
+from ObjectDetectionAnalyzer.services.PathService import PathService
 from ObjectDetectionAnalyzer.settings import DATA_DIR
 
 
@@ -17,14 +16,19 @@ class ImageView(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.path_service = PathService()
+        self.image_service = ImageService()
+
     def get(self, request, image_name):
         """
         Send image based on url.
         """
-        user_dir = DATA_DIR / request.user.username
-        Path(user_dir).mkdir(parents=True, exist_ok=True)
+        user_dir = self.path_service.get_user_dir(DATA_DIR, request.user.username)
+        self.path_service.create_user_dir(user_dir)
 
-        image_base64 = ImageService().encode_image(user_dir / image_name)
+        image_base64 = self.image_service.encode_image(user_dir / image_name)
 
         if not image_base64:
             return Response({}, status=status.HTTP_404_NOT_FOUND)

@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 
 class ImageFilesService:
@@ -6,7 +7,7 @@ class ImageFilesService:
     Service for getting image file names
     """
 
-    def get_image_file_names(self, directory, image_endings):
+    def get_image_file_names(self, directory: Path, image_endings: dict) -> list:
         """
         Get file names of images with specific endings in a certain directory
         """

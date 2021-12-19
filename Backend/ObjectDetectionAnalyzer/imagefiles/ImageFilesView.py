@@ -26,6 +26,7 @@ class ImageFilesView(APIView):
         Send image with name image_name from data directory.
         """
         user_dir = self.path_service.get_user_dir(DATA_DIR, request.user.username)
+        self.path_service.create_user_dir(user_dir)
 
         image_names = self.image_file_service.get_image_file_names(user_dir, IMAGE_ENDINGS)
 

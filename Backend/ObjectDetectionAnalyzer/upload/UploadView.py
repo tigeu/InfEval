@@ -21,6 +21,7 @@ class UploadView(APIView):
         file_obj = request.data['file']
 
         user_dir = self.path_service.get_user_dir(DATA_DIR, request.user.username)
+        self.path_service.create_user_dir(user_dir)
 
         with open(user_dir / file_name, "wb") as file:
             file.write(file_obj.read())

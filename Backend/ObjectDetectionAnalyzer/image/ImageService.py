@@ -7,7 +7,7 @@ class ImageService:
     Service for encoding images
     """
 
-    def encode_image(self, image_name):
+    def encode_image(self, image_name: str) -> str:
         """
         Open image and encode it in base64
         """
