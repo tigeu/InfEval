@@ -16,6 +16,7 @@ import {UploadComponent} from './upload/upload.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {MatIconModule} from "@angular/material/icon";
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatProgressBarModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule
   ],
   providers: [
     CookieService,

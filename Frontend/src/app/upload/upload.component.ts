@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient, HttpEventType} from "@angular/common/http";
+import {HttpEventType} from "@angular/common/http";
 import {finalize, Subscription} from "rxjs";
-import {environment} from "../../environments/environment";
+import {UploadService} from "./upload.service";
 
 @Component({
   selector: 'app-upload',
@@ -9,14 +9,13 @@ import {environment} from "../../environments/environment";
   styleUrls: ['./upload.component.css']
 })
 export class UploadComponent implements OnInit {
-  requiredFileType: String = "txt";
-  private uploadUrl = `${environment.apiUrl}/upload`;
+  requiredFileType: String = ".zip";
 
   fileName: String = '';
   uploadProgress!: number | null;
   uploadSub!: Subscription | null;
 
-  constructor(private http: HttpClient) {
+  constructor(private uploadService: UploadService) {
   }
 
   ngOnInit(): void {
@@ -24,27 +23,23 @@ export class UploadComponent implements OnInit {
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
-    if (file) {
-      this.fileName = file.name;
-      const queryUrl = `${this.uploadUrl}/${this.fileName}`
-      const formData = new FormData();
-      formData.append("file", file);
+    if (!file)
+      return
 
-      const upload = this.http.put(queryUrl, formData, {
-        reportProgress: true,
-        observe: 'events'
-      }).pipe(
-        finalize(() => this.reset())
-      );
+    this.fileName = file.name;
 
-      this.uploadSub = upload.subscribe(event => {
+    this.uploadSub = this.uploadService.upload(this.fileName, file)
+      .pipe(finalize(() => this.reset()))
+      .subscribe(event => {
         if (event.type == HttpEventType.UploadProgress) {
-          console.log(event.total)
-          if (event.total)
-            this.uploadProgress = Math.round(100 * (event.loaded / event.total));
+          this.updateProgress(event.loaded, event.total);
         }
       })
-    }
+  }
+
+  updateProgress(loaded: number, total: number) {
+    if (total)
+      this.uploadProgress = Math.round(100 * (loaded / total));
   }
 
   cancelUpload() {
