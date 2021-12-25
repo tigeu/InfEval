@@ -7,6 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # custom settings #
 DATA_DIR = BASE_DIR / "data"
+TMP_DIR = BASE_DIR / "tmp"
 IMAGE_ENDINGS = {".jpg", ".png"}
 ###################
 
@@ -27,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'ObjectDetectionAnalyzer',
+    'ObjectDetectionAnalyzer.upload'
 ]
 
 MIDDLEWARE = [

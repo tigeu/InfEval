@@ -13,11 +13,12 @@ export class UploadService {
   constructor(private http: HttpClient) {
   }
 
-  upload(fileName: String, file: File, type: UploadTypes): Observable<any> {
+  upload(fileName: String, file: File, dataset_name: string, type: UploadTypes): Observable<any> {
     const queryUrl = `${this.uploadUrl}/${fileName}`
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("type", type.toString());
+    formData.append("dataset_name", dataset_name)
+    formData.append("type", type.toString())
     return this.http.put(queryUrl, formData, {reportProgress: true, observe: 'events'})
   }
 }

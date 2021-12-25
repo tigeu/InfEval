@@ -259,3 +259,6 @@ fabric.properties
 
 data/*
 !data/.gitkeep
+
+tmp/*
+!tmp/.gitkeep

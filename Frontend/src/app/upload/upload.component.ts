@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {HttpEventType} from "@angular/common/http";
 import {finalize, Subscription} from "rxjs";
 import {UploadService} from "./upload.service";
-import {UploadTypes} from "./UploadTypes";
 import {UploadFileTypes} from "./UploadFileTypes";
+import {UploadTypes} from "./UploadTypes";
 
 @Component({
   selector: 'app-upload',
@@ -30,7 +30,7 @@ export class UploadComponent implements OnInit {
 
     this.fileName = file.name;
 
-    this.uploadSub = this.uploadService.upload(this.fileName, file, UploadTypes.Dataset)
+    this.uploadSub = this.uploadService.upload(this.fileName, file, "TestDataset", UploadTypes.Dataset)
       .pipe(finalize(() => this.reset()))
       .subscribe(event => {
         if (event.type == HttpEventType.UploadProgress) {

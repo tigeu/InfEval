@@ -5,8 +5,8 @@ import {HttpClientModule, HttpEventType, HttpProgressEvent} from "@angular/commo
 import {MatIconModule} from "@angular/material/icon";
 import {UploadService} from "./upload.service";
 import {of, Subscription} from "rxjs";
-import {UploadTypes} from "./UploadTypes";
 import {UploadFileTypes} from "./UploadFileTypes";
+import {UploadTypes} from "./UploadTypes";
 
 describe('UploadComponent', () => {
   let component: UploadComponent;
@@ -39,7 +39,8 @@ describe('UploadComponent', () => {
     const event = {target: {files: [file]}}
 
     const httpEvent = of({type: HttpEventType.UploadProgress, loaded: 7, total: 10} as HttpProgressEvent)
-    spyOn(uploadService, "upload").withArgs("test.txt", file, UploadTypes.Dataset).and.returnValue(httpEvent);
+    spyOn(uploadService, "upload").withArgs("test.txt", file, "test", UploadTypes.Dataset)
+      .and.returnValue(httpEvent);
     spyOn(component, "reset");
     spyOn(component, "updateProgress").withArgs(7, 10);
 
