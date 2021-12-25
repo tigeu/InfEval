@@ -2,6 +2,7 @@ import {TestBed} from '@angular/core/testing';
 
 import {UploadService} from './upload.service';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {UploadTypes} from "./UploadTypes";
 
 describe('UploadService', () => {
   let service: UploadService;
@@ -25,7 +26,7 @@ describe('UploadService', () => {
 
     spyOn(http, "put")
 
-    service.upload("test.txt", file);
+    service.upload("test.txt", file, UploadTypes.Dataset);
 
     expect(http.put).toHaveBeenCalled();
   });

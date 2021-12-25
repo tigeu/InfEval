@@ -5,6 +5,8 @@ import {HttpClientModule, HttpEventType, HttpProgressEvent} from "@angular/commo
 import {MatIconModule} from "@angular/material/icon";
 import {UploadService} from "./upload.service";
 import {of, Subscription} from "rxjs";
+import {UploadTypes} from "./UploadTypes";
+import {UploadFileTypes} from "./UploadFileTypes";
 
 describe('UploadComponent', () => {
   let component: UploadComponent;
@@ -33,11 +35,11 @@ describe('UploadComponent', () => {
 
   it('#onFileSelected should update progress and finally reset', () => {
     const uploadService = TestBed.inject(UploadService);
-    const file = new File(["content"], "test.txt");
+    const file = new File(["content"], "test.txt", {type: UploadFileTypes.Compressed});
     const event = {target: {files: [file]}}
 
     const httpEvent = of({type: HttpEventType.UploadProgress, loaded: 7, total: 10} as HttpProgressEvent)
-    spyOn(uploadService, "upload").withArgs("test.txt", file, "dataset").and.returnValue(httpEvent);
+    spyOn(uploadService, "upload").withArgs("test.txt", file, UploadTypes.Dataset).and.returnValue(httpEvent);
     spyOn(component, "reset");
     spyOn(component, "updateProgress").withArgs(7, 10);
 
@@ -51,6 +53,22 @@ describe('UploadComponent', () => {
   it('#onFileSelected should return if file is not given', () => {
     const uploadService = TestBed.inject(UploadService);
     const event = {target: {files: []}}
+
+    spyOn(uploadService, "upload");
+    spyOn(component, "reset");
+    spyOn(component, "updateProgress");
+
+    component.onFileSelected(event);
+
+    expect(uploadService.upload).not.toHaveBeenCalled();
+    expect(component.reset).not.toHaveBeenCalled();
+    expect(component.updateProgress).not.toHaveBeenCalled();
+  })
+
+  it('#onFileSelected should return if file type is not compressed', () => {
+    const uploadService = TestBed.inject(UploadService);
+    const file = new File(["content"], "test.txt");
+    const event = {target: {files: [file]}}
 
     spyOn(uploadService, "upload");
     spyOn(component, "reset");

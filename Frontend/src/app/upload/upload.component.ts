@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {HttpEventType} from "@angular/common/http";
 import {finalize, Subscription} from "rxjs";
 import {UploadService} from "./upload.service";
+import {UploadTypes} from "./UploadTypes";
+import {UploadFileTypes} from "./UploadFileTypes";
 
 @Component({
   selector: 'app-upload',
@@ -23,12 +25,12 @@ export class UploadComponent implements OnInit {
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
-    if (!file || file.type !== 'application/x-zip-compressed')
+    if (!file || file.type !== UploadFileTypes.Compressed)
       return
 
     this.fileName = file.name;
 
-    this.uploadSub = this.uploadService.upload(this.fileName, file, "dataset")
+    this.uploadSub = this.uploadService.upload(this.fileName, file, UploadTypes.Dataset)
       .pipe(finalize(() => this.reset()))
       .subscribe(event => {
         if (event.type == HttpEventType.UploadProgress) {
