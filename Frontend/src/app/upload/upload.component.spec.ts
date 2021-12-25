@@ -37,7 +37,7 @@ describe('UploadComponent', () => {
     const event = {target: {files: [file]}}
 
     const httpEvent = of({type: HttpEventType.UploadProgress, loaded: 7, total: 10} as HttpProgressEvent)
-    spyOn(uploadService, "upload").withArgs("test.txt", file).and.returnValue(httpEvent);
+    spyOn(uploadService, "upload").withArgs("test.txt", file, "dataset").and.returnValue(httpEvent);
     spyOn(component, "reset");
     spyOn(component, "updateProgress").withArgs(7, 10);
 
@@ -85,7 +85,7 @@ describe('UploadComponent', () => {
     expect(component.reset).toHaveBeenCalled();
   });
 
-  it('#reset should uploadProgress and uploadSub to null', () => {
+  it('#reset should uploadProgress and uploadSub to null and fileName to ""', () => {
     component.uploadProgress = 10;
     component.uploadSub = new Subscription();
 
@@ -93,5 +93,6 @@ describe('UploadComponent', () => {
 
     expect(component.uploadProgress).not.toBeTruthy();
     expect(component.uploadSub).not.toBeTruthy();
+    expect(component.fileName).not.toBeTruthy();
   })
 });

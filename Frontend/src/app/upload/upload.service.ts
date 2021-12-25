@@ -12,10 +12,11 @@ export class UploadService {
   constructor(private http: HttpClient) {
   }
 
-  upload(fileName: String, file: File): Observable<any> {
+  upload(fileName: String, file: File, type: string): Observable<any> {
     const queryUrl = `${this.uploadUrl}/${fileName}`
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("type", type);
     return this.http.put(queryUrl, formData, {reportProgress: true, observe: 'events'})
   }
 }

@@ -23,12 +23,12 @@ export class UploadComponent implements OnInit {
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
-    if (!file)
+    if (!file || file.type !== 'application/x-zip-compressed')
       return
 
     this.fileName = file.name;
 
-    this.uploadSub = this.uploadService.upload(this.fileName, file)
+    this.uploadSub = this.uploadService.upload(this.fileName, file, "dataset")
       .pipe(finalize(() => this.reset()))
       .subscribe(event => {
         if (event.type == HttpEventType.UploadProgress) {
@@ -51,5 +51,6 @@ export class UploadComponent implements OnInit {
   reset() {
     this.uploadProgress = null;
     this.uploadSub = null;
+    this.fileName = "";
   }
 }
