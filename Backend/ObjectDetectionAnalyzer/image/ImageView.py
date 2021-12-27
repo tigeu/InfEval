@@ -21,14 +21,14 @@ class ImageView(APIView):
         self.path_service = PathService()
         self.image_service = ImageService()
 
-    def get(self, request, image_name):
+    def get(self, request, dataset, image_name):
         """
         Send image based on url.
         """
         user_dir = self.path_service.get_combined_dir(DATA_DIR, request.user.username)
-        self.path_service.create_dir(user_dir)
+        dataset_dir = self.path_service.get_dataset_dir(user_dir, dataset)
 
-        image_base64 = self.image_service.encode_image(user_dir / image_name)
+        image_base64 = self.image_service.encode_image(dataset_dir / image_name)
 
         if not image_base64:
             return Response({}, status=status.HTTP_404_NOT_FOUND)

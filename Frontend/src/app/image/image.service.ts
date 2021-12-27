@@ -13,8 +13,8 @@ export class ImageService {
   constructor(private http: HttpClient) {
   }
 
-  getImage(imageName: String): Observable<Image> {
-    const queryUrl = `${this.imageUrl}/${imageName}`
+  getImage(dataset: string, imageName: String): Observable<Image> {
+    const queryUrl = `${this.imageUrl}/${dataset}/${imageName}`
     return this.http.get<Image>(queryUrl);
   }
 }

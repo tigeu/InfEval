@@ -3,6 +3,7 @@ import {HttpEventType} from "@angular/common/http";
 import {finalize, Subscription} from "rxjs";
 import {UploadService} from "./upload.service";
 import {UploadInformation} from "./UploadInformation";
+import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 
 @Component({
   selector: 'app-upload',
@@ -18,7 +19,13 @@ export class UploadComponent implements OnInit {
   uploadProgress!: number | null;
   uploadSub!: Subscription | null;
 
-  constructor(private uploadService: UploadService) {
+  selectedDatasetChanged: Subscription;
+
+  constructor(private uploadService: UploadService,
+              private selectedDatasetChangedService: SelectedDatasetChangedService) {
+    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
+      this.datasetName = data;
+    })
   }
 
   ngOnInit(): void {
@@ -31,8 +38,6 @@ export class UploadComponent implements OnInit {
 
   onFileSelected(event: any) {
     this.file = event.target.files[0];
-    if (this.file)
-      console.log(this.file.type)
     if (!this.file || this.file.type !== this.uploadInformation.uploadFileType)
       return
 

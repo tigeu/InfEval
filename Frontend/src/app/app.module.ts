@@ -19,6 +19,9 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {UploadMainComponent} from './upload-main/upload-main.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatTabsModule} from "@angular/material/tabs";
+import {DatasetListComponent} from './dataset-list/dataset-list.component';
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -29,7 +32,8 @@ import {MatFormFieldModule} from "@angular/material/form-field";
     RegisterComponent,
     MainComponent,
     UploadComponent,
-    UploadMainComponent
+    UploadMainComponent,
+    DatasetListComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +44,9 @@ import {MatFormFieldModule} from "@angular/material/form-field";
     MatProgressBarModule,
     MatIconModule,
     MatButtonModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatTabsModule,
+    MatSelectModule
   ],
   providers: [
     CookieService,

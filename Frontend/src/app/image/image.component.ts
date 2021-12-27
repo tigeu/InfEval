@@ -4,6 +4,7 @@ import {SafeResourceUrl} from '@angular/platform-browser'
 import {Image} from "./image";
 import {Subscription} from "rxjs";
 import {SelectedImageChangedService} from "../shared-services/selected-image-changed-service";
+import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 
 @Component({
   selector: 'app-image',
@@ -13,13 +14,20 @@ import {SelectedImageChangedService} from "../shared-services/selected-image-cha
 export class ImageComponent implements OnInit {
 
   selectedImageChanged: Subscription;
+  selectedDatasetChanged: Subscription;
+  selectedDataset!: string;
 
   image: Image = {file: new File([""], "")};
   imageUrl: SafeResourceUrl = "";
 
-  constructor(private imageService: ImageService, private selectedImageChangedService: SelectedImageChangedService) {
+  constructor(private imageService: ImageService,
+              private selectedImageChangedService: SelectedImageChangedService,
+              private selectedDatasetChangedService: SelectedDatasetChangedService) {
     this.selectedImageChanged = this.selectedImageChangedService.newData.subscribe((data: any) => {
       this.getImage(data)
+    });
+    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
+      this.selectedDataset = data
     })
   }
 
@@ -34,7 +42,7 @@ export class ImageComponent implements OnInit {
   }
 
   getImage(imageName: String): void {
-    this.imageService.getImage(imageName)
+    this.imageService.getImage(this.selectedDataset, imageName)
       .subscribe({
         next: this.setImage.bind(this),
         error: this.resetImage.bind(this)

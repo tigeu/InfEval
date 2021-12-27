@@ -8,12 +8,13 @@ import {ImageFile} from "./image-file";
   providedIn: 'root'
 })
 export class ImageFilesService {
-  private imageFilesUrl = `${environment.apiUrl}/image-files/`;
+  private imageFilesUrl = `${environment.apiUrl}/image-files`;
 
   constructor(private http: HttpClient) {
   }
 
-  getImageFiles(): Observable<ImageFile[]> {
-    return this.http.get<ImageFile[]>(this.imageFilesUrl);
+  getImageFiles(dataset: string): Observable<ImageFile[]> {
+    const queryUrl = `${this.imageFilesUrl}/${dataset}`
+    return this.http.get<ImageFile[]>(queryUrl);
   }
 }

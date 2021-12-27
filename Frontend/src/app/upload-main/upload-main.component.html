@@ -1,12 +1,42 @@
-<form [formGroup]="datasetForm">
-  <div>
-    <label for="datasetName">Dataset name: </label>
-    <input id="datasetName" name="datasetName" type="text" formControlName="datasetName"
-           (ngModelChange)="datasetNameChange($event)"/>
-  </div>
-</form>
-<app-upload [uploadInformation]="datasetInformation" [datasetName]="datasetName"></app-upload>
-<app-upload [uploadInformation]="groundTruthInformation" [datasetName]="datasetName"></app-upload>
-<app-upload [uploadInformation]="labelMapInformation" [datasetName]="datasetName"></app-upload>
-<app-upload [uploadInformation]="predictionsInformation" [datasetName]="datasetName"></app-upload>
-<app-upload [uploadInformation]="modelInformation"></app-upload>
+<mat-tab-group animationDuration="0ms">
+  <mat-tab label="Dataset">
+    <ng-template matTabContent>
+      <h1>Upload dataset</h1>
+      <form [formGroup]="datasetForm">
+        <div>
+          <label for="datasetName">Dataset name: </label>
+          <input id="datasetName" name="datasetName" type="text" formControlName="datasetName"
+                 (ngModelChange)="datasetNameChange($event)"/>
+        </div>
+      </form>
+      <app-upload [uploadInformation]="datasetInformation" [datasetName]="datasetName"></app-upload>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Ground truth">
+    <ng-template matTabContent>
+      <h1>Upload ground truth values</h1>
+      <app-dataset-list></app-dataset-list>
+      <app-upload [uploadInformation]="groundTruthInformation" [datasetName]="datasetName"></app-upload>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Label map">
+    <ng-template matTabContent>
+      <h1>Upload label map</h1>
+      <app-dataset-list></app-dataset-list>
+      <app-upload [uploadInformation]="labelMapInformation" [datasetName]="datasetName"></app-upload>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Predictions">
+    <ng-template matTabContent>
+      <h1>Upload predictions</h1>
+      <app-dataset-list></app-dataset-list>
+      <app-upload [uploadInformation]="predictionsInformation" [datasetName]="datasetName"></app-upload>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Model">
+    <ng-template matTabContent>
+      <h1>Upload model</h1>
+      <app-upload [uploadInformation]="modelInformation"></app-upload>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

@@ -21,14 +21,14 @@ class ImageFilesView(APIView):
         self.path_service = PathService()
         self.image_file_service = ImageFilesService()
 
-    def get(self, request):
+    def get(self, request, dataset):
         """
         Send image with name image_name from data directory.
         """
         user_dir = self.path_service.get_combined_dir(DATA_DIR, request.user.username)
-        self.path_service.create_dir(user_dir)
-
-        image_names = self.image_file_service.get_image_file_names(user_dir, IMAGE_ENDINGS)
+        dataset_dir = self.path_service.get_dataset_dir(user_dir, dataset)
+        
+        image_names = self.image_file_service.get_image_file_names(dataset_dir, IMAGE_ENDINGS)
 
         if not image_names:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
