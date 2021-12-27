@@ -17,6 +17,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
+import {UploadMainComponent} from './upload-main/upload-main.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import {MatButtonModule} from "@angular/material/button";
     LoginComponent,
     RegisterComponent,
     MainComponent,
-    UploadComponent
+    UploadComponent,
+    UploadMainComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,8 @@ import {MatButtonModule} from "@angular/material/button";
     BrowserAnimationsModule,
     MatProgressBarModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule
   ],
   providers: [
     CookieService,

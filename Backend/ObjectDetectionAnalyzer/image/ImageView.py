@@ -25,8 +25,8 @@ class ImageView(APIView):
         """
         Send image based on url.
         """
-        user_dir = self.path_service.get_user_dir(DATA_DIR, request.user.username)
-        self.path_service.create_user_dir(user_dir)
+        user_dir = self.path_service.get_combined_dir(DATA_DIR, request.user.username)
+        self.path_service.create_dir(user_dir)
 
         image_base64 = self.image_service.encode_image(user_dir / image_name)
 

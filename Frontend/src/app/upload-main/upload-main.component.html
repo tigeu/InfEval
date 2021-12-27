@@ -1,0 +1,12 @@
+<form [formGroup]="datasetForm">
+  <div>
+    <label for="datasetName">Dataset name: </label>
+    <input id="datasetName" name="datasetName" type="text" formControlName="datasetName"
+           (ngModelChange)="datasetNameChange($event)"/>
+  </div>
+</form>
+<app-upload [uploadInformation]="datasetInformation" [datasetName]="datasetName"></app-upload>
+<app-upload [uploadInformation]="groundTruthInformation" [datasetName]="datasetName"></app-upload>
+<app-upload [uploadInformation]="labelMapInformation" [datasetName]="datasetName"></app-upload>
+<app-upload [uploadInformation]="predictionsInformation" [datasetName]="datasetName"></app-upload>
+<app-upload [uploadInformation]="modelInformation"></app-upload>

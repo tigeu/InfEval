@@ -3,11 +3,11 @@ import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from "./login/login.component";
 import {RegisterComponent} from "./register/register.component";
 import {MainComponent} from "./main/main.component";
-import {UploadComponent} from "./upload/upload.component";
+import {UploadMainComponent} from "./upload-main/upload-main.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
-  {path: 'upload', component: UploadComponent},
+  {path: 'upload', component: UploadMainComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
 ];

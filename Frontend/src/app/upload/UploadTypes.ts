@@ -1,6 +1,7 @@
 export enum UploadTypes {
   Dataset,
   GroundTruth,
-  TFModel,
-  Predictions
+  LabelMap,
+  Predictions,
+  TFModel
 }

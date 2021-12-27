@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
 import {HttpEventType} from "@angular/common/http";
 import {finalize, Subscription} from "rxjs";
 import {UploadService} from "./upload.service";
-import {UploadFileTypes} from "./UploadFileTypes";
-import {UploadTypes} from "./UploadTypes";
+import {UploadInformation} from "./UploadInformation";
 
 @Component({
   selector: 'app-upload',
@@ -11,8 +10,10 @@ import {UploadTypes} from "./UploadTypes";
   styleUrls: ['./upload.component.css']
 })
 export class UploadComponent implements OnInit {
-  requiredFileType: String = ".zip";
+  @Input() uploadInformation!: UploadInformation;
+  @Input() datasetName!: string;
 
+  file!: File | null;
   fileName: String = '';
   uploadProgress!: number | null;
   uploadSub!: Subscription | null;
@@ -23,20 +24,31 @@ export class UploadComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if ("datasetName" in changes)
+      this.datasetName = changes["datasetName"].currentValue;
+  }
+
   onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (!file || file.type !== UploadFileTypes.Compressed)
+    this.file = event.target.files[0];
+    if (this.file)
+      console.log(this.file.type)
+    if (!this.file || this.file.type !== this.uploadInformation.uploadFileType)
       return
 
-    this.fileName = file.name;
+    this.fileName = this.file.name;
+  }
 
-    this.uploadSub = this.uploadService.upload(this.fileName, file, "TestDataset", UploadTypes.Dataset)
-      .pipe(finalize(() => this.reset()))
-      .subscribe(event => {
-        if (event.type == HttpEventType.UploadProgress) {
-          this.updateProgress(event.loaded, event.total);
-        }
-      })
+  upload() {
+    if (this.file) {
+      this.uploadSub = this.uploadService.upload(this.fileName, this.file, this.datasetName, this.uploadInformation.apiEndpoint)
+        .pipe(finalize(() => this.reset()))
+        .subscribe(event => {
+          if (event.type == HttpEventType.UploadProgress) {
+            this.updateProgress(event.loaded, event.total);
+          }
+        })
+    }
   }
 
   updateProgress(loaded: number, total: number) {
@@ -53,6 +65,7 @@ export class UploadComponent implements OnInit {
   reset() {
     this.uploadProgress = null;
     this.uploadSub = null;
-    this.fileName = "";
+    this.file = null;
+    this.fileName = '';
   }
 }
