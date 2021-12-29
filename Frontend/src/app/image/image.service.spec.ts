@@ -32,7 +32,7 @@ describe('ImageService', () => {
 
     spyOn(http, 'get').and.returnValue(of(newImage));
 
-    service.getImage("test_image.jpg").subscribe(value => {
+    service.getImage("test_data_set", "test_image.jpg").subscribe(value => {
       expect(value).toBe(newImage);
       expect(value).not.toBe(fakeImage);
     });

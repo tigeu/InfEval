@@ -6,6 +6,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {UploadService} from "./upload.service";
 import {of, Subscription} from "rxjs";
 import {UploadFileTypes} from "./UploadFileTypes";
+import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 
 describe('UploadComponent', () => {
   let component: UploadComponent;
@@ -26,59 +27,86 @@ describe('UploadComponent', () => {
     fixture = TestBed.createComponent(UploadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    const uploadInformation = {
+      uploadFileType: UploadFileTypes.Compressed,
+      uploadFileEnding: ".zip",
+      apiEndpoint: "dataset"
+    };
+    component.datasetName = "test_dataset"
+    component.uploadInformation = uploadInformation
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#onFileSelected should update progress and finally reset', () => {
+  it('dataset subscription should set datasetName', () => {
+    const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
+
+    selectedDatasetChangedService.publish("test_dataset")
+
+    expect(component.datasetName).toEqual("test_dataset");
+  });
+
+  it('#upload should update progress and finally reset', () => {
     const uploadService = TestBed.inject(UploadService);
     const file = new File(["content"], "test.txt", {type: UploadFileTypes.Compressed});
-    const event = {target: {files: [file]}}
 
     const httpEvent = of({type: HttpEventType.UploadProgress, loaded: 7, total: 10} as HttpProgressEvent)
-    spyOn(uploadService, "upload").withArgs("test.txt", file, "test", "dataset")
+    component.file = file
+    component.fileName = "test.txt"
+
+    spyOn(uploadService, "upload")
+      .withArgs("test.txt", file, "test_dataset", "dataset")
       .and.returnValue(httpEvent);
     spyOn(component, "reset");
     spyOn(component, "updateProgress").withArgs(7, 10);
 
-    component.onFileSelected(event)
+    component.upload()
 
     expect(uploadService.upload).toHaveBeenCalled();
     expect(component.reset).toHaveBeenCalled();
     expect(component.updateProgress).toHaveBeenCalled();
   });
 
-  it('#onFileSelected should return if file is not given', () => {
+  it('#upload not do anything when file is not set', () => {
     const uploadService = TestBed.inject(UploadService);
-    const event = {target: {files: []}}
-
     spyOn(uploadService, "upload");
-    spyOn(component, "reset");
-    spyOn(component, "updateProgress");
+
+    component.upload()
+
+    expect(uploadService.upload).not.toHaveBeenCalled();
+  });
+
+  it('#onFileSelected should set file and fileName', () => {
+    const file = new File(["content"], "test.txt", {type: UploadFileTypes.Compressed});
+    const event = {target: {files: [file]}}
 
     component.onFileSelected(event);
 
-    expect(uploadService.upload).not.toHaveBeenCalled();
-    expect(component.reset).not.toHaveBeenCalled();
-    expect(component.updateProgress).not.toHaveBeenCalled();
+    expect(component.file).toBe(file);
+    expect(component.fileName).toEqual("test.txt")
+  })
+
+
+  it('#onFileSelected should return if file is not given', () => {
+    const event = {target: {files: []}}
+
+    component.onFileSelected(event);
+
+    expect(component.file).not.toBeTruthy()
+    expect(component.fileName).not.toBeTruthy()
   })
 
   it('#onFileSelected should return if file type is not compressed', () => {
-    const uploadService = TestBed.inject(UploadService);
     const file = new File(["content"], "test.txt");
     const event = {target: {files: [file]}}
 
-    spyOn(uploadService, "upload");
-    spyOn(component, "reset");
-    spyOn(component, "updateProgress");
-
     component.onFileSelected(event);
 
-    expect(uploadService.upload).not.toHaveBeenCalled();
-    expect(component.reset).not.toHaveBeenCalled();
-    expect(component.updateProgress).not.toHaveBeenCalled();
+    expect(component.file).not.toBeTruthy()
+    expect(component.fileName).not.toBeTruthy()
   })
 
   it('#updateProgress should update the value correctly', () => {
@@ -111,6 +139,7 @@ describe('UploadComponent', () => {
 
     expect(component.uploadProgress).not.toBeTruthy();
     expect(component.uploadSub).not.toBeTruthy();
+    expect(component.file).not.toBeTruthy();
     expect(component.fileName).not.toBeTruthy();
   })
 });

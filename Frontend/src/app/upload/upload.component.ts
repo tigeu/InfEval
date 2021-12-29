@@ -37,15 +37,16 @@ export class UploadComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
-    this.file = event.target.files[0];
-    if (!this.file || this.file.type !== this.uploadInformation.uploadFileType)
+    const file = event.target.files[0];
+    if (!file || file.type !== this.uploadInformation.uploadFileType)
       return
 
-    this.fileName = this.file.name;
+    this.file = file
+    this.fileName = file.name;
   }
 
   upload() {
-    if (this.file) {
+    if (this.file && this.fileName) {
       this.uploadSub = this.uploadService.upload(this.fileName, this.file, this.datasetName, this.uploadInformation.apiEndpoint)
         .pipe(finalize(() => this.reset()))
         .subscribe(event => {

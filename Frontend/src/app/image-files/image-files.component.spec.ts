@@ -1,4 +1,4 @@
-import {ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ImageFilesComponent} from './image-files.component';
 import {HttpClientModule} from "@angular/common/http";
@@ -7,6 +7,11 @@ import {ImageFile} from "./image-file";
 import {of} from "rxjs";
 import {ImageFilesService} from "./image-files.service";
 import {By} from "@angular/platform-browser";
+import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
+import {DatasetListComponent} from "../dataset-list/dataset-list.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
 
 describe('ImageFilesComponent', () => {
   let component: ImageFilesComponent;
@@ -15,12 +20,18 @@ describe('ImageFilesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatSelectModule
       ],
       providers: [
         SelectedImageChangedService
       ],
-      declarations: [ImageFilesComponent]
+      declarations: [
+        ImageFilesComponent,
+        DatasetListComponent
+      ]
     })
       .compileComponents();
   });
@@ -44,7 +55,7 @@ describe('ImageFilesComponent', () => {
     const imageFilesService = TestBed.inject(ImageFilesService);
     spyOn(imageFilesService, 'getImageFiles').and.returnValue(of(imageFiles));
 
-    component.getImageFiles();
+    component.getImageFiles("test_dataset");
 
     expect(component.imageFiles).toBe(imageFiles);
   });
@@ -54,9 +65,18 @@ describe('ImageFilesComponent', () => {
     const imageFilesService = TestBed.inject(ImageFilesService);
     spyOn(imageFilesService, 'getImageFiles').and.returnValue(of(imageFiles));
 
-    component.getImageFiles();
+    component.getImageFiles("test_dataset");
 
     expect(component.imageFiles).toBe(imageFiles);
+  });
+
+  it('dataset subscription should trigger #getImageFiles', () => {
+    const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
+    const spy = spyOn(component, 'getImageFiles');
+
+    selectedDatasetChangedService.publish("test_dataset")
+
+    expect(spy).toHaveBeenCalledWith("test_dataset");
   });
 
   it('click should publish selected new file', () => {
@@ -80,7 +100,7 @@ describe('ImageFilesComponent', () => {
     const imageFilesService = TestBed.inject(ImageFilesService);
     spyOn(imageFilesService, 'getImageFiles').and.returnValue(of(imageFiles));
 
-    component.getImageFiles();
+    component.getImageFiles("test_dataset");
     fixture.detectChanges();
 
     const queriedElements = fixture.debugElement.query(By.css('#image-files')).children;
@@ -95,20 +115,11 @@ describe('ImageFilesComponent', () => {
     const imageFilesService = TestBed.inject(ImageFilesService);
     spyOn(imageFilesService, 'getImageFiles').and.returnValue(of(noImageFiles));
 
-    component.getImageFiles();
+    component.getImageFiles("test_dataset");
     fixture.detectChanges();
 
     const queriedElements = fixture.debugElement.query(By.css('#image-files')).children;
     expect(queriedElements.length).toBe(0);
   });
 
-  it('fetch image-files in an interval of 10000ms', fakeAsync(() => {
-    const spy = spyOn(component, 'getImageFiles');
-    component.ngOnInit();
-    tick(10000);
-    expect(spy).toHaveBeenCalledTimes(1);
-    tick(10000);
-    expect(spy).toHaveBeenCalledTimes(2);
-    discardPeriodicTasks();
-  }));
 });

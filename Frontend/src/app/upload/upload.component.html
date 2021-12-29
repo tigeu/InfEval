@@ -1,5 +1,5 @@
 <input #fileUpload class="file-input" type="file"
-       [accept]="uploadInformation.uploadFileEnding"
+       [accept]="uploadInformation?.uploadFileEnding"
        onclick="this.value=null"
        (change)="onFileSelected($event)">
 <div class="file-upload">

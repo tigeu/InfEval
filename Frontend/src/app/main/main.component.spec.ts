@@ -8,6 +8,10 @@ import {By} from "@angular/platform-browser";
 import {HttpClientModule} from "@angular/common/http";
 import {ImageComponent} from "../image/image.component";
 import {ImageFilesComponent} from "../image-files/image-files.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
+import {DatasetListComponent} from "../dataset-list/dataset-list.component";
 
 describe('MainComponent', () => {
   let component: MainComponent;
@@ -18,10 +22,14 @@ describe('MainComponent', () => {
       declarations: [
         MainComponent,
         ImageComponent,
-        ImageFilesComponent
+        ImageFilesComponent,
+        DatasetListComponent
       ],
       imports: [
         HttpClientModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatSelectModule
       ],
     })
       .compileComponents();

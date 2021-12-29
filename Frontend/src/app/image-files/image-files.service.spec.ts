@@ -34,9 +34,9 @@ describe('ImageFilesService', () => {
     ]
 
     const fakeImageFile: ImageFile = {name: "other_image.jpg"};
-    const httpGetSpy: jasmine.Spy<any> = spyOn(http, 'get').and.returnValue(of(imageFiles));
+    spyOn(http, 'get').and.returnValue(of(imageFiles));
 
-    service.getImageFiles().subscribe(value => {
+    service.getImageFiles("test_dataset").subscribe(value => {
       expect(value).toBe(imageFiles);
       expect(value).not.toContain(fakeImageFile);
     });
@@ -46,9 +46,9 @@ describe('ImageFilesService', () => {
     const http = TestBed.inject(HttpClient);
     const imageFiles: ImageFile[] = []
 
-    const httpGetSpy: jasmine.Spy<any> = spyOn(http, 'get').and.returnValue(of(imageFiles));
+    spyOn(http, 'get').and.returnValue(of(imageFiles));
 
-    service.getImageFiles().subscribe(value => {
+    service.getImageFiles("test_dataset").subscribe(value => {
       expect(value).toBe(imageFiles);
     });
   });
@@ -59,9 +59,9 @@ describe('ImageFilesService', () => {
       {name: "test_image1.jpg"}
     ]
 
-    const httpGetSpy: jasmine.Spy<any> = spyOn(http, 'get').and.returnValue(of(imageFiles));
+    spyOn(http, 'get').and.returnValue(of(imageFiles));
 
-    service.getImageFiles().subscribe(value => {
+    service.getImageFiles("test_dataset").subscribe(value => {
       expect(value).toBe(imageFiles);
     });
   });

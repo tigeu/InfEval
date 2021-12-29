@@ -7,6 +7,7 @@ import {of} from "rxjs";
 import {Image} from "./image";
 import {ImageService} from "./image.service";
 import {By} from "@angular/platform-browser";
+import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 
 describe('ImageComponent', () => {
   let component: ImageComponent;
@@ -50,19 +51,28 @@ describe('ImageComponent', () => {
   it('#getImage should change imageUrl', () => {
     const newImage: Image = {file: new File([""], "test_image.jpg")};
     const imageService = TestBed.inject(ImageService);
-    spyOn(imageService, 'getImage').withArgs("test_image.jpg").and.returnValue(of(newImage));
+    component.selectedDataset = "test_dataset";
+    spyOn(imageService, 'getImage').withArgs("test_dataset", "test_image.jpg").and.returnValue(of(newImage));
 
     component.getImage("test_image.jpg");
 
     expect(component.imageUrl).toBe('data:image/jpg;base64,' + newImage["file"]);
   });
 
-  it('subscription should trigger #getimage', () => {
+  it('image subscription should trigger #getimage', () => {
     const selectedImageChangedService = TestBed.inject(SelectedImageChangedService);
     const spy = spyOn(component, 'getImage');
 
     selectedImageChangedService.publish("test_image.jpg")
     expect(spy).toHaveBeenCalledWith("test_image.jpg");
+  });
+
+  it('dataset subscription should update selectedDataset', () => {
+    const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
+
+    selectedDatasetChangedService.publish("test_dataset");
+
+    expect(component.selectedDataset).toEqual("test_dataset");
   });
 
   it('should not render image if image is undefined or null', () => {
@@ -72,8 +82,9 @@ describe('ImageComponent', () => {
   it('should render image if image given', () => {
     const newImage: Image = {file: new File([""], "test_image.jpg")};
     const imageService = TestBed.inject(ImageService);
+    component.selectedDataset = "test_dataset";
 
-    spyOn(imageService, 'getImage').withArgs("test_image.jpg").and.returnValue(of(newImage));
+    spyOn(imageService, 'getImage').withArgs("test_dataset", "test_image.jpg").and.returnValue(of(newImage));
 
     component.getImage("test_image.jpg");
 

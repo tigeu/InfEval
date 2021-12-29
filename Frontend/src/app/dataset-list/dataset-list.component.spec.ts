@@ -1,6 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DatasetListComponent } from './dataset-list.component';
+import {DatasetListComponent} from './dataset-list.component';
+import {HttpClientModule} from "@angular/common/http";
+import {FormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('DatasetListComponent', () => {
   let component: DatasetListComponent;
@@ -8,9 +13,16 @@ describe('DatasetListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DatasetListComponent ]
+      imports: [
+        HttpClientModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatSelectModule
+      ],
+      declarations: [DatasetListComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
