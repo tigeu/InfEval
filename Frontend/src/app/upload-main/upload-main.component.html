@@ -2,13 +2,10 @@
   <mat-tab label="Dataset">
     <ng-template matTabContent>
       <h1>Upload dataset</h1>
-      <form [formGroup]="datasetForm">
-        <div>
-          <label for="datasetName">Dataset name: </label>
-          <input id="datasetName" name="datasetName" type="text" formControlName="datasetName"
-                 (ngModelChange)="datasetNameChange($event)"/>
-        </div>
-      </form>
+      <div>
+        <label for="datasetName">Dataset name: </label>
+        <input #datasetNameInput id="datasetName" (input)="setDatasetName(datasetNameInput.value)"/>
+      </div>
       <app-upload [uploadInformation]="datasetInformation" [datasetName]="datasetName"></app-upload>
     </ng-template>
   </mat-tab>

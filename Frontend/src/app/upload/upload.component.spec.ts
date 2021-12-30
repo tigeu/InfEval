@@ -7,6 +7,7 @@ import {UploadService} from "./upload.service";
 import {of, Subscription} from "rxjs";
 import {UploadFileTypes} from "./UploadFileTypes";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
+import {SimpleChange, SimpleChanges} from "@angular/core";
 
 describe('UploadComponent', () => {
   let component: UploadComponent;
@@ -142,4 +143,29 @@ describe('UploadComponent', () => {
     expect(component.file).not.toBeTruthy();
     expect(component.fileName).not.toBeTruthy();
   })
+
+  it('#ngOnChanges should set datasetName', () => {
+    const change: SimpleChange = {
+      previousValue: "",
+      currentValue: "test_dataset1",
+      firstChange: true,
+      isFirstChange(): boolean {
+        return true;
+      }
+    };
+    const changes: SimpleChanges = {"datasetName": change};
+
+    component.ngOnChanges(changes)
+
+    expect(component.datasetName).toEqual("test_dataset1");
+  });
+
+  it('#ngOnChanges should not set datasetName if not provided', () => {
+    const changes: SimpleChanges = {};
+    const previousValue = component.datasetName;
+
+    component.ngOnChanges(changes);
+
+    expect(component.datasetName).toEqual(previousValue);
+  });
 });

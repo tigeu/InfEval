@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UploadFileTypes} from "../upload/UploadFileTypes";
 import {UploadInformation} from "../upload/UploadInformation";
+import {debounceTime, distinctUntilChanged, Subject} from "rxjs";
 
 @Component({
   selector: 'app-upload-main',
@@ -37,18 +37,21 @@ export class UploadMainComponent implements OnInit {
 
   datasetName: string = "";
 
-  datasetForm: FormGroup;
+  datasetNameSubject = new Subject<string>();
 
-  constructor(private formBuilder: FormBuilder) {
-    this.datasetForm = this.formBuilder.group({
-      datasetName: ['', Validators.required],
-    });
+  constructor() {
   }
 
   ngOnInit(): void {
+    this.datasetNameSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(name => {
+      this.datasetName = name;
+    });
   }
 
-  datasetNameChange($event: any) {
-    this.datasetName = this.datasetForm.value.datasetName;
+  setDatasetName(datasetName: string) {
+    this.datasetNameSubject.next(datasetName)
   }
 }
