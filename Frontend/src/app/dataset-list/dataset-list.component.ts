@@ -20,7 +20,7 @@ export class DatasetListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.datasetListSubscription = interval(10000)
+    this.datasetListSubscription = interval(5000)
       .subscribe(
         intervalResponse => {
           this.getDatasetList();
