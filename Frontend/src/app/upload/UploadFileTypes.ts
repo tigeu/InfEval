@@ -1,5 +1,5 @@
 export enum UploadFileTypes {
-  Compressed = 'application/x-zip-compressed',
+  Compressed = 'application/zip',
   Csv = 'text/csv',
   Text = 'text/plain',
   Binary = ''

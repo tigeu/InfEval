@@ -22,6 +22,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatTabsModule} from "@angular/material/tabs";
 import {DatasetListComponent} from './dataset-list/dataset-list.component';
 import {MatSelectModule} from "@angular/material/select";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {MatSelectModule} from "@angular/material/select";
     MatButtonModule,
     MatFormFieldModule,
     MatTabsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatListModule
   ],
   providers: [
     CookieService,

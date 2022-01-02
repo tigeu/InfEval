@@ -36,8 +36,7 @@ export class ImageFilesComponent implements OnInit {
       })
   }
 
-  onSelectedImageFileChanged($event: MouseEvent) {
-    const target = $event.target as HTMLElement;
-    this.selectedImageChangedService.publish(target.innerText);
+  onSelectedImageFileChanged($event: any) {
+    this.selectedImageChangedService.publish($event.option.value);
   }
 }

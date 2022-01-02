@@ -1,6 +1,6 @@
 <app-dataset-list></app-dataset-list>
-<ul id="image-files" (click)="onSelectedImageFileChanged($event)">
-  <li *ngFor="let imageFile of imageFiles">
+<mat-selection-list (selectionChange)="onSelectedImageFileChanged($event)" [multiple]="false">
+  <mat-list-option *ngFor="let imageFile of imageFiles" [value]="imageFile.name">
     {{imageFile.name}}
-  </li>
-</ul>
+  </mat-list-option>
+</mat-selection-list>

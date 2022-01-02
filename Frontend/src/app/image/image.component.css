@@ -1,0 +1,10 @@
+div {
+  max-width: inherit;
+  max-height: inherit;
+}
+
+.dataset-image {
+  object-fit: contain;
+  max-width: inherit;
+  max-height: inherit;
+}

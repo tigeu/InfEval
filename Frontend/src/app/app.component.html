@@ -1,8 +1,14 @@
-<nav class="navigation" *ngIf="isLoggedIn()">
-  <ul>
-    <li><a routerLink="/" routerLinkActive="active">Main</a></li>
-    <li><a routerLink="/upload" routerLinkActive="active">Upload</a></li>
-    <li><a routerLink="/login" routerLinkActive="active">Logout</a></li>
+<nav class="navbar navbar-light navbar-expand-lg" *ngIf="isLoggedIn()">
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/" routerLinkActive="active">Main</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/upload" routerLinkActive="active">Upload</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/login" routerLinkActive="active">Logout</a>
+    </li>
   </ul>
 </nav>
 
