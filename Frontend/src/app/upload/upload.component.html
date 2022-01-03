@@ -12,7 +12,7 @@
   <button (click)="upload()" [disabled]="datasetName === '' || fileName === ''">Upload</button>
 </div>
 
-<div class="progress">
+<div class="progress-div">
   <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress">
   </mat-progress-bar>
   <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>

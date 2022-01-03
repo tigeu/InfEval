@@ -1,17 +1,24 @@
-<form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-  <div>
-    <label for="username">Username</label>
-    <input id="username" name="username" type="text" formControlName="username"/>
+<div class="back">
+  <div class="div-center">
+    <div class="content">
+      <h1>Register</h1>
+      <hr/>
+      <form class="register-form" id="loginForm" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input id="username" type="text" class="form-control" formControlName="username">
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input id="email" type="email" class="form-control" formControlName="email">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input id="password" type="password" class="form-control" formControlName="password">
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+      <a routerLink="/login" routerLinkActive="active">Back to login?</a>
+    </div>
   </div>
-  <div>
-    <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email"/>
-  </div>
-  <div>
-    <label for="password">Password</label>
-    <input id="password" type="password" formControlName="password"/>
-  </div>
-  <div>
-    <button>Register</button>
-  </div>
-</form>
+</div>
