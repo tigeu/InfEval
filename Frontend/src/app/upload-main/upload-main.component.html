@@ -4,7 +4,7 @@
       <ng-template matTabContent>
         <h1>Upload dataset</h1>
         <form>
-          <div class="mb-3">
+          <div class="mb-3 w-50">
             <label for="datasetName" class="form-label">Dataset name: </label>
             <input #datasetNameInput id="datasetName" class="form-control"
                    (input)="setDatasetName(datasetNameInput.value)" type="text" aria-describedby="datasetNameHelp">
@@ -17,21 +17,21 @@
     <mat-tab label="Ground truth">
       <ng-template matTabContent>
         <h1>Upload ground truth values</h1>
-        <app-dataset-list></app-dataset-list>
+        <app-dataset-list class="w-50"></app-dataset-list>
         <app-upload [uploadInformation]="groundTruthInformation" [datasetName]="datasetName"></app-upload>
       </ng-template>
     </mat-tab>
     <mat-tab label="Label map">
       <ng-template matTabContent>
         <h1>Upload label map</h1>
-        <app-dataset-list></app-dataset-list>
+        <app-dataset-list class="w-50"></app-dataset-list>
         <app-upload [uploadInformation]="labelMapInformation" [datasetName]="datasetName"></app-upload>
       </ng-template>
     </mat-tab>
     <mat-tab label="Predictions">
       <ng-template matTabContent>
         <h1>Upload predictions</h1>
-        <app-dataset-list></app-dataset-list>
+        <app-dataset-list class="w-50"></app-dataset-list>
         <app-upload [uploadInformation]="predictionsInformation" [datasetName]="datasetName"></app-upload>
       </ng-template>
     </mat-tab>

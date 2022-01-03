@@ -1,18 +1,21 @@
 .data-container {
-  overflow: auto;
+  overflow: hidden;
   display: grid;
   grid-column-gap: 10px;
   grid-template-rows: auto;
-  grid-template-columns: 2fr 8fr 1fr;
+  grid-template-columns: 0.5fr 9fr 0.5fr;
 }
 
 .image-files {
+  width: 15vw;
+  max-width: 15vw;
+  max-height: 90vh;
   grid-row-start: 1;
   grid-column-start: 1;
 }
 
 .image {
-  max-width: 90vw;
+  max-width: 70vw;
   max-height: 90vh;
   grid-row-start: 1;
   grid-column-start: 2;

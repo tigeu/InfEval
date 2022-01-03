@@ -1,0 +1,10 @@
+mat-selection-list {
+  width: inherit;
+  max-height: inherit;
+  overflow: auto;
+}
+
+app-dataset-list {
+  width: inherit;
+  max-width: inherit;
+}
