@@ -12,7 +12,7 @@ class TestImageView(APITestCase):
     """
 
     def setUp(self):
-        self.url = reverse('image', kwargs={'image_name': "test_image.jpg"})
+        self.url = reverse('image', kwargs={'dataset': 'test_dataset', 'image_name': "test_image.jpg"})
 
     @patch('ObjectDetectionAnalyzer.image.ImageService.ImageService.encode_image')
     def test_image_with_data(self, encode_image):

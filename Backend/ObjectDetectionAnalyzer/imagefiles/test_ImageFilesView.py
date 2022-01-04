@@ -12,7 +12,7 @@ class TestImageFilesView(APITestCase):
     """
 
     def setUp(self):
-        self.url = reverse('image-files')
+        self.url = reverse('image-files', kwargs={'dataset': 'test_dataset'})
         self.files = ["file1.jpg", "file2.png", "file3.jpg"]
 
     @patch('ObjectDetectionAnalyzer.imagefiles.ImageFilesService.ImageFilesService.get_image_file_names')

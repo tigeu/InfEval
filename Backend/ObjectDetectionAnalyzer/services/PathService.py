@@ -37,7 +37,7 @@ class PathService:
             return Path(model_dir)
 
     def save_tmp_file(self, tmp_dir: Path, file_name: str, file_obj: any) -> Path:
-        if self.create_dir(tmp_dir):
+        if self.create_dir(tmp_dir) and file_name and file_obj:
             tmp_file_path = self.get_combined_dir(tmp_dir, file_name)
             with open(tmp_file_path, "wb") as file:
                 file.write(file_obj.read())
