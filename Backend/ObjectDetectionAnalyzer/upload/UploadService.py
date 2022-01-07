@@ -22,7 +22,7 @@ class UploadService:
     def is_label_map_valid(self, tmp_file_path: Path) -> bool:
         return LabelMapValidator().is_valid(tmp_file_path)
 
-    def is_ground_truth_valid(self, tmp_file_path: Path) -> bool:
+    def is_prediction_valid(self, tmp_file_path: Path) -> bool:
         return PredictionsValidator().is_valid(tmp_file_path)
 
     def is_model_valid(self, tmp_file_path: Path) -> bool:
