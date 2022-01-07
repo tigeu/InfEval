@@ -4,6 +4,7 @@ from unittest.mock import patch
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 
+from ObjectDetectionAnalyzer.settings import IMAGE_ENDINGS
 from ObjectDetectionAnalyzer.upload.UploadModels import Dataset
 from ObjectDetectionAnalyzer.upload.views.UploadDatasetView import UploadDatasetView
 
@@ -53,7 +54,7 @@ class TestUploadDatasetView(APITestCase):
 
         self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, user, "file")
 
-        save_compressed_data.assert_called_with(Path("tmp"), Path("target"))
+        save_compressed_data.assert_called_with(Path("tmp"), Path("target"), IMAGE_ENDINGS)
         update.assert_called()
 
     @patch('django.db.models.query.QuerySet.create')
@@ -63,5 +64,5 @@ class TestUploadDatasetView(APITestCase):
 
         self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, user, "file")
 
-        save_compressed_data.assert_called_with(Path("tmp"), Path("target"))
+        save_compressed_data.assert_called_with(Path("tmp"), Path("target"), IMAGE_ENDINGS)
         create.assert_called_with(name="test_dataset", path=Path("target"), userId=user)
