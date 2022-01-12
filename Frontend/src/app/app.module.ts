@@ -11,7 +11,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {JwtInterceptor} from "./interceptors/jwt-interceptor";
 import {RegisterComponent} from './register/register.component';
 import {MainComponent} from './main/main.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {UploadComponent} from './upload/upload.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
@@ -23,6 +23,8 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {DatasetListComponent} from './dataset-list/dataset-list.component';
 import {MatSelectModule} from "@angular/material/select";
 import {MatListModule} from "@angular/material/list";
+import {ToolboxComponent} from "./toolbox/toolbox.component";
+import {GroundTruthComponent} from "./ground-truth/ground-truth.component";
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import {MatListModule} from "@angular/material/list";
     MainComponent,
     UploadComponent,
     UploadMainComponent,
-    DatasetListComponent
+    DatasetListComponent,
+    ToolboxComponent,
+    GroundTruthComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,7 +52,8 @@ import {MatListModule} from "@angular/material/list";
     MatFormFieldModule,
     MatTabsModule,
     MatSelectModule,
-    MatListModule
+    MatListModule,
+    FormsModule
   ],
   providers: [
     CookieService,

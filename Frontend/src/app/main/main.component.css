@@ -8,6 +8,7 @@
 
 .image-files {
   width: 15vw;
+  height: 90vh;
   max-width: 15vw;
   max-height: 90vh;
   grid-row-start: 1;
@@ -22,8 +23,8 @@
 }
 
 .toolbox {
-  width: 18vw;
-  max-width: 18vw;
+  width: 13vw;
+  max-width: 13vw;
   max-height: 90vh;
   grid-row-start: 1;
   grid-column-start: 3;

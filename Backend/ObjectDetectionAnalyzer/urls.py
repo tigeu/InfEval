@@ -4,6 +4,7 @@ from rest_framework import routers
 from rest_framework_simplejwt import views as jwt_views
 
 from ObjectDetectionAnalyzer.datasetlist.DatasetListView import DatasetListView
+from ObjectDetectionAnalyzer.groundtruth.GroundTruthView import GroundTruthView
 from ObjectDetectionAnalyzer.image.ImageView import ImageView
 from ObjectDetectionAnalyzer.imagefiles.ImageFilesView import ImageFilesView
 from ObjectDetectionAnalyzer.main.HeartbeatView import HeartbeatView
@@ -27,6 +28,8 @@ urlpatterns = [
     path('upload/predictions/<str:file_name>', UploadPredictionsView.as_view(), name="upload"),
     path('upload/model/<str:file_name>', UploadModelView.as_view(), name="upload"),
     path('dataset-list', DatasetListView.as_view(), name="dataset-list"),
+    path('ground-truth/<str:dataset>/<str:image_name>', GroundTruthView.as_view(),
+         name="ground-truth"),
     path('register/', RegisterView.as_view(), name="register"),
     path('login/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),

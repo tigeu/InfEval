@@ -6,7 +6,7 @@
 <div *ngIf="groundTruthSettings.showGroundTruth" class="form-check form-switch">
   <div>
     <label for="strokeRange" class="form-label">Stroke size:</label> {{this.groundTruthSettings.strokeSize}}
-    <input type="range" class="form-range" id="strokeRange" min="1" max="10"
+    <input type="range" class="form-range" id="strokeRange" min="5" max="50" step="5"
            [(ngModel)]="groundTruthSettings.strokeSize" (change)="selectionChanged()">
   </div>
   <div>
@@ -21,7 +21,7 @@
   </div>
   <div *ngIf="groundTruthSettings.showLabeled">
     <label for="fontRange" class="form-label">Font size:</label> {{this.groundTruthSettings.fontSize}}
-    <input type="range" class="form-range" id="fontRange" min="10" max="50" step="5"
+    <input type="range" class="form-range" id="fontRange" min="10" max="100" step="10"
            [(ngModel)]="groundTruthSettings.fontSize" (change)="selectionChanged()">
   </div>
 </div>

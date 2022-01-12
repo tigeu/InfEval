@@ -20,9 +20,15 @@ class DatasetListView(APIView):
         """
         user = request.user
 
-        response_data = [
-            {'name': dataset.name} for dataset in Dataset.objects.filter(userId=user)
-        ]
+        response_data = []
+        for dataset in Dataset.objects.filter(userId=user):
+            data = {'name': dataset.name}
+            if dataset.ground_truth_path:
+                data['ground_truth'] = True
+            if dataset.label_map_path:
+                data['label_map'] = True
+
+            response_data.append(data)
 
         serializer = DatasetListSerializer(response_data, many=True)
 

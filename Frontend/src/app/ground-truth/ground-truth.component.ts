@@ -20,7 +20,7 @@ export class GroundTruthComponent implements OnInit {
 
   groundTruthSettings: GroundTruthSettings = {
     showGroundTruth: false,
-    strokeSize: 35,
+    strokeSize: 10,
     showColored: true,
     showLabeled: true,
     fontSize: 35
@@ -35,6 +35,7 @@ export class GroundTruthComponent implements OnInit {
     })
     this.selectedImageChanged = this.selectedImageChangedService.newData.subscribe((data: any) => {
       this.selectedImage = data;
+      this.groundTruthSettings.showGroundTruth = false;
     });
   }
 
@@ -42,7 +43,9 @@ export class GroundTruthComponent implements OnInit {
   }
 
   selectionChanged() {
-    if (this.selectedDataset && this.selectedImage && this.groundTruthSettings.showGroundTruth) {
+    if (!this.groundTruthSettings.showGroundTruth)
+      this.groundTruthChangedService.publish("");
+    else if (this.selectedDataset && this.selectedImage) {
       this.groundTruthService.getGroundTruth(this.selectedDataset, this.selectedImage, this.groundTruthSettings)
         .subscribe((groundTruth: GroundTruth) => {
           this.groundTruthChangedService.publish(groundTruth);

@@ -25,7 +25,7 @@ export class MainComponent implements OnInit {
     this.heartbeatSubscription = interval(5000)
       .subscribe(
         intervalResponse => {
-          this.getHeartbeat();
+          //this.getHeartbeat();
         }
       );
   }

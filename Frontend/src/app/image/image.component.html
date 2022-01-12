@@ -1,3 +1,6 @@
-<div *ngIf="imageUrl">
-  <img class="dataset-image" id="selected-image" src="{{imageUrl}}" alt="currently selected image from dataset"/>
+<div>
+  <img *ngIf="imageUrl" class="dataset-image" id="selected-image"
+       src="{{imageUrl}}" alt="currently selected image from dataset"/>
+  <img *ngIf="groundTruthImageUrl" class="dataset-image" id="selected-ground-truth-image"
+       src="{{groundTruthImageUrl}}" alt="ground truth image for currently selected dataset"/>
 </div>

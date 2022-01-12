@@ -15,13 +15,13 @@ export class GroundTruthService {
   }
 
   getGroundTruth(dataset: string, imageName: string, groundTruthSettings: GroundTruthSettings): Observable<GroundTruth> {
-    const queryUrl = `${this.imageUrl}/${dataset}/${imageName}/`
+    const queryUrl = `${this.imageUrl}/${dataset}/${imageName}`
     return this.http.get<GroundTruth>(queryUrl, {
       params: {
-        strokeSize: groundTruthSettings.strokeSize,
-        showColored: groundTruthSettings.showColored,
-        showLabeled: groundTruthSettings.showLabeled,
-        fontSize: groundTruthSettings.fontSize,
+        stroke_size: groundTruthSettings.strokeSize,
+        show_colored: groundTruthSettings.showColored,
+        show_labeled: groundTruthSettings.showLabeled,
+        font_size: groundTruthSettings.fontSize,
       }
     });
   }

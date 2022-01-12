@@ -1,10 +1,14 @@
 div {
   max-width: inherit;
   max-height: inherit;
+  position: relative;
 }
 
 .dataset-image {
   object-fit: contain;
   max-width: inherit;
   max-height: inherit;
+  position: absolute;
+  top: inherit;
+  left: inherit;
 }
