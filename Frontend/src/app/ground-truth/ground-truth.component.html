@@ -1,0 +1,27 @@
+<div class="form-check" *ngIf="selectedDataset && selectedImage">
+  <input class="form-check-input" type="checkbox" id="flexShowGroundTruth"
+         [(ngModel)]="groundTruthSettings.showGroundTruth" (change)="selectionChanged()">
+  <label class="form-check-label" for="flexShowGroundTruth">Show ground truth values</label>
+</div>
+<div *ngIf="groundTruthSettings.showGroundTruth" class="form-check form-switch">
+  <div>
+    <label for="strokeRange" class="form-label">Stroke size:</label> {{this.groundTruthSettings.strokeSize}}
+    <input type="range" class="form-range" id="strokeRange" min="1" max="10"
+           [(ngModel)]="groundTruthSettings.strokeSize" (change)="selectionChanged()">
+  </div>
+  <div>
+    <input class="form-check-input" type="checkbox" id="flexSwitchColored"
+           [(ngModel)]="groundTruthSettings.showColored" (change)="selectionChanged()">
+    <label class="form-check-label" for="flexSwitchColored">Colored</label>
+  </div>
+  <div>
+    <input class="form-check-input" type="checkbox" id="flexSwitchLabeled"
+           [(ngModel)]="groundTruthSettings.showLabeled" (change)="selectionChanged()">
+    <label class="form-check-label" for="flexSwitchLabeled">Labeled</label>
+  </div>
+  <div *ngIf="groundTruthSettings.showLabeled">
+    <label for="fontRange" class="form-label">Font size:</label> {{this.groundTruthSettings.fontSize}}
+    <input type="range" class="form-range" id="fontRange" min="10" max="50" step="5"
+           [(ngModel)]="groundTruthSettings.fontSize" (change)="selectionChanged()">
+  </div>
+</div>
