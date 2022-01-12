@@ -27,19 +27,33 @@ class DrawBoundingBoxService:
         with Image.open(image) as img:
             width, height = img.size
 
-        stroke_size, font_size = settings['stroke_size'], settings['font_size']
-
         transparent_image = Image.new('RGBA', (width, height), (255, 0, 0, 0))
         draw = ImageDraw.Draw(transparent_image)
         for prediction in predictions:
-            data_class = prediction['class']
-            xmin, ymin, xmax, ymax = prediction['xmin'], prediction['ymin'], prediction['xmax'], prediction['ymax']
-            color, font_color = self.get_colors(classes, data_class, settings)
-            draw.rectangle([xmin, ymin, xmax, ymax], outline=color, width=stroke_size)
-            if settings['show_labeled']:
-                self.draw_label(color, data_class, draw, font_color, font_size, stroke_size, xmin, ymin)
+            self.draw_bounding_box(classes, draw, prediction, settings)
+
+        # draw labels last so they are not overlapped by boxes
+        if settings['show_labeled']:
+            for prediction in predictions:
+                self.draw_label(classes, draw, prediction, settings)
 
         return transparent_image
+
+    def draw_bounding_box(self, classes, draw, prediction, settings):
+        xmin, ymin, xmax, ymax = prediction['xmin'], prediction['ymin'], prediction['xmax'], prediction['ymax']
+        color, font_color = self.get_colors(classes, prediction['class'], settings)
+        draw.rectangle([xmin, ymin, xmax, ymax], outline=color, width=settings['stroke_size'])
+
+    def draw_label(self, classes, draw, prediction, settings):
+        data_class = prediction['class']
+        xmin, ymin = prediction['xmin'], prediction['ymin']
+        font_size, stroke_size = settings['font_size'], settings['stroke_size']
+        color, font_color = self.get_colors(classes, data_class, settings)
+        font = ImageFont.truetype("arial", font_size)
+        text_width, text_height = font.getsize(data_class)
+        label_rect = [xmin, ymin - text_height, xmin + text_width, ymin]
+        draw.rectangle(label_rect, outline=color, fill=color, width=stroke_size)
+        draw.text((xmin, ymin - 1.25 * font_size), data_class, fill=font_color, font=font)
 
     def get_colors(self, classes, data_class, settings):
         font_color = "black"
@@ -49,10 +63,3 @@ class DrawBoundingBoxService:
             color = "black"
             font_color = "white"
         return color, font_color
-
-    def draw_label(self, color, data_class, draw, font_color, font_size, stroke_size, xmin, ymin):
-        font = ImageFont.truetype("arial", font_size)
-        text_width, text_height = font.getsize(data_class)
-        label_rect = [xmin, ymin - text_height, xmin + text_width, ymin]
-        draw.rectangle(label_rect, outline=color, fill=color, width=stroke_size)
-        draw.text((xmin, ymin - 1.25 * font_size), data_class, fill=font_color, font=font)

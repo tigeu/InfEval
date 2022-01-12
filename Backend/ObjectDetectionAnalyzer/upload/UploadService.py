@@ -22,7 +22,7 @@ class UploadService:
         with zipfile.ZipFile(tmp_file_path, 'r') as zip_ref:
             for file in zip_ref.namelist():
                 _, ext = os.path.splitext(file)
-                if ext in image_endings:
+                if ext.lower() in image_endings:
                     contains_image = True
                     break
         return contains_image
@@ -43,7 +43,7 @@ class UploadService:
         with zipfile.ZipFile(tmp_file_path, 'r') as zip_ref:
             for member in zip_ref.namelist():
                 _, ext = os.path.splitext(member)
-                if ext not in image_endings:
+                if ext.lower() not in image_endings:
                     continue  # skip non-image files
                 filename = os.path.basename(member)
                 source = zip_ref.open(member)
