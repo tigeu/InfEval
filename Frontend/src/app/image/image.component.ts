@@ -50,7 +50,6 @@ export class ImageComponent implements OnInit {
   }
 
   setGroundTruthImage(image: Image) {
-    console.log("loaded gt")
     this.groundTruthImage = image
     this.groundTruthImageUrl = 'data:image/jpg;base64,' + image["file"];
   }

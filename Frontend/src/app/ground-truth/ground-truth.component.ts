@@ -35,7 +35,7 @@ export class GroundTruthComponent implements OnInit {
     })
     this.selectedImageChanged = this.selectedImageChangedService.newData.subscribe((data: any) => {
       this.selectedImage = data;
-      this.groundTruthSettings.showGroundTruth = false;
+      this.selectionChanged();
     });
   }
 

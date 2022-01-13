@@ -35,7 +35,7 @@ class DrawBoundingBoxService:
         # draw labels last so they are not overlapped by boxes
         if settings['show_labeled']:
             for prediction in predictions:
-                self.draw_label(classes, draw, prediction, settings)
+                self.draw_label(classes, draw, prediction, settings, width)
 
         return transparent_image
 
@@ -44,16 +44,33 @@ class DrawBoundingBoxService:
         color, font_color = self.get_colors(classes, prediction['class'], settings)
         draw.rectangle([xmin, ymin, xmax, ymax], outline=color, width=settings['stroke_size'])
 
-    def draw_label(self, classes, draw, prediction, settings):
+    def draw_label(self, classes, draw, prediction, settings, width):
         data_class = prediction['class']
         xmin, ymin = prediction['xmin'], prediction['ymin']
         font_size, stroke_size = settings['font_size'], settings['stroke_size']
+
         color, font_color = self.get_colors(classes, data_class, settings)
         font = ImageFont.truetype("arial", font_size)
         text_width, text_height = font.getsize(data_class)
-        label_rect = [xmin, ymin - text_height, xmin + text_width, ymin]
-        draw.rectangle(label_rect, outline=color, fill=color, width=stroke_size)
-        draw.text((xmin, ymin - 1.25 * font_size), data_class, fill=font_color, font=font)
+
+        label_coordinates = self.get_label_coordinates(text_height, text_width, width, xmin, ymin)
+        draw.rectangle(label_coordinates, outline=color, fill=color, width=stroke_size)
+        draw.text((label_coordinates[0], label_coordinates[1]), data_class, fill=font_color, font=font)
+
+    def get_label_coordinates(self, text_height, text_width, width, xmin, ymin):
+        # check whether label expands image on top
+        ymin_text = ymin - text_height
+        if ymin_text < 0:
+            ymin_text = 0
+            ymin = text_height
+
+        # check whether label expands image on right
+        xmax_text = xmin + text_width
+        if xmax_text > width:
+            xmin = width - text_width
+            xmax_text = width
+        label_rect = [xmin, ymin_text, xmax_text, ymin]
+        return label_rect
 
     def get_colors(self, classes, data_class, settings):
         font_color = "black"
