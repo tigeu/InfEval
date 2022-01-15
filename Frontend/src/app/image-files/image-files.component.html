@@ -1,5 +1,6 @@
 <app-dataset-list></app-dataset-list>
-<mat-selection-list class="overflow-auto" (selectionChange)="onSelectedImageFileChanged($event)" [multiple]="false">
+<mat-selection-list
+  id="image-files" class="overflow-auto" (selectionChange)="onSelectedImageFileChanged($event)">
   <mat-list-option *ngFor="let imageFile of imageFiles" [value]="imageFile.name">
     {{imageFile.name}}
   </mat-list-option>

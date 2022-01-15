@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { GroundTruthComponent } from './ground-truth.component';
+import {GroundTruthComponent} from './ground-truth.component';
+import {HttpClientModule} from "@angular/common/http";
 
 describe('GroundTruthComponent', () => {
   let component: GroundTruthComponent;
@@ -8,9 +9,12 @@ describe('GroundTruthComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GroundTruthComponent ]
+      imports: [
+        HttpClientModule,
+      ],
+      declarations: [GroundTruthComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

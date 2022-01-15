@@ -1,6 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ToolboxComponent } from './toolbox.component';
+import {ToolboxComponent} from './toolbox.component';
+import {GroundTruthComponent} from "../ground-truth/ground-truth.component";
+import {HttpClientModule} from "@angular/common/http";
 
 describe('ToolboxComponent', () => {
   let component: ToolboxComponent;
@@ -8,9 +10,16 @@ describe('ToolboxComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ToolboxComponent ]
+      declarations: [
+        ToolboxComponent,
+        GroundTruthComponent
+      ],
+      imports: [
+        HttpClientModule
+      ]
+
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

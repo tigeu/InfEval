@@ -7,6 +7,7 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {RegisterService} from "./register.service";
 import {of} from "rxjs";
 import {Router} from "@angular/router";
+import {MatSelectModule} from "@angular/material/select";
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -18,7 +19,8 @@ describe('RegisterComponent', () => {
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
-        RouterTestingModule
+        RouterTestingModule,
+        MatSelectModule
       ],
       declarations: [RegisterComponent]
     })

@@ -6,12 +6,13 @@ import {SelectedImageChangedService} from "../shared-services/selected-image-cha
 import {ImageFile} from "./image-file";
 import {of} from "rxjs";
 import {ImageFilesService} from "./image-files.service";
-import {By} from "@angular/platform-browser";
+import {BrowserModule, By} from "@angular/platform-browser";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 import {DatasetListComponent} from "../dataset-list/dataset-list.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
+import {MatListModule} from "@angular/material/list";
 
 describe('ImageFilesComponent', () => {
   let component: ImageFilesComponent;
@@ -23,7 +24,9 @@ describe('ImageFilesComponent', () => {
         HttpClientModule,
         BrowserAnimationsModule,
         MatFormFieldModule,
-        MatSelectModule
+        MatSelectModule,
+        MatListModule,
+        BrowserModule
       ],
       providers: [
         SelectedImageChangedService
@@ -81,12 +84,10 @@ describe('ImageFilesComponent', () => {
 
   it('click should publish selected new file', () => {
     const selectedImageChangedService = TestBed.inject(SelectedImageChangedService);
-    const ul = fixture.debugElement.query(By.css('#image-files'));
-    const htmlElement = document.createElement('li')
-    htmlElement.innerText = "test_image1.jpg"
+    const event = {'option': {'value': "test_image1.jpg"}}
     spyOn(selectedImageChangedService, 'publish').withArgs("test_image1.jpg");
 
-    ul.triggerEventHandler('click', {target: htmlElement});
+    component.onSelectedImageFileChanged(event)
 
     expect(selectedImageChangedService.publish).toHaveBeenCalledWith("test_image1.jpg")
   });
@@ -122,4 +123,5 @@ describe('ImageFilesComponent', () => {
     expect(queriedElements.length).toBe(0);
   });
 
+  it('onSelectedImageFileChanged')
 });
