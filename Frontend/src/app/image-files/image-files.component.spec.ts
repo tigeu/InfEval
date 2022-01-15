@@ -82,6 +82,7 @@ describe('ImageFilesComponent', () => {
     component.onSelectedImageFileChanged(event)
 
     expect(selectedImageChangedService.publish).toHaveBeenCalledWith("test_image1.jpg")
+    expect(component.selectedImage).toEqual("test_image1.jpg")
   });
 
   it('should render several list elements if image files given', () => {

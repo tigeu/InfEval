@@ -1,7 +1,7 @@
 <app-dataset-list></app-dataset-list>
 <p></p>
 <div id="image-files" class="list-group overflow-auto">
-  <button type="button" class="list-group-item list-group-item-action"
+  <button type="button" class="list-group-item list-group-item-action" [class.active]="selectedImage == imageFile.name"
           *ngFor="let imageFile of imageFiles" (click)="onSelectedImageFileChanged($event.target)">
     {{imageFile.name}}
   </button>

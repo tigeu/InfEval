@@ -16,6 +16,7 @@ export class ImageFilesComponent implements OnInit {
   imageFiles: ImageFile[] = [];
   selectedDataset!: string;
   selectedDatasetChanged: Subscription;
+  selectedImage!: string;
 
   constructor(private imageFilesService: ImageFilesService,
               private imageService: ImageService,
@@ -37,6 +38,7 @@ export class ImageFilesComponent implements OnInit {
   }
 
   onSelectedImageFileChanged($event: any) {
+    this.selectedImage = $event.innerText;
     this.selectedImageChangedService.publish($event.innerText);
   }
 }
