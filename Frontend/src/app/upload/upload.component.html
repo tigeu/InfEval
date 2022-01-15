@@ -1,22 +1,26 @@
 <input #fileUpload class="file-input" type="file"
-       [accept]="uploadInformation?.uploadFileEnding"
-       onclick="this.value=null"
-       (change)="onFileSelected($event)">
+       [accept]="uploadInformation?.uploadFileEnding" (change)="onFileSelected($event)" onclick="this.value=null">
 <div class="file-upload">
   <button mat-mini-fab color="primary" class="upload-btn"
           (click)="fileUpload.click()">
     <mat-icon>attach_file</mat-icon>
   </button>
   {{fileName || "No file uploaded yet."}}
+  <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="fileName">delete_forever</mat-icon>
 </div>
 
-<div class="mt-3">
-  <button class="btn btn-primary" (click)="upload()" [disabled]="datasetName === '' || fileName === ''">Upload
+<p class="mt-3">
+  <button class="btn btn-primary" (click)="upload()" [disabled]="datasetName === '' || fileName === ''">
+    Upload
   </button>
+</p>
+
+<div>
+  <div *ngIf="uploadProgress">
+    <div class="progress-bar" role="progressbar"
+         aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width : (uploadProgress + '%')}">
+      {{uploadProgress}} %
+    </div>
+  </div>
 </div>
 
-<div class="progress-div">
-  <mat-progress-bar class="progress-bar-animated" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress">
-  </mat-progress-bar>
-  <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
-</div>
