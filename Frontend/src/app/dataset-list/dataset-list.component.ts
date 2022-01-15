@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DatasetListService} from "./dataset-list.service";
-import {interval, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {DatasetFile} from "./dataset-file";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 
@@ -11,7 +11,6 @@ import {SelectedDatasetChangedService} from "../shared-services/selected-dataset
 })
 export class DatasetListComponent implements OnInit {
   datasetList: DatasetFile[] = [];
-  selectedDataset!: DatasetFile;
   private datasetListSubscription: Subscription = new Subscription;
 
   constructor(private datasetListService: DatasetListService,
@@ -20,12 +19,7 @@ export class DatasetListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.datasetListSubscription = interval(5000)
-      .subscribe(
-        intervalResponse => {
-          this.getDatasetList();
-        }
-      );
+
   }
 
   ngOnDestroy(): void {

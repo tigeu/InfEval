@@ -7,13 +7,9 @@ import {of} from "rxjs";
 import {HttpClientModule} from "@angular/common/http";
 import {ImageComponent} from "../image/image.component";
 import {ImageFilesComponent} from "../image-files/image-files.component";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatSelectModule} from "@angular/material/select";
 import {DatasetListComponent} from "../dataset-list/dataset-list.component";
 import {ToolboxComponent} from "../toolbox/toolbox.component";
 import {GroundTruthComponent} from "../ground-truth/ground-truth.component";
-import {BrowserModule} from "@angular/platform-browser";
 
 describe('MainComponent', () => {
   let component: MainComponent;
@@ -23,10 +19,6 @@ describe('MainComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatFormFieldModule,
-        MatSelectModule,
       ],
       declarations: [
         MainComponent,

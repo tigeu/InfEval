@@ -6,13 +6,9 @@ import {SelectedImageChangedService} from "../shared-services/selected-image-cha
 import {ImageFile} from "./image-file";
 import {of} from "rxjs";
 import {ImageFilesService} from "./image-files.service";
-import {BrowserModule, By} from "@angular/platform-browser";
+import {By} from "@angular/platform-browser";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 import {DatasetListComponent} from "../dataset-list/dataset-list.component";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatSelectModule} from "@angular/material/select";
-import {MatListModule} from "@angular/material/list";
 
 describe('ImageFilesComponent', () => {
   let component: ImageFilesComponent;
@@ -22,11 +18,6 @@ describe('ImageFilesComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        BrowserAnimationsModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatListModule,
-        BrowserModule
       ],
       providers: [
         SelectedImageChangedService
@@ -84,7 +75,7 @@ describe('ImageFilesComponent', () => {
 
   it('click should publish selected new file', () => {
     const selectedImageChangedService = TestBed.inject(SelectedImageChangedService);
-    const event = {'option': {'value': "test_image1.jpg"}}
+    const event = {'innerText': "test_image1.jpg"}
 
     spyOn(selectedImageChangedService, 'publish').withArgs("test_image1.jpg");
 

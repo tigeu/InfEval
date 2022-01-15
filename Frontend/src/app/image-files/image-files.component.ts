@@ -37,6 +37,6 @@ export class ImageFilesComponent implements OnInit {
   }
 
   onSelectedImageFileChanged($event: any) {
-    this.selectedImageChangedService.publish($event.option.value);
+    this.selectedImageChangedService.publish($event.innerText);
   }
 }

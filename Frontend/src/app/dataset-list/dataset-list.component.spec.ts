@@ -1,11 +1,8 @@
-import {ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DatasetListComponent} from './dataset-list.component';
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatSelectModule} from "@angular/material/select";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 import {of} from "rxjs";
 import {DatasetFile} from "./dataset-file";
@@ -20,9 +17,6 @@ describe('DatasetListComponent', () => {
       imports: [
         HttpClientModule,
         FormsModule,
-        BrowserAnimationsModule,
-        MatFormFieldModule,
-        MatSelectModule
       ],
       declarations: [DatasetListComponent]
     })
@@ -72,14 +66,4 @@ describe('DatasetListComponent', () => {
 
     expect(selectedDatasetChangedService.publish).toHaveBeenCalledWith("test_dataset1")
   });
-
-  it('fetch dataset-list in an interval of 10000ms', fakeAsync(() => {
-    const spy = spyOn(component, 'getDatasetList');
-    component.ngOnInit();
-    tick(5000);
-    expect(spy).toHaveBeenCalledTimes(1);
-    tick(5000);
-    expect(spy).toHaveBeenCalledTimes(2);
-    discardPeriodicTasks();
-  }));
 });
