@@ -42,14 +42,18 @@ export class GroundTruthComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  getGroundTruth() {
+    this.groundTruthService.getGroundTruth(this.selectedDataset, this.selectedImage, this.groundTruthSettings)
+      .subscribe((groundTruth: GroundTruth) => {
+        this.groundTruthChangedService.publish(groundTruth);
+      })
+  }
+
   selectionChanged() {
     if (!this.groundTruthSettings.showGroundTruth)
       this.groundTruthChangedService.publish("");
     else if (this.selectedDataset && this.selectedImage) {
-      this.groundTruthService.getGroundTruth(this.selectedDataset, this.selectedImage, this.groundTruthSettings)
-        .subscribe((groundTruth: GroundTruth) => {
-          this.groundTruthChangedService.publish(groundTruth);
-        })
+      this.getGroundTruth()
     }
   }
 }

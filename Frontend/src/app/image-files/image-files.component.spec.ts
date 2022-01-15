@@ -85,6 +85,7 @@ describe('ImageFilesComponent', () => {
   it('click should publish selected new file', () => {
     const selectedImageChangedService = TestBed.inject(SelectedImageChangedService);
     const event = {'option': {'value': "test_image1.jpg"}}
+
     spyOn(selectedImageChangedService, 'publish').withArgs("test_image1.jpg");
 
     component.onSelectedImageFileChanged(event)
@@ -122,6 +123,4 @@ describe('ImageFilesComponent', () => {
     const queriedElements = fixture.debugElement.query(By.css('#image-files')).children;
     expect(queriedElements.length).toBe(0);
   });
-
-  it('onSelectedImageFileChanged')
 });
