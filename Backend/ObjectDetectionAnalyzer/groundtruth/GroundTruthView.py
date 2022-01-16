@@ -1,6 +1,5 @@
 import base64
 import io
-import os
 from pathlib import Path
 
 from rest_framework import status
@@ -8,9 +7,10 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ObjectDetectionAnalyzer.groundtruth.CSVParseService import CSVParseService
 from ObjectDetectionAnalyzer.groundtruth.DrawBoundingBoxService import DrawBoundingBoxService
 from ObjectDetectionAnalyzer.groundtruth.GroundTruthSerializer import GroundTruthSerializer
+from ObjectDetectionAnalyzer.services.CSVParseService import CSVParseService
+from ObjectDetectionAnalyzer.services.PathService import PathService
 from ObjectDetectionAnalyzer.upload.UploadModels import Dataset
 
 
@@ -19,16 +19,18 @@ class GroundTruthView(APIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.path_service = PathService()
         self.csv_parse_service = CSVParseService()
         self.draw_bounding_box_service = DrawBoundingBoxService()
 
     def get(self, request, dataset, image_name):
         user = request.user
 
-        dataset = Dataset.objects.filter(name=dataset, userId=user).first()
-        if not dataset:
+        filtered_dataset = Dataset.objects.filter(name=dataset, userId=user)
+        if not filtered_dataset:
             return Response("Dataset does not exist yet", status=status.HTTP_404_NOT_FOUND)
 
+        dataset = filtered_dataset.first()
         if not dataset.ground_truth_path:
             return Response("Ground truth file for dataset does not exist yet", status=status.HTTP_404_NOT_FOUND)
 
@@ -39,10 +41,11 @@ class GroundTruthView(APIView):
             'font_size': int(request.GET['font_size']),
         }
 
-        dataset_files = os.listdir(dataset.path)
+        indices = {'file_name': 0, 'class': 1, 'confidence': 2, 'xmin': 3, 'ymin': 4, 'xmax': 5, 'ymax': 6}
+        dataset_files = self.path_service.get_files_from_dir(dataset.path)
         if image_name in dataset_files:
-            predictions = self.csv_parse_service.get_ground_truth_values(dataset.ground_truth_path, image_name)
-            classes = self.csv_parse_service.get_ground_truth_classes(dataset.ground_truth_path)
+            predictions = self.csv_parse_service.get_values_for_image(dataset.ground_truth_path, image_name, indices)
+            classes = self.csv_parse_service.get_classes(dataset.ground_truth_path, indices['class'])
             image_path = Path(dataset.path) / image_name
             gt_image = self.draw_bounding_box_service.draw_bounding_boxes(predictions, image_path, classes, settings)
 
@@ -59,4 +62,4 @@ class GroundTruthView(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response("Image not found in dataset", status=status.HTTP_404_NOT_FOUND)

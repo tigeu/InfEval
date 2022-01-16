@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 
@@ -45,3 +46,6 @@ class PathService:
 
     def delete_tmp_file(self, tmp_file_path):
         Path.unlink(tmp_file_path)
+
+    def get_files_from_dir(self, dir):
+        return os.listdir(dir)

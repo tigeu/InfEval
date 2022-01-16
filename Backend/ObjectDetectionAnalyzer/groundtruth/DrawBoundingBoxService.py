@@ -51,13 +51,16 @@ class DrawBoundingBoxService:
 
         color, font_color = self.get_colors(classes, data_class, settings)
         font = ImageFont.truetype("arial", font_size)
-        text_width, text_height = font.getsize(data_class)
+        label = data_class
+        if 'confidence' in prediction:
+            label += ": {0} %".format(str(prediction['confidence']))
+        text_width, text_height = font.getsize(label)
 
-        label_coordinates = self.get_label_coordinates(text_height, text_width, width, xmin, ymin)
+        label_coordinates = self.get_label_coordinates(text_width, text_height, width, xmin, ymin)
         draw.rectangle(label_coordinates, outline=color, fill=color, width=stroke_size)
-        draw.text((label_coordinates[0], label_coordinates[1]), data_class, fill=font_color, font=font)
+        draw.text((label_coordinates[0], label_coordinates[1]), label, fill=font_color, font=font)
 
-    def get_label_coordinates(self, text_height, text_width, width, xmin, ymin):
+    def get_label_coordinates(self, text_width, text_height, width, xmin, ymin):
         # check whether label expands image on top
         ymin_text = ymin - text_height
         if ymin_text < 0:

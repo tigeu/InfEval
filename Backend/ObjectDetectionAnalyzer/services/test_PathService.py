@@ -103,3 +103,9 @@ class TestPathService(TestCase):
     def test_delete_tmp_file(self, unlink):
         self.path_service.delete_tmp_file("tmp_file_path")
         unlink.assert_called_with("tmp_file_path")
+
+    @patch('os.listdir')
+    def test_get_files_from_dir(self, listdir):
+        self.path_service.get_files_from_dir("test_dir")
+
+        listdir.assert_called()
