@@ -3,4 +3,6 @@
        src="{{imageUrl}}" alt="currently selected image from dataset"/>
   <img *ngIf="groundTruthImageUrl" class="dataset-image" id="selected-ground-truth-image"
        src="{{groundTruthImageUrl}}" alt="ground truth image for currently selected dataset"/>
+  <img *ngIf="predictionImageUrl" class="dataset-image" id="selected-prediction-image"
+       src="{{predictionImageUrl}}" alt="prediction image for currently selected dataset"/>
 </div>

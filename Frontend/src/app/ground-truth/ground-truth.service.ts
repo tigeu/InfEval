@@ -9,13 +9,13 @@ import {GroundTruth} from "./ground-truth";
   providedIn: 'root'
 })
 export class GroundTruthService {
-  private imageUrl = `${environment.apiUrl}/ground-truth`;
+  private groundTruthUrl = `${environment.apiUrl}/ground-truth`;
 
   constructor(private http: HttpClient) {
   }
 
   getGroundTruth(dataset: string, imageName: string, groundTruthSettings: GroundTruthSettings): Observable<GroundTruth> {
-    const queryUrl = `${this.imageUrl}/${dataset}/${imageName}`
+    const queryUrl = `${this.groundTruthUrl}/${dataset}/${imageName}`
     return this.http.get<GroundTruth>(queryUrl, {
       params: {
         stroke_size: groundTruthSettings.strokeSize,

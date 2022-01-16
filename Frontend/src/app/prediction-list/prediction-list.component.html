@@ -1,6 +1,5 @@
-<select class="form-select" aria-label="Select prediction" #select
-        *ngIf="predictionList.length > 0" (change)="selectedPredictionChanged(select.value)">
-  <option value="none" selected disabled hidden>Select prediction</option>
+<select class="form-select" aria-label="Select prediction" #select (change)="selectedPredictionChanged(select.value)">
+  <option value="none" selected disabled>Select prediction</option>
   <option *ngFor="let prediction of predictionList">
     {{prediction.name}}
   </option>

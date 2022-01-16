@@ -6,6 +6,7 @@ import {Subscription} from "rxjs";
 import {SelectedImageChangedService} from "../shared-services/selected-image-changed-service";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 import {GroundTruthChangedService} from "../shared-services/ground-truth-changed.service";
+import {PredictionChangedService} from "../shared-services/prediction-changed.service";
 
 @Component({
   selector: 'app-image',
@@ -17,6 +18,7 @@ export class ImageComponent implements OnInit {
   selectedImageChanged: Subscription;
   selectedDatasetChanged: Subscription;
   groundTruthChanged: Subscription;
+  predictionChanged: Subscription;
   selectedDataset!: string;
 
   image: Image = {file: new File([""], "")};
@@ -25,22 +27,33 @@ export class ImageComponent implements OnInit {
   groundTruthImage: Image = {file: new File([""], "")};
   groundTruthImageUrl: SafeResourceUrl = "";
 
+  predictionImage: Image = {file: new File([""], "")};
+  predictionImageUrl: SafeResourceUrl = "";
+
   constructor(private imageService: ImageService,
               private selectedImageChangedService: SelectedImageChangedService,
               private selectedDatasetChangedService: SelectedDatasetChangedService,
-              private groundTruthChangedService: GroundTruthChangedService) {
+              private groundTruthChangedService: GroundTruthChangedService,
+              private predictionChangedService: PredictionChangedService) {
     this.selectedImageChanged = this.selectedImageChangedService.newData.subscribe((data: any) => {
-      this.getImage(data)
-      this.resetGroundTruthImage()
+      this.resetImages();
+      this.getImage(data);
     });
     this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
-      this.selectedDataset = data
+      this.selectedDataset = data;
+      this.resetImages();
     });
     this.groundTruthChanged = this.groundTruthChangedService.newData.subscribe((data: any) => {
       if (data)
-        this.setGroundTruthImage(data)
+        this.setGroundTruthImage(data);
       else
-        this.resetGroundTruthImage()
+        this.resetGroundTruthImage();
+    });
+    this.predictionChanged = this.predictionChangedService.newData.subscribe((data: any) => {
+      if (data)
+        this.setPredictionImage(data);
+      else
+        this.resetPredictionImage();
     });
   }
 
@@ -54,6 +67,17 @@ export class ImageComponent implements OnInit {
     this.groundTruthImageUrl = 'data:image/jpg;base64,' + image["file"];
   }
 
+  setPredictionImage(image: Image) {
+    this.predictionImage = image
+    this.predictionImageUrl = 'data:image/jpg;base64,' + image["file"];
+  }
+
+  resetImages() {
+    this.resetImage();
+    this.resetGroundTruthImage();
+    this.resetPredictionImage();
+  }
+
   resetImage() {
     this.image = {file: new File([""], "")};
     this.imageUrl = "";
@@ -62,6 +86,11 @@ export class ImageComponent implements OnInit {
   resetGroundTruthImage() {
     this.groundTruthImage = {file: new File([""], "")};
     this.groundTruthImageUrl = "";
+  }
+
+  resetPredictionImage() {
+    this.predictionImage = {file: new File([""], "")};
+    this.predictionImageUrl = "";
   }
 
   getImage(imageName: String): void {

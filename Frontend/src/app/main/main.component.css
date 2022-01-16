@@ -16,15 +16,15 @@
 }
 
 .image {
-  max-width: 70vw;
+  max-width: 65vw;
   max-height: 90vh;
   grid-row-start: 1;
   grid-column-start: 2;
 }
 
 .toolbox {
-  width: 13vw;
-  max-width: 13vw;
+  width: 18vw;
+  max-width: 18vw;
   max-height: 90vh;
   grid-row-start: 1;
   grid-column-start: 3;

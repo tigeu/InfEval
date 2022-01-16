@@ -1,39 +1,42 @@
-<div class="">
+<div class="card" *ngIf="selectedDataset && selectedImage">
+  <div class="card-body">
+    <h3 class="card-title">Ground truth utilities</h3>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="flexShowGroundTruth"
+             [(ngModel)]="groundTruthSettings.showGroundTruth" (change)="selectionChanged()">
+      <label class="form-check-label" for="flexShowGroundTruth">Show ground truth values</label>
+    </div>
+    <p *ngIf="groundTruthSettings.showGroundTruth" class="d-grid gap-2">
+      <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapseGroundTruth"
+              aria-expanded="false" aria-controls="collapseGroundTruth">
+        Show ground truth settings
+      </button>
+    </p>
+    <div class="collapse" id="collapseGroundTruth">
+      <div class="card card-body">
+        <div>
+          <label for="strokeRange" class="form-label">Stroke size:</label> {{this.groundTruthSettings.strokeSize}}
+          <input type="range" class="form-range" id="strokeRange" min="5" max="50" step="5"
+                 [(ngModel)]="groundTruthSettings.strokeSize" (change)="selectionChanged()">
+        </div>
+        <div>
+          <input class="form-check-input" type="checkbox" id="flexSwitchColored"
+                 [(ngModel)]="groundTruthSettings.showColored" (change)="selectionChanged()">
+          <label class="form-check-label" for="flexSwitchColored">Colored</label>
+        </div>
+        <div>
+          <input class="form-check-input" type="checkbox" id="flexSwitchLabeled"
+                 [(ngModel)]="groundTruthSettings.showLabeled" (change)="selectionChanged()">
+          <label class="form-check-label" for="flexSwitchLabeled">Labeled</label>
+        </div>
+        <div *ngIf="groundTruthSettings.showLabeled">
+          <label for="fontRange" class="form-label">Font size:</label> {{this.groundTruthSettings.fontSize}}
+          <input type="range" class="form-range" id="fontRange" min="10" max="100" step="10"
+                 [(ngModel)]="groundTruthSettings.fontSize" (change)="selectionChanged()">
+        </div>
+      </div>
+    </div>
 
-</div>
-<div class="form-check" *ngIf="selectedDataset && selectedImage">
-  <input class="form-check-input" type="checkbox" id="flexShowGroundTruth"
-         [(ngModel)]="groundTruthSettings.showGroundTruth" (change)="selectionChanged()">
-  <label class="form-check-label" for="flexShowGroundTruth">Show ground truth values</label>
-</div>
-<p *ngIf="groundTruthSettings.showGroundTruth" class="d-grid gap-2">
-  <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse"
-          data-bs-target="#collapseExample"
-          aria-expanded="false" aria-controls="collapseExample">
-    Show ground truth settings
-  </button>
-</p>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
-    <div>
-      <label for="strokeRange" class="form-label">Stroke size:</label> {{this.groundTruthSettings.strokeSize}}
-      <input type="range" class="form-range" id="strokeRange" min="5" max="50" step="5"
-             [(ngModel)]="groundTruthSettings.strokeSize" (change)="selectionChanged()">
-    </div>
-    <div>
-      <input class="form-check-input" type="checkbox" id="flexSwitchColored"
-             [(ngModel)]="groundTruthSettings.showColored" (change)="selectionChanged()">
-      <label class="form-check-label" for="flexSwitchColored">Colored</label>
-    </div>
-    <div>
-      <input class="form-check-input" type="checkbox" id="flexSwitchLabeled"
-             [(ngModel)]="groundTruthSettings.showLabeled" (change)="selectionChanged()">
-      <label class="form-check-label" for="flexSwitchLabeled">Labeled</label>
-    </div>
-    <div *ngIf="groundTruthSettings.showLabeled">
-      <label for="fontRange" class="form-label">Font size:</label> {{this.groundTruthSettings.fontSize}}
-      <input type="range" class="form-range" id="fontRange" min="10" max="100" step="10"
-             [(ngModel)]="groundTruthSettings.fontSize" (change)="selectionChanged()">
-    </div>
   </div>
 </div>

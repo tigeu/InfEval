@@ -1,0 +1,45 @@
+<div class="card" *ngIf="selectedDataset && selectedImage">
+  <div class="card-body">
+    <h3 class="card-title">Prediction utilities</h3>
+    <app-prediction-list [selectedDataset]="selectedDataset"></app-prediction-list>
+    <p></p>
+    <div class="form-check" *ngIf="selectedPrediction">
+      <input class="form-check-input" type="checkbox" id="flexShowGroundTruth"
+             [(ngModel)]="predictionSettings.showPrediction" (change)="selectionChanged()">
+      <label class="form-check-label" for="flexShowGroundTruth">Show prediction values</label>
+    </div>
+    <p></p>
+    <p *ngIf="predictionSettings.showPrediction" class="d-grid gap-2">
+      <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapsePrediction"
+              aria-expanded="false" aria-controls="collapsePrediction">
+        Show prediction settings
+      </button>
+    </p>
+    <div class="collapse" id="collapsePrediction">
+      <div class="card card-body">
+        <div>
+          <label for="strokeRange" class="form-label">Stroke size:</label> {{this.predictionSettings.strokeSize}}
+          <input type="range" class="form-range" id="strokeRange" min="5" max="50" step="5"
+                 [(ngModel)]="predictionSettings.strokeSize" (change)="selectionChanged()">
+        </div>
+        <div>
+          <input class="form-check-input" type="checkbox" id="flexSwitchColored"
+                 [(ngModel)]="predictionSettings.showColored" (change)="selectionChanged()">
+          <label class="form-check-label" for="flexSwitchColored">Colored</label>
+        </div>
+        <div>
+          <input class="form-check-input" type="checkbox" id="flexSwitchLabeled"
+                 [(ngModel)]="predictionSettings.showLabeled" (change)="selectionChanged()">
+          <label class="form-check-label" for="flexSwitchLabeled">Labeled</label>
+        </div>
+        <div *ngIf="predictionSettings.showLabeled">
+          <label for="fontRange" class="form-label">Font size:</label> {{this.predictionSettings.fontSize}}
+          <input type="range" class="form-range" id="fontRange" min="10" max="100" step="10"
+                 [(ngModel)]="predictionSettings.fontSize" (change)="selectionChanged()">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

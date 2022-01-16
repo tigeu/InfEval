@@ -7,14 +7,14 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ObjectDetectionAnalyzer.groundtruth.GroundTruthSerializer import GroundTruthSerializer
+from ObjectDetectionAnalyzer.prediction.PredictionSerializer import PredictionSerializer
 from ObjectDetectionAnalyzer.services.CSVParseService import CSVParseService
 from ObjectDetectionAnalyzer.services.DrawBoundingBoxService import DrawBoundingBoxService
 from ObjectDetectionAnalyzer.services.PathService import PathService
-from ObjectDetectionAnalyzer.upload.UploadModels import Dataset
+from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 
-class GroundTruthView(APIView):
+class PredictionView(APIView):
     parser_classes = [MultiPartParser]
 
     def __init__(self, **kwargs):
@@ -23,7 +23,7 @@ class GroundTruthView(APIView):
         self.csv_parse_service = CSVParseService()
         self.draw_bounding_box_service = DrawBoundingBoxService()
 
-    def get(self, request, dataset, image_name):
+    def get(self, request, dataset, prediction, image_name):
         user = request.user
 
         filtered_dataset = Dataset.objects.filter(name=dataset, userId=user)
@@ -31,8 +31,11 @@ class GroundTruthView(APIView):
             return Response("Dataset does not exist yet", status=status.HTTP_404_NOT_FOUND)
 
         dataset = filtered_dataset.first()
-        if not dataset.ground_truth_path:
-            return Response("Ground truth file for dataset does not exist yet", status=status.HTTP_404_NOT_FOUND)
+        filtered_pred = Predictions.objects.filter(name=prediction, datasetId=filtered_dataset.first(), userId=user)
+        if not filtered_pred:
+            return Response("Prediction file does not exist yet", status=status.HTTP_404_NOT_FOUND)
+
+        pred = filtered_pred.first()
 
         settings = {
             'stroke_size': int(request.GET['stroke_size']),
@@ -41,16 +44,16 @@ class GroundTruthView(APIView):
             'font_size': int(request.GET['font_size']),
         }
 
-        indices = {'file_name': 0, 'class': 1, 'xmin': 2, 'ymin': 3, 'xmax': 4, 'ymax': 5}
+        indices = {'file_name': 0, 'class': 1, 'confidence': 2, 'xmin': 3, 'ymin': 4, 'xmax': 5, 'ymax': 6}
         dataset_files = self.path_service.get_files_from_dir(dataset.path)
         if image_name in dataset_files:
-            ground_truth = self.csv_parse_service.get_values_for_image(dataset.ground_truth_path, image_name, indices)
+            predictions = self.csv_parse_service.get_values_for_image(pred.path, image_name, indices)
             classes = self.csv_parse_service.get_classes(dataset.ground_truth_path, indices['class'])
             image_path = Path(dataset.path) / image_name
-            gt_image = self.draw_bounding_box_service.draw_bounding_boxes(ground_truth, image_path, classes, settings)
+            pred_image = self.draw_bounding_box_service.draw_bounding_boxes(predictions, image_path, classes, settings)
 
             with io.BytesIO() as output:
-                gt_image.save(output, format="PNG")
+                pred_image.save(output, format="PNG")
                 image_base64 = base64.b64encode(output.getvalue()).decode('utf-8')
 
             response_data = {
@@ -58,7 +61,7 @@ class GroundTruthView(APIView):
                 'file': image_base64
             }
 
-            serializer = GroundTruthSerializer(response_data)
+            serializer = PredictionSerializer(response_data)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
 

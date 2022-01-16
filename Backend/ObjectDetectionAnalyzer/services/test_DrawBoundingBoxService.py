@@ -3,7 +3,7 @@ from unittest.mock import patch, ANY
 
 from PIL import Image, ImageDraw, ImageFont
 
-from ObjectDetectionAnalyzer.groundtruth.DrawBoundingBoxService import DrawBoundingBoxService
+from ObjectDetectionAnalyzer.services.DrawBoundingBoxService import DrawBoundingBoxService
 
 
 class TestDrawBoundingBoxService(TestCase):

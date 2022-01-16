@@ -8,6 +8,8 @@ from ObjectDetectionAnalyzer.groundtruth.GroundTruthView import GroundTruthView
 from ObjectDetectionAnalyzer.image.ImageView import ImageView
 from ObjectDetectionAnalyzer.imagefiles.ImageFilesView import ImageFilesView
 from ObjectDetectionAnalyzer.main.HeartbeatView import HeartbeatView
+from ObjectDetectionAnalyzer.prediction.PredictionView import PredictionView
+from ObjectDetectionAnalyzer.predictionlist.PredictionListView import PredictionListView
 from ObjectDetectionAnalyzer.register.RegisterView import RegisterView
 from ObjectDetectionAnalyzer.upload.views.UploadDatasetView import UploadDatasetView
 from ObjectDetectionAnalyzer.upload.views.UploadGroundTruthView import UploadGroundTruthView
@@ -28,8 +30,11 @@ urlpatterns = [
     path('upload/predictions/<str:file_name>', UploadPredictionsView.as_view(), name="upload"),
     path('upload/model/<str:file_name>', UploadModelView.as_view(), name="upload"),
     path('dataset-list', DatasetListView.as_view(), name="dataset-list"),
+    path('prediction-list/<str:dataset>', PredictionListView.as_view(), name="prediction-list"),
     path('ground-truth/<str:dataset>/<str:image_name>', GroundTruthView.as_view(),
          name="ground-truth"),
+    path('prediction/<str:dataset>/<str:prediction>/<str:image_name>', PredictionView.as_view(),
+         name="prediction"),
     path('register/', RegisterView.as_view(), name="register"),
     path('login/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),

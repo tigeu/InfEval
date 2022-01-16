@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
 import {PredictionFile} from "./prediction-file";
 import {PredictionListService} from "./prediction-list.service";
@@ -13,20 +13,19 @@ import {SelectedDatasetChangedService} from "../shared-services/selected-dataset
 export class PredictionListComponent implements OnInit {
   predictionList: PredictionFile[] = [];
   private predictionListSubscription: Subscription = new Subscription;
-  selectedDataset!: string;
+  @Input() selectedDataset!: string;
   selectedDatasetChanged: Subscription;
 
   constructor(private predictionListService: PredictionListService,
               private selectedPredictionChangedService: SelectedPredictionChangedService,
               private selectedDatasetChangedService: SelectedDatasetChangedService) {
     this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
-      this.getPredictionList(data);
-      console.log(this.predictionList)
+      this.selectedDataset = data
     })
   }
 
   ngOnInit(): void {
-
+    this.getPredictionList(this.selectedDataset)
   }
 
   ngOnDestroy(): void {
