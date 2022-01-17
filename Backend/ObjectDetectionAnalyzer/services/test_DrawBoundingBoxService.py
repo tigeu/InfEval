@@ -24,8 +24,8 @@ class TestDrawBoundingBoxService(TestCase):
                             {'class': 'class1', 'confidence': 25, 'xmin': 25, 'ymin': 25, 'xmax': 60, 'ymax': 60},
                             {'class': 'class2', 'confidence': 10, 'xmin': 10, 'ymin': 30, 'xmax': 30, 'ymax': 75}]
 
-    @patch('ObjectDetectionAnalyzer.groundtruth.DrawBoundingBoxService.DrawBoundingBoxService.draw_label')
-    @patch('ObjectDetectionAnalyzer.groundtruth.DrawBoundingBoxService.DrawBoundingBoxService.draw_bounding_box')
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_label')
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_bounding_box')
     @patch('PIL.Image.open')
     def test_draw_bounding_boxes(self, open, draw_bounding_box, draw_label):
         open.return_value = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
@@ -35,8 +35,8 @@ class TestDrawBoundingBoxService(TestCase):
         self.assertEqual(draw_bounding_box.call_count, 3)
         self.assertEqual(draw_label.call_count, 3)
 
-    @patch('ObjectDetectionAnalyzer.groundtruth.DrawBoundingBoxService.DrawBoundingBoxService.draw_label')
-    @patch('ObjectDetectionAnalyzer.groundtruth.DrawBoundingBoxService.DrawBoundingBoxService.draw_bounding_box')
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_label')
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_bounding_box')
     @patch('PIL.Image.open')
     def test_draw_bounding_boxes_not_labeled(self, open, draw_bounding_box, draw_label):
         open.return_value = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
@@ -48,7 +48,7 @@ class TestDrawBoundingBoxService(TestCase):
         self.assertEqual(draw_label.call_count, 0)
 
     @patch('PIL.ImageDraw.ImageDraw.rectangle')
-    @patch('ObjectDetectionAnalyzer.groundtruth.DrawBoundingBoxService.DrawBoundingBoxService.get_colors')
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.get_colors')
     def test_draw_bounding_box(self, get_colors, rectangle):
         get_colors.return_value = ("black", "white")
 
@@ -62,8 +62,8 @@ class TestDrawBoundingBoxService(TestCase):
 
     @patch('PIL.ImageDraw.ImageDraw.text')
     @patch('PIL.ImageDraw.ImageDraw.rectangle')
-    @patch('ObjectDetectionAnalyzer.groundtruth.DrawBoundingBoxService.DrawBoundingBoxService.get_label_coordinates')
-    @patch('ObjectDetectionAnalyzer.groundtruth.DrawBoundingBoxService.DrawBoundingBoxService.get_colors')
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.get_label_coordinates')
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.get_colors')
     def test_draw_label(self, get_colors, get_label_coordinates, rectangle, text):
         get_colors.return_value = ("black", "white")
         get_label_coordinates.return_value = [50, 40, 60, 50]
