@@ -10,10 +10,10 @@ import {SelectedPredictionChangedService} from "../shared-services/selected-pred
 
 @Component({
   selector: 'app-prediction',
-  templateUrl: './predictions.component.html',
-  styleUrls: ['./predictions.component.css']
+  templateUrl: './prediction.component.html',
+  styleUrls: ['./prediction.component.css']
 })
-export class PredictionsComponent implements OnInit {
+export class PredictionComponent implements OnInit {
 
   selectedDatasetChanged: Subscription;
   selectedDataset: string = "";

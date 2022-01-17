@@ -40,8 +40,8 @@ export class ImageComponent implements OnInit {
       this.getImage(data);
     });
     this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
-      this.selectedDataset = data;
       this.resetImages();
+      this.selectedDataset = data;
     });
     this.groundTruthChanged = this.groundTruthChangedService.newData.subscribe((data: any) => {
       if (data)
@@ -97,7 +97,7 @@ export class ImageComponent implements OnInit {
     this.imageService.getImage(this.selectedDataset, imageName)
       .subscribe({
         next: this.setImage.bind(this),
-        error: this.resetImage.bind(this)
+        error: this.resetImages.bind(this)
       })
   }
 

@@ -10,6 +10,7 @@ import {ImageFilesComponent} from "../image-files/image-files.component";
 import {DatasetListComponent} from "../dataset-list/dataset-list.component";
 import {ToolboxComponent} from "../toolbox/toolbox.component";
 import {GroundTruthComponent} from "../ground-truth/ground-truth.component";
+import {PredictionComponent} from "../prediction/prediction.component";
 
 describe('MainComponent', () => {
   let component: MainComponent;
@@ -26,7 +27,8 @@ describe('MainComponent', () => {
         ImageFilesComponent,
         DatasetListComponent,
         ToolboxComponent,
-        GroundTruthComponent
+        GroundTruthComponent,
+        PredictionComponent
       ],
     })
       .compileComponents();

@@ -3,6 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ToolboxComponent} from './toolbox.component';
 import {GroundTruthComponent} from "../ground-truth/ground-truth.component";
 import {HttpClientModule} from "@angular/common/http";
+import {PredictionComponent} from "../prediction/prediction.component";
 
 describe('ToolboxComponent', () => {
   let component: ToolboxComponent;
@@ -12,7 +13,8 @@ describe('ToolboxComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [
         ToolboxComponent,
-        GroundTruthComponent
+        GroundTruthComponent,
+        PredictionComponent
       ],
       imports: [
         HttpClientModule

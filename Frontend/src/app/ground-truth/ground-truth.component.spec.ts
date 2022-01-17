@@ -48,12 +48,14 @@ describe('GroundTruthComponent', () => {
     expect(spy).toHaveBeenCalledWith(groundTruth)
   });
 
-  it('dataset subscription should set selectedDataset', () => {
+  it('dataset subscription should set selectedDataset and reset image and show selection', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
 
     selectedDatasetChangedService.publish("test_dataset")
 
     expect(component.selectedDataset).toEqual("test_dataset");
+    expect(component.selectedImage).toEqual("");
+    expect(component.groundTruthSettings.showGroundTruth).toEqual(false);
   });
 
   it('image subscription should set selectedImage and trigger #selectionChanged', () => {

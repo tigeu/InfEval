@@ -9,6 +9,7 @@ import {ImageService} from "./image.service";
 import {By} from "@angular/platform-browser";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 import {GroundTruthChangedService} from "../shared-services/ground-truth-changed.service";
+import {PredictionChangedService} from "../shared-services/prediction-changed.service";
 
 describe('ImageComponent', () => {
   let component: ImageComponent;
@@ -60,10 +61,10 @@ describe('ImageComponent', () => {
     expect(component.imageUrl).toBe('data:image/jpg;base64,' + newImage["file"]);
   });
 
-  it('image subscription should trigger #getimage and #resetGroundTruthImage', () => {
+  it('image subscription should trigger #getimage and #resetImages', () => {
     const selectedImageChangedService = TestBed.inject(SelectedImageChangedService);
     const spy = spyOn(component, 'getImage');
-    const gtSpy = spyOn(component, 'resetGroundTruthImage');
+    const gtSpy = spyOn(component, 'resetImages');
 
     selectedImageChangedService.publish("test_image.jpg");
 
@@ -90,12 +91,34 @@ describe('ImageComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('dataset subscription should update selectedDataset', () => {
+  it('predimage subscription should trigger #setPredictionImage if data given', () => {
+    const predictionChangedService = TestBed.inject(PredictionChangedService);
+    const spy = spyOn(component, 'setPredictionImage');
+    const newImage: Image = {file: new File([""], "test_image.jpg")};
+
+    predictionChangedService.publish(newImage);
+
+    expect(spy).toHaveBeenCalledWith(newImage);
+  });
+
+  it('predimage subscription should trigger #resetPrediction if no data given', () => {
+    const predictionChangedService = TestBed.inject(PredictionChangedService);
+    const spy = spyOn(component, 'resetPredictionImage');
+
+    predictionChangedService.publish("");
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+
+  it('dataset subscription should update selectedDataset and trigger #resetImages', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
+    const spy = spyOn(component, 'resetImages');
 
     selectedDatasetChangedService.publish("test_dataset");
 
     expect(component.selectedDataset).toEqual("test_dataset");
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should not render image if image is undefined or null', () => {
@@ -134,17 +157,54 @@ describe('ImageComponent', () => {
     expect(fixture.debugElement.query(By.css('#selected-ground-truth-image')).nativeElement.src).toBeTruthy();
   });
 
+  it('should not render selected-prediction-image if image is undefined or null', () => {
+    expect(fixture.debugElement.query(By.css('#selected-prediction-image'))).toBeNull();
+  });
+
+  it('should render image if prediction image given', () => {
+    const newImage: Image = {file: new File([""], "test_image.jpg")};
+    const imageService = TestBed.inject(ImageService);
+    component.selectedDataset = "test_dataset";
+
+    spyOn(imageService, 'getImage').withArgs("test_dataset", "test_image.jpg").and.returnValue(of(newImage));
+
+    component.setPredictionImage(newImage);
+
+    expect(component.predictionImageUrl).toBeTruthy();
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('#selected-prediction-image')).nativeElement.src).toBeTruthy();
+  });
+
   it('#resetImage should reset image', () => {
     component.resetImage();
 
     expect(component.image).toEqual({file: new File([""], "")});
     expect(component.imageUrl).toBe("");
-  })
+  });
 
   it('#resetGroundTruthImage should reset image', () => {
     component.resetGroundTruthImage();
 
     expect(component.groundTruthImage).toEqual({file: new File([""], "")});
     expect(component.groundTruthImageUrl).toBe("");
-  })
+  });
+
+  it('#resetPredicitonImage should reset image', () => {
+    component.resetPredictionImage();
+
+    expect(component.predictionImage).toEqual({file: new File([""], "")});
+    expect(component.predictionImageUrl).toBe("");
+  });
+
+  it('#resetImages should trigger reset methods', () => {
+    const imageSpy = spyOn(component, 'resetImage');
+    const groundTruthSpy = spyOn(component, 'resetGroundTruthImage');
+    const predictionSpy = spyOn(component, 'resetPredictionImage');
+
+    component.resetImages();
+
+    expect(imageSpy).toHaveBeenCalled();
+    expect(groundTruthSpy).toHaveBeenCalled();
+    expect(predictionSpy).toHaveBeenCalled();
+  });
 });

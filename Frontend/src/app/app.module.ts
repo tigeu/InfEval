@@ -26,7 +26,7 @@ import {MatListModule} from "@angular/material/list";
 import {ToolboxComponent} from "./toolbox/toolbox.component";
 import {GroundTruthComponent} from "./ground-truth/ground-truth.component";
 import {PredictionListComponent} from './prediction-list/prediction-list.component';
-import {PredictionsComponent} from './prediction/predictions.component';
+import {PredictionComponent} from './prediction/prediction.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +42,7 @@ import {PredictionsComponent} from './prediction/predictions.component';
     ToolboxComponent,
     GroundTruthComponent,
     PredictionListComponent,
-    PredictionsComponent,
+    PredictionComponent,
   ],
   imports: [
     BrowserModule,
