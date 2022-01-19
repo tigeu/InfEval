@@ -7,6 +7,7 @@ import {SelectedImageChangedService} from "../shared-services/selected-image-cha
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 import {GroundTruthChangedService} from "../shared-services/ground-truth-changed.service";
 import {PredictionChangedService} from "../shared-services/prediction-changed.service";
+import {DatasetFile} from "../dataset-list/dataset-file";
 
 @Component({
   selector: 'app-image',
@@ -19,7 +20,7 @@ export class ImageComponent implements OnInit {
   selectedDatasetChanged: Subscription;
   groundTruthChanged: Subscription;
   predictionChanged: Subscription;
-  selectedDataset!: string;
+  selectedDataset!: DatasetFile;
 
   image: Image = {file: new File([""], "")};
   imageUrl: SafeResourceUrl = "";
@@ -39,9 +40,9 @@ export class ImageComponent implements OnInit {
       this.resetImages();
       this.getImage(data);
     });
-    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
+    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: DatasetFile) => {
       this.resetImages();
-      this.selectedDataset = data;
+      this.selectedDataset = data
     });
     this.groundTruthChanged = this.groundTruthChangedService.newData.subscribe((data: any) => {
       if (data)
@@ -94,7 +95,7 @@ export class ImageComponent implements OnInit {
   }
 
   getImage(imageName: String): void {
-    this.imageService.getImage(this.selectedDataset, imageName)
+    this.imageService.getImage(this.selectedDataset.name, imageName)
       .subscribe({
         next: this.setImage.bind(this),
         error: this.resetImages.bind(this)

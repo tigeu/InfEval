@@ -5,6 +5,7 @@ import {ImageService} from "../image/image.service";
 import {SelectedImageChangedService} from "../shared-services/selected-image-changed-service";
 import {Subscription} from "rxjs";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
+import {DatasetFile} from "../dataset-list/dataset-file";
 
 @Component({
   selector: 'app-image-files',
@@ -14,7 +15,6 @@ import {SelectedDatasetChangedService} from "../shared-services/selected-dataset
 export class ImageFilesComponent implements OnInit {
 
   imageFiles: ImageFile[] = [];
-  selectedDataset!: string;
   selectedDatasetChanged: Subscription;
   selectedImage!: string;
 
@@ -22,8 +22,8 @@ export class ImageFilesComponent implements OnInit {
               private imageService: ImageService,
               private selectedImageChangedService: SelectedImageChangedService,
               private selectedDatasetChangedService: SelectedDatasetChangedService) {
-    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
-      this.getImageFiles(data)
+    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: DatasetFile) => {
+      this.getImageFiles(data.name)
     })
   }
 

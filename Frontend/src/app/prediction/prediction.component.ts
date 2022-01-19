@@ -7,6 +7,7 @@ import {PredictionService} from "./prediction.service";
 import {Prediction} from "./prediction";
 import {PredictionChangedService} from "../shared-services/prediction-changed.service";
 import {SelectedPredictionChangedService} from "../shared-services/selected-prediction-changed.service";
+import {DatasetFile} from "../dataset-list/dataset-file";
 
 @Component({
   selector: 'app-prediction',
@@ -16,7 +17,7 @@ import {SelectedPredictionChangedService} from "../shared-services/selected-pred
 export class PredictionComponent implements OnInit {
 
   selectedDatasetChanged: Subscription;
-  selectedDataset: string = "";
+  selectedDataset: DatasetFile = {name: ""};
   selectedPredictionChanged: Subscription;
   selectedPrediction: string = "";
   selectedImageChanged: Subscription;
@@ -35,7 +36,7 @@ export class PredictionComponent implements OnInit {
               private selectedPredictionChangedService: SelectedPredictionChangedService,
               private selectedImageChangedService: SelectedImageChangedService,
               private predictionChangedService: PredictionChangedService) {
-    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
+    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: DatasetFile) => {
       this.selectedDataset = data;
       this.selectedPrediction = "";
       this.selectedImage = "";
@@ -56,7 +57,7 @@ export class PredictionComponent implements OnInit {
   }
 
   getPrediction() {
-    this.predictionService.getPrediction(this.selectedDataset, this.selectedPrediction, this.selectedImage, this.predictionSettings)
+    this.predictionService.getPrediction(this.selectedDataset.name, this.selectedPrediction, this.selectedImage, this.predictionSettings)
       .subscribe((prediction: Prediction) => {
         this.predictionChangedService.publish(prediction);
       })

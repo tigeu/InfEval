@@ -45,19 +45,19 @@ describe('UploadMainComponent', () => {
   });
 
   it('#setDatasetName should call next on subject', () => {
-    const spy = spyOn(component.datasetNameSubject, "next")
+    const spy = spyOn(component.datasetSubject, "next")
 
-    component.setDatasetName("test_dataset1");
+    component.createDataset("test_dataset1");
 
-    expect(spy).toHaveBeenCalledWith("test_dataset1")
+    expect(spy).toHaveBeenCalledWith({name: "test_dataset1"})
   });
 
   it('#setDatasetName should set datasetname after debouncetime', fakeAsync(() => {
-    component.setDatasetName("test_dataset1");
+    component.createDataset("test_dataset1");
 
     tick(300);
 
-    expect(component.datasetName).toEqual("test_dataset1");
+    expect(component.dataset).toEqual({name: "test_dataset1"});
     discardPeriodicTasks();
   }));
 });

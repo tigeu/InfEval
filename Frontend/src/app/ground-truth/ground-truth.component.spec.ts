@@ -34,26 +34,28 @@ describe('GroundTruthComponent', () => {
   });
 
   it('#getGroundTruth should publish image', () => {
-    const groundTruth: GroundTruth = {file: new File([""], "test_image.jpg")};
-    const groundTruthService = TestBed.inject(GroundTruthService);
-    const groundTruthChangedService = TestBed.inject(GroundTruthChangedService);
-    spyOn(groundTruthService, 'getGroundTruth').and.returnValue(of(groundTruth));
-    const spy = spyOn(groundTruthChangedService, 'publish');
+      const groundTruth: GroundTruth = {file: new File([""], "test_image.jpg")};
+      const groundTruthService = TestBed.inject(GroundTruthService);
+      const groundTruthChangedService = TestBed.inject(GroundTruthChangedService);
+      spyOn(groundTruthService, 'getGroundTruth').and.returnValue(of(groundTruth));
+      const spy = spyOn(groundTruthChangedService, 'publish');
 
-    component.selectedDataset = "test_dataset";
-    component.selectedImage = "test_image.jpg";
+      component.selectedDataset = {name: "test_dataset"};
+      component.selectedImage = "test_image.jpg";
 
-    component.getGroundTruth();
+      component.getGroundTruth();
 
-    expect(spy).toHaveBeenCalledWith(groundTruth)
-  });
+      expect(spy).toHaveBeenCalledWith(groundTruth)
+    }
+  )
+  ;
 
   it('dataset subscription should set selectedDataset and reset image and show selection', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
+    const dataset = {name: "test_dataset"};
+    selectedDatasetChangedService.publish(dataset)
 
-    selectedDatasetChangedService.publish("test_dataset")
-
-    expect(component.selectedDataset).toEqual("test_dataset");
+    expect(component.selectedDataset).toEqual(dataset);
     expect(component.selectedImage).toEqual("");
     expect(component.groundTruthSettings.showGroundTruth).toEqual(false);
   });
@@ -79,8 +81,9 @@ describe('GroundTruthComponent', () => {
 
   it('#selectionChanged should trigger #getGroundTruth if dataset and image are selected', () => {
     const spy = spyOn(component, 'getGroundTruth');
+    const dataset = {name: "test_dataset"}
     component.groundTruthSettings.showGroundTruth = true;
-    component.selectedDataset = "test_dataset";
+    component.selectedDataset = dataset;
     component.selectedImage = "test_image.jpg";
 
     component.selectionChanged();
@@ -90,7 +93,7 @@ describe('GroundTruthComponent', () => {
 
   it('#selectionChanged should not trigger #getGroundTruth if dataset and image are not selected', () => {
     const spy = spyOn(component, 'getGroundTruth');
-    component.selectedDataset = "";
+    component.selectedDataset = {name: ""};
     component.selectedImage = "";
 
     component.selectionChanged();

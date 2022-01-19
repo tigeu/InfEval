@@ -34,6 +34,8 @@ export class DatasetListComponent implements OnInit {
   }
 
   selectedDatasetChanged(dataset: string) {
-    this.selectedDatasetChangedService.publish(dataset);
+    const selectedDataset = this.datasetList.find(x => x.name == dataset)
+    if (selectedDataset)
+      this.selectedDatasetChangedService.publish(selectedDataset);
   }
 }

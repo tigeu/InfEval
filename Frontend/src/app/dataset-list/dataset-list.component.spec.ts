@@ -60,10 +60,12 @@ describe('DatasetListComponent', () => {
 
   it('click should publish new selected dataset', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
-    spyOn(selectedDatasetChangedService, 'publish').withArgs("test_dataset1");
+    const datasets = [{'name': "test_dataset1"}, {'name': "test_dataset2"}]
+    spyOn(selectedDatasetChangedService, 'publish').withArgs({'name': "test_dataset1"});
+    component.datasetList = datasets;
 
     component.selectedDatasetChanged("test_dataset1");
 
-    expect(selectedDatasetChangedService.publish).toHaveBeenCalledWith("test_dataset1")
+    expect(selectedDatasetChangedService.publish).toHaveBeenCalledWith({'name': "test_dataset1"})
   });
 });

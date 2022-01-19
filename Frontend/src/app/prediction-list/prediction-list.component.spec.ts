@@ -25,6 +25,7 @@ describe('PredictionListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PredictionListComponent);
     component = fixture.componentInstance;
+    component.selectedDataset = {name: "test_dataset"};
     fixture.detectChanges();
   });
 
@@ -34,10 +35,11 @@ describe('PredictionListComponent', () => {
 
   it('dataset subscription should update selectedDataset', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
+    const dataset = {name: "test_dataset"}
 
-    selectedDatasetChangedService.publish("test_dataset");
+    selectedDatasetChangedService.publish(dataset);
 
-    expect(component.selectedDataset).toEqual("test_dataset");
+    expect(component.selectedDataset).toEqual(dataset);
   });
 
   it('#getPredictionList should set predictionList', () => {

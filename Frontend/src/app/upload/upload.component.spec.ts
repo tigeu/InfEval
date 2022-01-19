@@ -27,15 +27,16 @@ describe('UploadComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UploadComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
 
     const uploadInformation = {
       uploadFileType: UploadFileTypes.Compressed,
       uploadFileEnding: ".zip",
       apiEndpoint: "dataset"
     };
-    component.datasetName = "test_dataset"
-    component.uploadInformation = uploadInformation
+    component.dataset = {name: "test_dataset"};
+    component.uploadInformation = uploadInformation;
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -45,9 +46,9 @@ describe('UploadComponent', () => {
   it('dataset subscription should set datasetName', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
 
-    selectedDatasetChangedService.publish("test_dataset")
+    selectedDatasetChangedService.publish(component.dataset)
 
-    expect(component.datasetName).toEqual("test_dataset");
+    expect(component.dataset).toEqual(component.dataset);
   });
 
   it('#upload should update progress and finally reset', () => {
@@ -147,25 +148,25 @@ describe('UploadComponent', () => {
   it('#ngOnChanges should set datasetName', () => {
     const change: SimpleChange = {
       previousValue: "",
-      currentValue: "test_dataset1",
+      currentValue: {name: "test_dataset1"},
       firstChange: true,
       isFirstChange(): boolean {
         return true;
       }
     };
-    const changes: SimpleChanges = {"datasetName": change};
+    const changes: SimpleChanges = {"dataset": change};
 
     component.ngOnChanges(changes)
 
-    expect(component.datasetName).toEqual("test_dataset1");
+    expect(component.dataset).toEqual({name: "test_dataset1"});
   });
 
   it('#ngOnChanges should not set datasetName if not provided', () => {
     const changes: SimpleChanges = {};
-    const previousValue = component.datasetName;
+    const previousValue = component.dataset;
 
     component.ngOnChanges(changes);
 
-    expect(component.datasetName).toEqual(previousValue);
+    expect(component.dataset).toEqual(previousValue);
   });
 });

@@ -4,6 +4,7 @@ import {finalize, Subscription} from "rxjs";
 import {UploadService} from "./upload.service";
 import {UploadInformation} from "./UploadInformation";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
+import {DatasetFile} from "../dataset-list/dataset-file";
 
 @Component({
   selector: 'app-upload',
@@ -12,7 +13,7 @@ import {SelectedDatasetChangedService} from "../shared-services/selected-dataset
 })
 export class UploadComponent implements OnInit {
   @Input() uploadInformation!: UploadInformation;
-  @Input() datasetName!: string;
+  @Input() dataset!: DatasetFile;
 
   file!: File | null;
   fileName: String = '';
@@ -23,8 +24,8 @@ export class UploadComponent implements OnInit {
 
   constructor(private uploadService: UploadService,
               private selectedDatasetChangedService: SelectedDatasetChangedService) {
-    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
-      this.datasetName = data;
+    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: DatasetFile) => {
+      this.dataset = data;
     })
   }
 
@@ -32,8 +33,8 @@ export class UploadComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if ("datasetName" in changes)
-      this.datasetName = changes["datasetName"].currentValue;
+    if ("dataset" in changes)
+      this.dataset = changes["dataset"].currentValue;
   }
 
   onFileSelected(event: any) {
@@ -47,7 +48,7 @@ export class UploadComponent implements OnInit {
 
   upload() {
     if (this.file && this.fileName) {
-      this.uploadSub = this.uploadService.upload(this.fileName, this.file, this.datasetName, this.uploadInformation.apiEndpoint)
+      this.uploadSub = this.uploadService.upload(this.fileName, this.file, this.dataset.name, this.uploadInformation.apiEndpoint)
         .pipe(finalize(() => this.reset()))
         .subscribe(event => {
           if (event.type == HttpEventType.UploadProgress) {

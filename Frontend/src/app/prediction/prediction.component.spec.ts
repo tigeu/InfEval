@@ -41,7 +41,7 @@ describe('PredictionsComponent', () => {
     spyOn(predictionService, 'getPrediction').and.returnValue(of(prediction));
     const spy = spyOn(predictionChangedService, 'publish');
 
-    component.selectedDataset = "test_dataset";
+    component.selectedDataset = {name: "test_dataset"};
     component.selectedImage = "test_image.jpg";
 
     component.getPrediction();
@@ -51,10 +51,11 @@ describe('PredictionsComponent', () => {
 
   it('dataset subscription should set selectedDataset and reset images and show selection', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
+    const dataset = {name: "test_dataset"};
 
-    selectedDatasetChangedService.publish("test_dataset")
+    selectedDatasetChangedService.publish(dataset)
 
-    expect(component.selectedDataset).toEqual("test_dataset");
+    expect(component.selectedDataset).toEqual(dataset);
     expect(component.selectedPrediction).toEqual("");
     expect(component.selectedImage).toEqual("");
     expect(component.predictionSettings.showPrediction).toEqual(false);
@@ -92,7 +93,7 @@ describe('PredictionsComponent', () => {
   it('#selectionChanged should trigger #getGroundTruth if dataset, pred and image are selected', () => {
     const spy = spyOn(component, 'getPrediction');
     component.predictionSettings.showPrediction = true;
-    component.selectedDataset = "test_dataset";
+    component.selectedDataset = {name: "test_dataset"}
     component.selectedPrediction = "test_pred";
     component.selectedImage = "test_image.jpg";
 
@@ -103,7 +104,7 @@ describe('PredictionsComponent', () => {
 
   it('#selectionChanged should not trigger #getPrediction if dataset, pred and image are not selected', () => {
     const spy = spyOn(component, 'getPrediction');
-    component.selectedDataset = "";
+    component.selectedDataset = {name: ""};
     component.selectedPrediction = "";
     component.selectedImage = "";
 

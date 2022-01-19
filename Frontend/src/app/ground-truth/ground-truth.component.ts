@@ -6,6 +6,7 @@ import {SelectedDatasetChangedService} from "../shared-services/selected-dataset
 import {Subscription} from "rxjs";
 import {GroundTruthChangedService} from "../shared-services/ground-truth-changed.service";
 import {GroundTruth} from "./ground-truth";
+import {DatasetFile} from "../dataset-list/dataset-file";
 
 @Component({
   selector: 'app-ground-truth',
@@ -14,7 +15,7 @@ import {GroundTruth} from "./ground-truth";
 })
 export class GroundTruthComponent implements OnInit {
   selectedDatasetChanged: Subscription;
-  selectedDataset: string = "";
+  selectedDataset: DatasetFile = {'name': ""};
   selectedImageChanged: Subscription;
   selectedImage: string = "";
 
@@ -30,7 +31,7 @@ export class GroundTruthComponent implements OnInit {
               private selectedDatasetChangedService: SelectedDatasetChangedService,
               private selectedImageChangedService: SelectedImageChangedService,
               private groundTruthChangedService: GroundTruthChangedService) {
-    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: string) => {
+    this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: DatasetFile) => {
       this.selectedDataset = data;
       this.selectedImage = "";
       this.groundTruthSettings.showGroundTruth = false;
@@ -45,7 +46,7 @@ export class GroundTruthComponent implements OnInit {
   }
 
   getGroundTruth() {
-    this.groundTruthService.getGroundTruth(this.selectedDataset, this.selectedImage, this.groundTruthSettings)
+    this.groundTruthService.getGroundTruth(this.selectedDataset.name, this.selectedImage, this.groundTruthSettings)
       .subscribe((groundTruth: GroundTruth) => {
         this.groundTruthChangedService.publish(groundTruth);
       })

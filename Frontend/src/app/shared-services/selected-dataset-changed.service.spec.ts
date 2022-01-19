@@ -1,6 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {SelectedDatasetChangedService} from './selected-dataset-changed.service';
+import {DatasetFile} from "../dataset-list/dataset-file";
 
 describe('SelectedDatasetChangedService', () => {
   let service: SelectedDatasetChangedService;
@@ -15,8 +16,8 @@ describe('SelectedDatasetChangedService', () => {
   });
 
   it('#newData should return selected dataset', () => {
-    const newDataset: string = "test_dataset1";
-    const fakeDataset: string = "other_dataset";
+    const newDataset: DatasetFile = {name: "test_dataset1"};
+    const fakeDataset: DatasetFile = {name: "other_dataset"};
 
     // assert before act
     service.newData.subscribe((data: any) => {

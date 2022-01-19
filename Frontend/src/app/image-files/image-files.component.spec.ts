@@ -67,8 +67,9 @@ describe('ImageFilesComponent', () => {
   it('dataset subscription should trigger #getImageFiles', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
     const spy = spyOn(component, 'getImageFiles');
+    const dataset = {name: "test_dataset"}
 
-    selectedDatasetChangedService.publish("test_dataset")
+    selectedDatasetChangedService.publish(dataset)
 
     expect(spy).toHaveBeenCalledWith("test_dataset");
   });

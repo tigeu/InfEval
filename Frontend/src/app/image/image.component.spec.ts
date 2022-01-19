@@ -43,6 +43,7 @@ describe('ImageComponent', () => {
     const fakeImage: Image = {file: new File(["an"], "other_image.jpg")};
     const imageService = TestBed.inject(ImageService);
     spyOn(imageService, 'getImage').and.returnValue(of(newImage));
+    component.selectedDataset = {name: "test_dataset"}
 
     component.getImage("test_image.jpg");
 
@@ -53,7 +54,8 @@ describe('ImageComponent', () => {
   it('#getImage should change imageUrl', () => {
     const newImage: Image = {file: new File([""], "test_image.jpg")};
     const imageService = TestBed.inject(ImageService);
-    component.selectedDataset = "test_dataset";
+
+    component.selectedDataset = {name: "test_dataset"};
     spyOn(imageService, 'getImage').withArgs("test_dataset", "test_image.jpg").and.returnValue(of(newImage));
 
     component.getImage("test_image.jpg");
@@ -114,10 +116,11 @@ describe('ImageComponent', () => {
   it('dataset subscription should update selectedDataset and trigger #resetImages', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
     const spy = spyOn(component, 'resetImages');
+    const dataset = {name: "test_dataset"}
 
-    selectedDatasetChangedService.publish("test_dataset");
+    selectedDatasetChangedService.publish(dataset);
 
-    expect(component.selectedDataset).toEqual("test_dataset");
+    expect(component.selectedDataset).toEqual(dataset);
     expect(spy).toHaveBeenCalled();
   });
 
@@ -126,13 +129,13 @@ describe('ImageComponent', () => {
   });
 
   it('should render image if image given', () => {
-    const newImage: Image = {file: new File([""], "test_image.jpg")};
+    const newImage: Image = {file: new File([""], "test_image1.jpg")};
     const imageService = TestBed.inject(ImageService);
-    component.selectedDataset = "test_dataset";
+    component.selectedDataset = {name: "test_dataset"}
 
-    spyOn(imageService, 'getImage').withArgs("test_dataset", "test_image.jpg").and.returnValue(of(newImage));
+    spyOn(imageService, 'getImage').withArgs("test_dataset", "test_image1.jpg").and.returnValue(of(newImage));
 
-    component.getImage("test_image.jpg");
+    component.getImage("test_image1.jpg");
 
     expect(component.imageUrl).toBeTruthy();
     fixture.detectChanges();
@@ -146,7 +149,8 @@ describe('ImageComponent', () => {
   it('should render image if ground truth image given', () => {
     const newImage: Image = {file: new File([""], "test_image.jpg")};
     const imageService = TestBed.inject(ImageService);
-    component.selectedDataset = "test_dataset";
+
+    component.selectedDataset = {name: "test_dataset"};
 
     spyOn(imageService, 'getImage').withArgs("test_dataset", "test_image.jpg").and.returnValue(of(newImage));
 
@@ -164,7 +168,8 @@ describe('ImageComponent', () => {
   it('should render image if prediction image given', () => {
     const newImage: Image = {file: new File([""], "test_image.jpg")};
     const imageService = TestBed.inject(ImageService);
-    component.selectedDataset = "test_dataset";
+
+    component.selectedDataset = {name: "test_dataset"}
 
     spyOn(imageService, 'getImage').withArgs("test_dataset", "test_image.jpg").and.returnValue(of(newImage));
 
