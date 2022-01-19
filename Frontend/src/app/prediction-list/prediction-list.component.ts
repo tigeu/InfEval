@@ -41,6 +41,8 @@ export class PredictionListComponent implements OnInit {
   }
 
   selectedPredictionChanged(prediction: string) {
-    this.selectedPredictionChangedService.publish(prediction);
+    const selectedPrediction = this.predictionList.find(x => x.name == prediction)
+    if (selectedPrediction)
+      this.selectedPredictionChangedService.publish(selectedPrediction);
   }
 }

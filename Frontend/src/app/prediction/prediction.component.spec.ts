@@ -56,7 +56,7 @@ describe('PredictionsComponent', () => {
     selectedDatasetChangedService.publish(dataset)
 
     expect(component.selectedDataset).toEqual(dataset);
-    expect(component.selectedPrediction).toEqual("");
+    expect(component.selectedPrediction).toEqual({name: ""});
     expect(component.selectedImage).toEqual("");
     expect(component.predictionSettings.showPrediction).toEqual(false);
   });
@@ -64,10 +64,11 @@ describe('PredictionsComponent', () => {
   it('prediction subscription should set selectedPrediction and trigger #selectionChanged', () => {
     const selectedPredictionChangedService = TestBed.inject(SelectedPredictionChangedService);
     const spy = spyOn(component, 'selectionChanged');
+    const pred = {name: "test_pred"};
 
-    selectedPredictionChangedService.publish("test_pred")
+    selectedPredictionChangedService.publish(pred);
 
-    expect(component.selectedPrediction).toEqual("test_pred");
+    expect(component.selectedPrediction).toEqual(pred);
     expect(spy).toHaveBeenCalled();
   });
 
@@ -94,7 +95,7 @@ describe('PredictionsComponent', () => {
     const spy = spyOn(component, 'getPrediction');
     component.predictionSettings.showPrediction = true;
     component.selectedDataset = {name: "test_dataset"}
-    component.selectedPrediction = "test_pred";
+    component.selectedPrediction = {name: "test_pred"};
     component.selectedImage = "test_image.jpg";
 
     component.selectionChanged();
@@ -105,7 +106,7 @@ describe('PredictionsComponent', () => {
   it('#selectionChanged should not trigger #getPrediction if dataset, pred and image are not selected', () => {
     const spy = spyOn(component, 'getPrediction');
     component.selectedDataset = {name: ""};
-    component.selectedPrediction = "";
+    component.selectedPrediction = {name: ""};
     component.selectedImage = "";
 
     component.selectionChanged();
