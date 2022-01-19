@@ -43,6 +43,7 @@ export class PredictionComponent implements OnInit {
     });
     this.selectedPredictionChanged = this.selectedPredictionChangedService.newData.subscribe((data: any) => {
       this.selectedPrediction = data;
+      this.selectionChanged();
     })
     this.selectedImageChanged = this.selectedImageChangedService.newData.subscribe((data: any) => {
       this.selectedImage = data;

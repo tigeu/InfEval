@@ -60,12 +60,14 @@ describe('PredictionsComponent', () => {
     expect(component.predictionSettings.showPrediction).toEqual(false);
   });
 
-  it('prediction subscription should set selectedPrediction', () => {
+  it('prediction subscription should set selectedPrediction and trigger #selectionChanged', () => {
     const selectedPredictionChangedService = TestBed.inject(SelectedPredictionChangedService);
+    const spy = spyOn(component, 'selectionChanged');
 
     selectedPredictionChangedService.publish("test_pred")
 
     expect(component.selectedPrediction).toEqual("test_pred");
+    expect(spy).toHaveBeenCalled();
   });
 
   it('image subscription should set selectedImage and trigger selectionChanged', () => {
