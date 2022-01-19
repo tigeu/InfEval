@@ -9,6 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 TMP_DIR = BASE_DIR / "tmp"
 IMAGE_ENDINGS = {".jpg", ".png"}
+
+GROUND_TRUTH_INDICES = {'file_name': 0, 'class': 1, 'xmin': 2, 'ymin': 3, 'xmax': 4, 'ymax': 5}
+PREDICTION_INDICES = {'file_name': 0, 'class': 1, 'confidence': 2, 'xmin': 3, 'ymin': 4, 'xmax': 5, 'ymax': 6}
 ###################
 
 SECRET_KEY = 'django-insecure-j6i_zudz8xu@z4&y$l^31i5521hgq!atqy-v1e&p%f9d3n=-=)'

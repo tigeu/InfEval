@@ -11,6 +11,7 @@ from ObjectDetectionAnalyzer.groundtruth.GroundTruthSerializer import GroundTrut
 from ObjectDetectionAnalyzer.services.CSVParseService import CSVParseService
 from ObjectDetectionAnalyzer.services.DrawBoundingBoxService import DrawBoundingBoxService
 from ObjectDetectionAnalyzer.services.PathService import PathService
+from ObjectDetectionAnalyzer.settings import GROUND_TRUTH_INDICES
 from ObjectDetectionAnalyzer.upload.UploadModels import Dataset
 
 
@@ -41,7 +42,7 @@ class GroundTruthView(APIView):
             'font_size': int(request.GET['font_size']),
         }
 
-        indices = {'file_name': 0, 'class': 1, 'xmin': 2, 'ymin': 3, 'xmax': 4, 'ymax': 5}
+        indices = GROUND_TRUTH_INDICES
         dataset_files = self.path_service.get_files_from_dir(dataset.path)
         if image_name in dataset_files:
             ground_truth = self.csv_parse_service.get_values_for_image(dataset.ground_truth_path, image_name, indices)

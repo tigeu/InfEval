@@ -11,6 +11,7 @@ from ObjectDetectionAnalyzer.prediction.PredictionSerializer import PredictionSe
 from ObjectDetectionAnalyzer.services.CSVParseService import CSVParseService
 from ObjectDetectionAnalyzer.services.DrawBoundingBoxService import DrawBoundingBoxService
 from ObjectDetectionAnalyzer.services.PathService import PathService
+from ObjectDetectionAnalyzer.settings import PREDICTION_INDICES
 from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 
@@ -44,7 +45,7 @@ class PredictionView(APIView):
             'font_size': int(request.GET['font_size']),
         }
 
-        indices = {'file_name': 0, 'class': 1, 'confidence': 2, 'xmin': 3, 'ymin': 4, 'xmax': 5, 'ymax': 6}
+        indices = PREDICTION_INDICES
         dataset_files = self.path_service.get_files_from_dir(dataset.path)
         if image_name in dataset_files:
             predictions = self.csv_parse_service.get_values_for_image(pred.path, image_name, indices)
