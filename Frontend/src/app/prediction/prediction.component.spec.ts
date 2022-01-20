@@ -34,11 +34,12 @@ describe('PredictionsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#getPrediction should publish image', () => {
+  it('#getPrediction trigger setClassColors and should publish image', () => {
     const prediction: Prediction = {file: new File([""], "test_image.jpg")};
     const predictionService = TestBed.inject(PredictionService);
     const predictionChangedService = TestBed.inject(PredictionChangedService);
     spyOn(predictionService, 'getPrediction').and.returnValue(of(prediction));
+    const colorSpy = spyOn(component, "setClassColors");
     const spy = spyOn(predictionChangedService, 'publish');
 
     component.selectedDataset = {name: "test_dataset"};
@@ -46,6 +47,7 @@ describe('PredictionsComponent', () => {
 
     component.getPrediction();
 
+    expect(colorSpy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(prediction)
   });
 
@@ -61,7 +63,20 @@ describe('PredictionsComponent', () => {
     expect(component.predictionSettings.showPrediction).toEqual(false);
   });
 
-  it('prediction subscription should set selectedPrediction and trigger #selectionChanged', () => {
+  it('prediction subscription should set selectedPrediction, init classes and colors and trigger #selectionChanged', () => {
+    const selectedPredictionChangedService = TestBed.inject(SelectedPredictionChangedService);
+    const spy = spyOn(component, 'selectionChanged');
+    const pred = {name: "test_pred", classes: ["class1", "class2"], colors: ["color1", "color2"]};
+
+    selectedPredictionChangedService.publish(pred);
+
+    expect(component.selectedPrediction).toEqual(pred);
+    expect(spy).toHaveBeenCalled();
+    expect(component.showClasses).toEqual([true, true]);
+    expect(component.classColors).toEqual(["color1", "color2"]);
+  });
+
+  it('prediction subscription should set selectedPrediction without init of classes and colors and trigger #selectionChanged', () => {
     const selectedPredictionChangedService = TestBed.inject(SelectedPredictionChangedService);
     const spy = spyOn(component, 'selectionChanged');
     const pred = {name: "test_pred"};
@@ -70,6 +85,8 @@ describe('PredictionsComponent', () => {
 
     expect(component.selectedPrediction).toEqual(pred);
     expect(spy).toHaveBeenCalled();
+    expect(component.showClasses).toEqual([]);
+    expect(component.classColors).toEqual([]);
   });
 
   it('image subscription should set selectedImage and trigger selectionChanged', () => {
@@ -112,5 +129,27 @@ describe('PredictionsComponent', () => {
     component.selectionChanged();
 
     expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('#setClassColors should set classes in predictionsettings', () => {
+    component.showClasses = [true, true]
+    component.classColors = ["color1", "newColor"]
+    component.selectedDataset = {name: "test_dataset", classes: ["class1", "class2"], colors: ["color1", "color2"]};
+
+    component.setClassColors();
+
+    expect(component.predictionSettings.classes).toEqual(["class1", "class2"]);
+    expect(component.predictionSettings.colors).toEqual(["color1", "newColor"]);
+  });
+
+  it('#setClassColors should not set classes in predictionsettings if all classes are false', () => {
+    component.showClasses = [false, false]
+    component.classColors = ["color1", "newColor"]
+    component.selectedDataset = {name: "test_dataset", classes: ["class1", "class2"], colors: ["color1", "color2"]};
+
+    component.setClassColors();
+
+    expect(component.predictionSettings.classes).toEqual([]);
+    expect(component.predictionSettings.colors).toEqual([]);
   });
 });

@@ -69,10 +69,22 @@ describe('PredictionListComponent', () => {
 
   it('click should publish new selected prediction', () => {
     const selectedPredictionChangedService = TestBed.inject(SelectedPredictionChangedService);
-    spyOn(selectedPredictionChangedService, 'publish').withArgs("pred");
+    const pred = {name: 'pred'}
+    component.predictionList = [{name: "pred"}, {name: "pred2"}]
+    spyOn(selectedPredictionChangedService, 'publish').withArgs(pred);
 
     component.selectedPredictionChanged("pred");
 
-    expect(selectedPredictionChangedService.publish).toHaveBeenCalledWith("pred")
+    expect(selectedPredictionChangedService.publish).toHaveBeenCalledWith(pred)
+  });
+
+  it('click should not publish new selected prediction if not found in list', () => {
+    const selectedPredictionChangedService = TestBed.inject(SelectedPredictionChangedService);
+    const pred = {name: 'pred'}
+    spyOn(selectedPredictionChangedService, 'publish').withArgs(pred);
+
+    component.selectedPredictionChanged("pred");
+
+    expect(selectedPredictionChangedService.publish).not.toHaveBeenCalledWith(pred)
   });
 });

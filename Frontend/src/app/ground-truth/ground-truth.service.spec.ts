@@ -31,7 +31,9 @@ describe('GroundTruthService', () => {
       strokeSize: 10,
       showColored: true,
       showLabeled: true,
-      fontSize: 35
+      fontSize: 35,
+      classes: [],
+      colors: []
     }
 
     spyOn(http, 'get').and.returnValue(of(newImage));

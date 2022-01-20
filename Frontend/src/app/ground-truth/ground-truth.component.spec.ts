@@ -33,11 +33,12 @@ describe('GroundTruthComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#getGroundTruth should publish image', () => {
+  it('#getGroundTruth trigger setClassColors and should publish image', () => {
       const groundTruth: GroundTruth = {file: new File([""], "test_image.jpg")};
       const groundTruthService = TestBed.inject(GroundTruthService);
       const groundTruthChangedService = TestBed.inject(GroundTruthChangedService);
       spyOn(groundTruthService, 'getGroundTruth').and.returnValue(of(groundTruth));
+      const colorSpy = spyOn(component, "setClassColors");
       const spy = spyOn(groundTruthChangedService, 'publish');
 
       component.selectedDataset = {name: "test_dataset"};
@@ -45,19 +46,35 @@ describe('GroundTruthComponent', () => {
 
       component.getGroundTruth();
 
+      expect(colorSpy).toHaveBeenCalled();
       expect(spy).toHaveBeenCalledWith(groundTruth)
     }
-  )
-  ;
+  );
 
-  it('dataset subscription should set selectedDataset and reset image and show selection', () => {
+  it('dataset subscription should set selectedDataset, init classes and colors, reset image and show selection', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
-    const dataset = {name: "test_dataset"};
+    const dataset = {name: "test_dataset", classes: ["class1", "class2"], colors: ["color1", "color2"]};
+
     selectedDatasetChangedService.publish(dataset)
 
     expect(component.selectedDataset).toEqual(dataset);
     expect(component.selectedImage).toEqual("");
     expect(component.groundTruthSettings.showGroundTruth).toEqual(false);
+    expect(component.showClasses).toEqual([true, true]);
+    expect(component.classColors).toEqual(["color1", "color2"]);
+  });
+
+  it('dataset subscription should set selectedDataset, reset image and show selection', () => {
+    const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
+    const dataset = {name: "test_dataset", classes: [], colors: []};
+
+    selectedDatasetChangedService.publish(dataset)
+
+    expect(component.selectedDataset).toEqual(dataset);
+    expect(component.selectedImage).toEqual("");
+    expect(component.groundTruthSettings.showGroundTruth).toEqual(false);
+    expect(component.showClasses).toEqual([]);
+    expect(component.classColors).toEqual([]);
   });
 
   it('image subscription should set selectedImage and trigger #selectionChanged', () => {
@@ -99,5 +116,27 @@ describe('GroundTruthComponent', () => {
     component.selectionChanged();
 
     expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('#setClassColors should set classes in groundTruthSettings', () => {
+    component.showClasses = [true, true]
+    component.classColors = ["color1", "newColor"]
+    component.selectedDataset = {name: "test_dataset", classes: ["class1", "class2"], colors: ["color1", "color2"]};
+
+    component.setClassColors();
+
+    expect(component.groundTruthSettings.classes).toEqual(["class1", "class2"]);
+    expect(component.groundTruthSettings.colors).toEqual(["color1", "newColor"]);
+  });
+
+  it('#setClassColors should not set classes in groundTruthSettings if all classes are false', () => {
+    component.showClasses = [false, false]
+    component.classColors = ["color1", "newColor"]
+    component.selectedDataset = {name: "test_dataset", classes: ["class1", "class2"], colors: ["color1", "color2"]};
+
+    component.setClassColors();
+
+    expect(component.groundTruthSettings.classes).toEqual([]);
+    expect(component.groundTruthSettings.colors).toEqual([]);
   });
 });
