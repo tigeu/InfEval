@@ -22,6 +22,8 @@ export class PredictionService {
         show_colored: predictionSettings.showColored,
         show_labeled: predictionSettings.showLabeled,
         font_size: predictionSettings.fontSize,
+        classes: predictionSettings.classes.join(','),
+        colors: predictionSettings.colors.join(',')
       }
     });
   }

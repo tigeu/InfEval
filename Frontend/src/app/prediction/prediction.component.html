@@ -1,9 +1,15 @@
-<div class="card" *ngIf="selectedDataset && selectedImage">
+<div class="card" *ngIf="selectedDataset && selectedImage && selectedDataset.predictions">
   <div class="card-body">
-    <h3 class="card-title">Prediction utilities</h3>
+    <div class="mb-3">
+      <h3 class="card-title d-inline">Prediction utilities</h3>
+      <button *ngIf="loading" class="btn btn-primary float-end" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="false"></span>
+        Loading...
+      </button>
+    </div>
     <app-prediction-list [selectedDataset]="selectedDataset"></app-prediction-list>
     <p></p>
-    <div class="form-check" *ngIf="selectedPrediction">
+    <div class="form-check" *ngIf="selectedPrediction.name">
       <input class="form-check-input" type="checkbox" id="flexShowGroundTruth"
              [(ngModel)]="predictionSettings.showPrediction" (change)="selectionChanged()">
       <label class="form-check-label" for="flexShowGroundTruth">Show prediction values</label>
@@ -16,7 +22,7 @@
         Show prediction settings
       </button>
     </p>
-    <div class="collapse" id="collapsePrediction">
+    <div *ngIf="predictionSettings.showPrediction" class="collapse" id="collapsePrediction">
       <div class="card card-body">
         <div>
           <label for="strokeRange" class="form-label">Stroke size:</label> {{this.predictionSettings.strokeSize}}
@@ -26,20 +32,34 @@
         <div>
           <input class="form-check-input" type="checkbox" id="flexSwitchColored"
                  [(ngModel)]="predictionSettings.showColored" (change)="selectionChanged()">
-          <label class="form-check-label" for="flexSwitchColored">Colored</label>
+          <label class="form-check-label ms-1" for="flexSwitchColored">Colored</label>
         </div>
-        <div>
+        <div class="mb-1">
           <input class="form-check-input" type="checkbox" id="flexSwitchLabeled"
                  [(ngModel)]="predictionSettings.showLabeled" (change)="selectionChanged()">
-          <label class="form-check-label" for="flexSwitchLabeled">Labeled</label>
+          <label class="form-check-label ms-1" for="flexSwitchLabeled">Labeled</label>
         </div>
         <div *ngIf="predictionSettings.showLabeled">
           <label for="fontRange" class="form-label">Font size:</label> {{this.predictionSettings.fontSize}}
           <input type="range" class="form-range" id="fontRange" min="10" max="100" step="10"
                  [(ngModel)]="predictionSettings.fontSize" (change)="selectionChanged()">
         </div>
+        <p class="d-grid gap-2">
+          <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapsePredictionClasses"
+                  aria-expanded="false" aria-controls="collapsePredictionClasses">
+            Show classes
+          </button>
+        </p>
+        <div class="collapse mb-1" id="collapsePredictionClasses"
+             *ngFor="let className of selectedPrediction.classes; let i = index">
+          <input class="form-check-input align-middle" type="checkbox" id="{{className}}"
+                 [(ngModel)]="showClasses[i]" (change)="selectionChanged()">
+          <label class="form-check-label ms-1" for="{{className}}}">{{className}}</label>
+          <input *ngIf="predictionSettings.showColored" [(ngModel)]="classColors[i]" (change)="selectionChanged()"
+                 type="color" class="form-control-color float-end" id="{{className}}">
+        </div>
       </div>
     </div>
-
   </div>
 </div>

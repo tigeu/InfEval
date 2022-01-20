@@ -22,6 +22,8 @@ export class GroundTruthService {
         show_colored: groundTruthSettings.showColored,
         show_labeled: groundTruthSettings.showLabeled,
         font_size: groundTruthSettings.fontSize,
+        classes: groundTruthSettings.classes.join(','),
+        colors: groundTruthSettings.colors.join(',')
       }
     });
   }

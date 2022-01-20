@@ -4,4 +4,6 @@ export interface PredictionSettings {
   showColored: boolean;
   showLabeled: boolean;
   fontSize: number;
+  classes: string[];
+  colors: string[];
 }

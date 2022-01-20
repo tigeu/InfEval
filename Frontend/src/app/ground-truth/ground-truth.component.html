@@ -1,6 +1,12 @@
-<div class="card" *ngIf="selectedDataset && selectedImage">
+<div class="card" *ngIf="selectedDataset && selectedImage && selectedDataset.ground_truth">
   <div class="card-body">
-    <h3 class="card-title">Ground truth utilities</h3>
+    <div class="mb-3">
+      <h3 class="card-title d-inline">Ground truth utilities</h3>
+      <button *ngIf="loading" class="btn btn-primary float-end" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="false"></span>
+        Loading...
+      </button>
+    </div>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="flexShowGroundTruth"
              [(ngModel)]="groundTruthSettings.showGroundTruth" (change)="selectionChanged()">
@@ -13,30 +19,44 @@
         Show ground truth settings
       </button>
     </p>
-    <div class="collapse" id="collapseGroundTruth">
+    <div *ngIf="groundTruthSettings.showGroundTruth" class="collapse" id="collapseGroundTruth">
       <div class="card card-body">
         <div>
           <label for="strokeRange" class="form-label">Stroke size:</label> {{this.groundTruthSettings.strokeSize}}
-          <input type="range" class="form-range" id="strokeRange" min="5" max="50" step="5"
+          <input type="range" class="form-range ms-1" id="strokeRange" min="5" max="50" step="5"
                  [(ngModel)]="groundTruthSettings.strokeSize" (change)="selectionChanged()">
         </div>
         <div>
           <input class="form-check-input" type="checkbox" id="flexSwitchColored"
                  [(ngModel)]="groundTruthSettings.showColored" (change)="selectionChanged()">
-          <label class="form-check-label" for="flexSwitchColored">Colored</label>
+          <label class="form-check-label ms-1" for="flexSwitchColored">Colored</label>
         </div>
-        <div>
+        <div class="mb-1">
           <input class="form-check-input" type="checkbox" id="flexSwitchLabeled"
                  [(ngModel)]="groundTruthSettings.showLabeled" (change)="selectionChanged()">
-          <label class="form-check-label" for="flexSwitchLabeled">Labeled</label>
+          <label class="form-check-label ms-1" for="flexSwitchLabeled">Labeled</label>
         </div>
         <div *ngIf="groundTruthSettings.showLabeled">
           <label for="fontRange" class="form-label">Font size:</label> {{this.groundTruthSettings.fontSize}}
           <input type="range" class="form-range" id="fontRange" min="10" max="100" step="10"
                  [(ngModel)]="groundTruthSettings.fontSize" (change)="selectionChanged()">
         </div>
+        <p class="d-grid gap-2">
+          <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseGroundTruthClasses"
+                  aria-expanded="false" aria-controls="collapseGroundTruthClasses">
+            Show classes
+          </button>
+        </p>
+        <div class="collapse mb-1" id="collapseGroundTruthClasses"
+             *ngFor="let className of selectedDataset.classes; let i = index">
+          <input class="form-check-input align-middle" type="checkbox" id="{{className}}"
+                 [(ngModel)]="showClasses[i]" (change)="selectionChanged()">
+          <label class="form-check-label ms-1" for="{{className}}}">{{className}}</label>
+          <input *ngIf="groundTruthSettings.showColored" [(ngModel)]="classColors[i]" (change)="selectionChanged()"
+                 type="color" class="form-control-color float-end" id="{{className}}">
+        </div>
       </div>
     </div>
-
   </div>
 </div>

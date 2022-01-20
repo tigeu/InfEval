@@ -23,13 +23,18 @@ export class PredictionComponent implements OnInit {
   selectedPrediction: PredictionFile = {name: ""};
   selectedImageChanged: Subscription;
   selectedImage: string = "";
+  loading: boolean = false;
+  showClasses: boolean[] = [];
+  classColors: string[] = [];
 
   predictionSettings: PredictionSettings = {
     showPrediction: false,
     strokeSize: 10,
     showColored: true,
     showLabeled: true,
-    fontSize: 35
+    fontSize: 35,
+    classes: [],
+    colors: []
   }
 
   constructor(private predictionService: PredictionService,
@@ -45,6 +50,10 @@ export class PredictionComponent implements OnInit {
     });
     this.selectedPredictionChanged = this.selectedPredictionChangedService.newData.subscribe((data: any) => {
       this.selectedPrediction = data;
+      if (data.classes && data.colors) {
+        this.showClasses = new Array(data.classes.length).fill(true);
+        this.classColors = data.colors;
+      }
       this.selectionChanged();
     })
     this.selectedImageChanged = this.selectedImageChangedService.newData.subscribe((data: any) => {
@@ -58,10 +67,28 @@ export class PredictionComponent implements OnInit {
   }
 
   getPrediction() {
+    this.loading = true;
+    this.setClassColors();
     this.predictionService.getPrediction(this.selectedDataset.name, this.selectedPrediction.name, this.selectedImage, this.predictionSettings)
       .subscribe((prediction: Prediction) => {
         this.predictionChangedService.publish(prediction);
+        this.loading = false;
       })
+  }
+
+  setClassColors() {
+    if (this.selectedDataset.classes) {
+      let classes: string[] = [];
+      let colors: string[] = [];
+      for (let i = 0; i < this.selectedDataset.classes?.length; i++) {
+        if (this.showClasses[i]) {
+          classes.push(this.selectedDataset.classes[i]);
+          colors.push(this.classColors[i]);
+        }
+      }
+      this.predictionSettings.classes = classes;
+      this.predictionSettings.colors = colors;
+    }
   }
 
   selectionChanged() {

@@ -4,4 +4,6 @@ export interface GroundTruthSettings {
   showColored: boolean;
   showLabeled: boolean;
   fontSize: number;
+  classes: string[];
+  colors: string[];
 }

@@ -18,13 +18,18 @@ export class GroundTruthComponent implements OnInit {
   selectedDataset: DatasetFile = {'name': ""};
   selectedImageChanged: Subscription;
   selectedImage: string = "";
+  loading: boolean = false;
+  showClasses: boolean[] = [];
+  classColors: string[] = [];
 
   groundTruthSettings: GroundTruthSettings = {
     showGroundTruth: false,
     strokeSize: 10,
     showColored: true,
     showLabeled: true,
-    fontSize: 35
+    fontSize: 35,
+    classes: [],
+    colors: []
   }
 
   constructor(private groundTruthService: GroundTruthService,
@@ -35,6 +40,10 @@ export class GroundTruthComponent implements OnInit {
       this.selectedDataset = data;
       this.selectedImage = "";
       this.groundTruthSettings.showGroundTruth = false;
+      if (data.classes && data.colors) {
+        this.showClasses = new Array(data.classes.length).fill(true);
+        this.classColors = data.colors;
+      }
     })
     this.selectedImageChanged = this.selectedImageChangedService.newData.subscribe((data: any) => {
       this.selectedImage = data;
@@ -46,10 +55,28 @@ export class GroundTruthComponent implements OnInit {
   }
 
   getGroundTruth() {
+    this.loading = true;
+    this.setClassColors();
     this.groundTruthService.getGroundTruth(this.selectedDataset.name, this.selectedImage, this.groundTruthSettings)
       .subscribe((groundTruth: GroundTruth) => {
         this.groundTruthChangedService.publish(groundTruth);
+        this.loading = false;
       })
+  }
+
+  setClassColors() {
+    if (this.selectedDataset.classes) {
+      let classes: string[] = [];
+      let colors: string[] = [];
+      for (let i = 0; i < this.selectedDataset.classes?.length; i++) {
+        if (this.showClasses[i]) {
+          classes.push(this.selectedDataset.classes[i]);
+          colors.push(this.classColors[i]);
+        }
+      }
+      this.groundTruthSettings.classes = classes;
+      this.groundTruthSettings.colors = colors;
+    }
   }
 
   selectionChanged() {
