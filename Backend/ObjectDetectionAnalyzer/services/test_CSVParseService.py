@@ -55,16 +55,16 @@ class TestCSVParseService(TestCase):
         open.return_value = self.csv_file
         classes = self.csv_parse_service.get_classes(self.csv_file, 1)
 
-        self.assertEqual(classes, {'class1': 0, 'class2': 1, 'class3': 2})
+        self.assertEqual(classes, ['class1', 'class2', 'class3'])
 
     def test_get_classes_with_invalid_file(self, open):
         open.return_value = self.invalid_file
         classes = self.csv_parse_service.get_classes(self.invalid_file, 1)
 
-        self.assertEqual(classes, {})
+        self.assertEqual(classes, [])
 
     def test_get_classes_with_invalid_csv_file(self, open):
         open.return_value = self.invalid_csv_file
         classes = self.csv_parse_service.get_classes(self.invalid_csv_file, 1)
 
-        self.assertEqual(classes, {'0': 0})
+        self.assertEqual(classes, ['0'])

@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch, ANY
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 from ObjectDetectionAnalyzer.services.DrawBoundingBoxService import DrawBoundingBoxService
 
@@ -18,6 +18,8 @@ class TestDrawBoundingBoxService(TestCase):
             'show_colored': True,
             'show_labeled': True,
             'font_size': 35,
+            'classes': ['class1', 'class2'],
+            'colors': ['color1', 'color2']
         }
         self.classes = {'class1': 0, 'class2': 1, 'class3': 2}
         self.predictions = [{'class': 'class1', 'confidence': 50, 'xmin': 50, 'ymin': 50, 'xmax': 75, 'ymax': 75},
@@ -30,7 +32,7 @@ class TestDrawBoundingBoxService(TestCase):
     def test_draw_bounding_boxes(self, open, draw_bounding_box, draw_label):
         open.return_value = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
 
-        self.draw_bounding_box_service.draw_bounding_boxes(self.predictions, "img.jpg", self.classes, self.settings)
+        self.draw_bounding_box_service.draw_bounding_boxes(self.predictions, "img.jpg", self.settings)
 
         self.assertEqual(draw_bounding_box.call_count, 3)
         self.assertEqual(draw_label.call_count, 3)
@@ -42,7 +44,7 @@ class TestDrawBoundingBoxService(TestCase):
         open.return_value = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
         self.settings['show_labeled'] = False
 
-        self.draw_bounding_box_service.draw_bounding_boxes(self.predictions, "img.jpg", self.classes, self.settings)
+        self.draw_bounding_box_service.draw_bounding_boxes(self.predictions, "img.jpg", self.settings)
 
         self.assertEqual(draw_bounding_box.call_count, 3)
         self.assertEqual(draw_label.call_count, 0)
@@ -56,7 +58,7 @@ class TestDrawBoundingBoxService(TestCase):
         draw = ImageDraw.Draw(transparent_image)
         prediction = {'class': 'class1', 'confidence': 50, 'xmin': 50, 'ymin': 50, 'xmax': 75, 'ymax': 75}
 
-        self.draw_bounding_box_service.draw_bounding_box(self.classes, draw, prediction, self.settings)
+        self.draw_bounding_box_service.draw_bounding_box(draw, prediction, self.settings)
 
         rectangle.assert_called_with([50, 50, 75, 75], outline="black", width=15)
 
@@ -70,10 +72,9 @@ class TestDrawBoundingBoxService(TestCase):
 
         transparent_image = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
         draw = ImageDraw.Draw(transparent_image)
-        font = ImageFont.truetype("arial", 35)
         prediction = {'class': 'class1', 'confidence': 50, 'xmin': 50, 'ymin': 50, 'xmax': 75, 'ymax': 75}
 
-        self.draw_bounding_box_service.draw_label(self.classes, draw, prediction, self.settings, 100)
+        self.draw_bounding_box_service.draw_label(draw, prediction, self.settings, 100)
 
         rectangle.assert_called_with([50, 40, 60, 50], outline="black", fill="black", width=15)
         text.assert_called_with((50, 40), "class1: 50 %", fill="white", font=ANY)
@@ -99,20 +100,20 @@ class TestDrawBoundingBoxService(TestCase):
         self.assertEqual(label_rect, [40, 0, 100, 10])
 
     def test_get_colors_colored(self):
-        color, font_color = self.draw_bounding_box_service.get_colors(self.classes, 'class1', self.settings)
+        color, font_color = self.draw_bounding_box_service.get_colors('class1', self.settings)
 
-        self.assertEqual(color, "#1CE6FF")
+        self.assertEqual(color, "color1")
         self.assertEqual(font_color, "black")
 
     def test_get_colors_colored_class2(self):
-        color, font_color = self.draw_bounding_box_service.get_colors(self.classes, 'class2', self.settings)
+        color, font_color = self.draw_bounding_box_service.get_colors('class2', self.settings)
 
-        self.assertEqual(color, "#FF34FF")
+        self.assertEqual(color, "color2")
         self.assertEqual(font_color, "black")
 
     def test_get_colors_not_colored(self):
         self.settings['show_colored'] = False
-        color, font_color = self.draw_bounding_box_service.get_colors(self.classes, 'class1', self.settings)
+        color, font_color = self.draw_bounding_box_service.get_colors('class1', self.settings)
 
         self.assertEqual(color, "black")
         self.assertEqual(font_color, "white")

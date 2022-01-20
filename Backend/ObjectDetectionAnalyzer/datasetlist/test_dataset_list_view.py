@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ObjectDetectionAnalyzer.upload.UploadModels import Dataset
+from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 
 class TestDatasetListView(APITestCase):
@@ -35,6 +35,52 @@ class TestDatasetListView(APITestCase):
         self.assertEqual(response.data[0]['name'], "dataset1")
         self.assertEqual(response.data[1]['name'], "dataset2")
         self.assertEqual(response.data[2]['name'], "dataset3")
+
+    @patch('ObjectDetectionAnalyzer.services.ColorService.ColorService.get_class_colors')
+    @patch('ObjectDetectionAnalyzer.services.CSVParseService.CSVParseService.get_classes')
+    def test_dataset_list_with_ground_truth(self, get_classes, get_class_colors):
+        user = User.objects.create_user("test", "test@test.test", "test")
+        self.client.force_authenticate(user=user)
+
+        Dataset.objects.create(name="dataset_name", ground_truth_path="path", userId=user)
+        get_classes.return_value = ["class1", "class2"]
+        get_class_colors.return_value = ["color1", "color2"]
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], "dataset_name")
+        self.assertEqual(response.data[0]['ground_truth'], True)
+        self.assertEqual(response.data[0]['classes'], ["class1", "class2"])
+        self.assertEqual(response.data[0]['colors'], ["color1", "color2"])
+        self.assertEqual(response.data[0]['predictions'], False)
+
+    def test_dataset_list_without_ground_truth(self):
+        user = User.objects.create_user("test", "test@test.test", "test")
+        self.client.force_authenticate(user=user)
+
+        Dataset.objects.create(name="dataset_name", userId=user)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], "dataset_name")
+        self.assertEqual(response.data[0]['ground_truth'], False)
+        self.assertEqual(response.data[0]['predictions'], False)
+
+    def test_dataset_list_without_ground_truth_with_predictions(self):
+        user = User.objects.create_user("test", "test@test.test", "test")
+        self.client.force_authenticate(user=user)
+
+        dataset = Dataset.objects.create(name="dataset_name", userId=user)
+        Predictions.objects.create(name="pred", datasetId=dataset, userId=user)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], "dataset_name")
+        self.assertEqual(response.data[0]['ground_truth'], False)
+        self.assertEqual(response.data[0]['predictions'], True)
 
     @patch('ObjectDetectionAnalyzer.upload.UploadModels.Dataset.objects.filter')
     def test_dataset_list_with_without_data(self, filter):

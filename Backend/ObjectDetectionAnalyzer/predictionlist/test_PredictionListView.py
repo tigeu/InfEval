@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
@@ -27,7 +29,12 @@ class TestPredictionListView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data, "No predictions available for this dataset yet")
 
-    def test_prediction_list_with_dataset_with_predictions(self):
+    @patch('ObjectDetectionAnalyzer.services.ColorService.ColorService.get_class_colors')
+    @patch('ObjectDetectionAnalyzer.services.CSVParseService.CSVParseService.get_classes')
+    def test_prediction_list_with_dataset_with_predictions(self, get_classes, get_class_colors):
+        get_classes.return_value = ["class1", "class2"]
+        get_class_colors.return_value = ["color1", "color2"]
+
         dataset = Dataset.objects.create(name="dataset", userId=self.user)
         Predictions.objects.create(name="prediction1", datasetId=dataset, userId=self.user)
         Predictions.objects.create(name="prediction2", datasetId=dataset, userId=self.user)
@@ -36,4 +43,8 @@ class TestPredictionListView(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['name'], "prediction1")
+        self.assertEqual(response.data[0]['classes'], ["class1", "class2"])
+        self.assertEqual(response.data[0]['colors'], ["color1", "color2"])
         self.assertEqual(response.data[1]['name'], "prediction2")
+        self.assertEqual(response.data[1]['classes'], ["class1", "class2"])
+        self.assertEqual(response.data[1]['colors'], ["color1", "color2"])
