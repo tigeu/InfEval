@@ -31,5 +31,4 @@ class CSVParseService:
             for row in reader:
                 classes.add(row[class_index])
             sorted_classes = sorted(list(classes))
-            classes_dict = {sorted_class: index for index, sorted_class in enumerate(sorted_classes)}
-            return classes_dict
+            return sorted_classes

@@ -43,15 +43,16 @@ class PredictionView(APIView):
             'show_colored': request.GET['show_colored'].lower() == "true",
             'show_labeled': request.GET['show_labeled'].lower() == "true",
             'font_size': int(request.GET['font_size']),
+            'classes': request.GET['classes'].split(','),
+            'colors': request.GET['colors'].split(',')
         }
 
         indices = PREDICTION_INDICES
         dataset_files = self.path_service.get_files_from_dir(dataset.path)
         if image_name in dataset_files:
             predictions = self.csv_parse_service.get_values_for_image(pred.path, image_name, indices)
-            classes = self.csv_parse_service.get_classes(dataset.ground_truth_path, indices['class'])
             image_path = Path(dataset.path) / image_name
-            pred_image = self.draw_bounding_box_service.draw_bounding_boxes(predictions, image_path, classes, settings)
+            pred_image = self.draw_bounding_box_service.draw_bounding_boxes(predictions, image_path, settings)
 
             with io.BytesIO() as output:
                 pred_image.save(output, format="PNG")
