@@ -18,6 +18,7 @@ import {DownloadImageTriggeredService} from "../shared-services/download-image-t
 export class ImageComponent implements OnInit {
   @ViewChild('downloadCanvas')
   downloadCanvas!: ElementRef<HTMLCanvasElement>;
+  downloadLink: HTMLAnchorElement = document.createElement("a");
 
   selectedImageChanged: Subscription;
   selectedDatasetChanged: Subscription;
@@ -115,12 +116,10 @@ export class ImageComponent implements OnInit {
     let context = this.downloadCanvas.nativeElement.getContext('2d');
     if (context) {
       this.createImage(context)
-      let url = this.downloadCanvas.nativeElement.toDataURL("image/png");
-      let link = document.createElement("a");
-      link.href = url
+      this.downloadLink.href = this.downloadCanvas.nativeElement.toDataURL();
       if (this.image.name)
-        link.download = this.image.name;
-      link.click();
+        this.downloadLink.download = this.image.name;
+      this.downloadLink.click();
     }
   }
 
