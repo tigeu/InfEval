@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ImageService} from "./image.service";
 import {SafeResourceUrl} from '@angular/platform-browser'
 import {Image} from "./image";
@@ -8,6 +8,7 @@ import {SelectedDatasetChangedService} from "../shared-services/selected-dataset
 import {GroundTruthChangedService} from "../shared-services/ground-truth-changed.service";
 import {PredictionChangedService} from "../shared-services/prediction-changed.service";
 import {DatasetFile} from "../dataset-list/dataset-file";
+import {DownloadImageTriggeredService} from "../shared-services/download-image-triggered.service";
 
 @Component({
   selector: 'app-image',
@@ -15,11 +16,14 @@ import {DatasetFile} from "../dataset-list/dataset-file";
   styleUrls: ['./image.component.css']
 })
 export class ImageComponent implements OnInit {
+  @ViewChild('downloadCanvas')
+  downloadCanvas!: ElementRef<HTMLCanvasElement>;
 
   selectedImageChanged: Subscription;
   selectedDatasetChanged: Subscription;
   groundTruthChanged: Subscription;
   predictionChanged: Subscription;
+  downloadImageTriggered: Subscription;
   selectedDataset!: DatasetFile;
 
   image: Image = {file: new File([""], "")};
@@ -35,7 +39,8 @@ export class ImageComponent implements OnInit {
               private selectedImageChangedService: SelectedImageChangedService,
               private selectedDatasetChangedService: SelectedDatasetChangedService,
               private groundTruthChangedService: GroundTruthChangedService,
-              private predictionChangedService: PredictionChangedService) {
+              private predictionChangedService: PredictionChangedService,
+              private downloadImageTriggeredService: DownloadImageTriggeredService) {
     this.selectedImageChanged = this.selectedImageChangedService.newData.subscribe((data: any) => {
       this.resetImages();
       this.getImage(data);
@@ -55,6 +60,10 @@ export class ImageComponent implements OnInit {
         this.setPredictionImage(data);
       else
         this.resetPredictionImage();
+    });
+    this.downloadImageTriggered = this.downloadImageTriggeredService.newData.subscribe((data: any) => {
+      if (data)
+        this.downloadImage();
     });
   }
 
@@ -100,6 +109,31 @@ export class ImageComponent implements OnInit {
         next: this.setImage.bind(this),
         error: this.resetImages.bind(this)
       })
+  }
+
+  downloadImage() {
+    let context = this.downloadCanvas.nativeElement.getContext('2d');
+    if (context) {
+      this.createImage(context)
+      let url = this.downloadCanvas.nativeElement.toDataURL("image/png");
+      let link = document.createElement("a");
+      link.href = url
+      if (this.image.name)
+        link.download = this.image.name;
+      link.click();
+    }
+  }
+
+  createImage(context: CanvasRenderingContext2D) {
+    let img = new Image();
+    img.src = this.imageUrl.toString()
+    this.downloadCanvas.nativeElement.width = img.width;
+    this.downloadCanvas.nativeElement.height = img.height;
+    context.drawImage(img, 0, 0);
+    img.src = this.groundTruthImageUrl.toString()
+    context.drawImage(img, 0, 0);
+    img.src = this.predictionImageUrl.toString()
+    context.drawImage(img, 0, 0);
   }
 
   ngOnInit(): void {

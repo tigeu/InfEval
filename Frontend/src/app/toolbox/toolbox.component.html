@@ -1,3 +1,8 @@
 <app-ground-truth></app-ground-truth>
 <p></p>
 <app-prediction></app-prediction>
+<p></p>
+<button *ngIf="imageSelected" type="button" class="btn btn-success"
+        (click)="downloadTriggered()">
+  Download image
+</button>
