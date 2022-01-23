@@ -10,6 +10,7 @@ import {By} from "@angular/platform-browser";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 import {GroundTruthChangedService} from "../shared-services/ground-truth-changed.service";
 import {PredictionChangedService} from "../shared-services/prediction-changed.service";
+import {DownloadImageTriggeredService} from "../shared-services/download-image-triggered.service";
 
 describe('ImageComponent', () => {
   let component: ImageComponent;
@@ -21,9 +22,11 @@ describe('ImageComponent', () => {
         HttpClientModule,
       ],
       providers: [
-        SelectedImageChangedService
+        SelectedImageChangedService,
       ],
-      declarations: [ImageComponent]
+      declarations: [
+        ImageComponent,
+      ]
     })
       .compileComponents();
   });
@@ -124,6 +127,24 @@ describe('ImageComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('download subscription should initiate download if data', () => {
+    const downloadImageTriggeredService = TestBed.inject(DownloadImageTriggeredService);
+    const spy = spyOn(component, 'downloadImage');
+
+    downloadImageTriggeredService.publish(true);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('download subscription should not initiate download if no data', () => {
+    const downloadImageTriggeredService = TestBed.inject(DownloadImageTriggeredService);
+    const spy = spyOn(component, 'downloadImage');
+
+    downloadImageTriggeredService.publish(false);
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
   it('should not render image if image is undefined or null', () => {
     expect(fixture.debugElement.query(By.css('#selected-image'))).toBeNull();
   });
@@ -211,5 +232,29 @@ describe('ImageComponent', () => {
     expect(imageSpy).toHaveBeenCalled();
     expect(groundTruthSpy).toHaveBeenCalled();
     expect(predictionSpy).toHaveBeenCalled();
+  });
+
+  it('#downloadImage should trigger createImage and click on link', () => {
+    const spy = spyOn(component, 'createImage');
+    const linkSpy = spyOn(component.downloadLink, 'click');
+    component.image.name = "test_name";
+
+    component.downloadImage();
+
+    expect(spy).toHaveBeenCalled();
+    expect(linkSpy).toHaveBeenCalled();
+  });
+
+  it('#createImage should draw 3 images on canvas', () => {
+    const context = component.downloadCanvas.nativeElement.getContext('2d');
+    if (context) {
+      const canvasSpy = spyOn(context, 'drawImage');
+
+      component.createImage(context);
+
+      expect(canvasSpy).toHaveBeenCalledTimes(3);
+    } else {
+      throw new Error("context can not be fetched")
+    }
   });
 });
