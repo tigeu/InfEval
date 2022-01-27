@@ -139,4 +139,14 @@ describe('GroundTruthComponent', () => {
     expect(component.groundTruthSettings.classes).toEqual([]);
     expect(component.groundTruthSettings.colors).toEqual([]);
   });
+
+  it('#ngOnDestroy unsubscribes from all subscriptions', () => {
+    const selectedImageChangedSpy = spyOn(component.selectedImageChanged, 'unsubscribe');
+    const selectedDatasetChangedSpy = spyOn(component.selectedDatasetChanged, 'unsubscribe');
+
+    component.ngOnDestroy();
+
+    expect(selectedImageChangedSpy).toHaveBeenCalled();
+    expect(selectedDatasetChangedSpy).toHaveBeenCalled();
+  });
 });

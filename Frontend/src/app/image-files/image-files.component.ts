@@ -30,6 +30,10 @@ export class ImageFilesComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy(): void {
+    this.selectedDatasetChanged.unsubscribe();
+  }
+
   getImageFiles(dataset: string): void {
     this.imageFilesService.getImageFiles(dataset)
       .subscribe((imageFiles: ImageFile[]) => {

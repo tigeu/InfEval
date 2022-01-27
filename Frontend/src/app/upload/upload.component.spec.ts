@@ -169,4 +169,12 @@ describe('UploadComponent', () => {
 
     expect(component.dataset).toEqual(previousValue);
   });
+
+  it('#ngOnDestroy unsubscribes from all subscriptions', () => {
+    const selectedDatasetChangedSpy = spyOn(component.selectedDatasetChanged, 'unsubscribe');
+
+    component.ngOnDestroy();
+
+    expect(selectedDatasetChangedSpy).toHaveBeenCalled();
+  });
 });

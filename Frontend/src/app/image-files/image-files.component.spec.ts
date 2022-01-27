@@ -116,4 +116,12 @@ describe('ImageFilesComponent', () => {
     const queriedElements = fixture.debugElement.query(By.css('#image-files')).children;
     expect(queriedElements.length).toBe(0);
   });
+
+  it('#ngOnDestroy unsubscribes from all subscriptions', () => {
+    const selectedDatasetChangedSpy = spyOn(component.selectedDatasetChanged, 'unsubscribe');
+
+    component.ngOnDestroy();
+
+    expect(selectedDatasetChangedSpy).toHaveBeenCalled();
+  });
 });

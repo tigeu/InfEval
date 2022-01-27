@@ -257,4 +257,20 @@ describe('ImageComponent', () => {
       throw new Error("context can not be fetched")
     }
   });
+
+  it('#ngOnDestroy unsubscribes from all subscriptions', () => {
+    const selectedImageChangedSpy = spyOn(component.selectedImageChanged, 'unsubscribe');
+    const selectedDatasetChangedSpy = spyOn(component.selectedDatasetChanged, 'unsubscribe');
+    const groundTruthChangedSpy = spyOn(component.groundTruthChanged, 'unsubscribe');
+    const predictionChangedSpy = spyOn(component.predictionChanged, 'unsubscribe');
+    const downloadImageTriggeredSpy = spyOn(component.downloadImageTriggered, 'unsubscribe');
+
+    component.ngOnDestroy();
+
+    expect(selectedImageChangedSpy).toHaveBeenCalled();
+    expect(selectedDatasetChangedSpy).toHaveBeenCalled();
+    expect(groundTruthChangedSpy).toHaveBeenCalled();
+    expect(predictionChangedSpy).toHaveBeenCalled();
+    expect(downloadImageTriggeredSpy).toHaveBeenCalled();
+  });
 });

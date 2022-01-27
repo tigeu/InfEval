@@ -4,17 +4,27 @@
     <hr/>
     <form id="loginForm" class="mb-3" [formGroup]="loginForm" (ngSubmit)="onLogin()">
       <div class="form-floating mb-1">
-        <input type="text" class="form-control" id="floatingUsername" placeholder="Username" formControlName="username">
+        <input type="text" class="form-control" id="floatingUsername" placeholder="Username"
+               formControlName="username">
         <label for="floatingUsername">Username</label>
+      </div>
+      <div *ngIf="usernameErrorMessage" class="alert alert-danger d-flex align-items-center" role="alert">
+        {{usernameErrorMessage}}
       </div>
       <p></p>
       <div class="form-floating mb-2">
         <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
-               formControlName="password">
+               formControlName="password" required>
         <label for="floatingPassword">Password</label>
+      </div>
+      <div *ngIf="passwordErrorMessage" class="alert alert-danger d-flex align-items-center" role="alert">
+        {{passwordErrorMessage}}
       </div>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
     </form>
+    <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center" role="alert">
+      {{errorMessage}}
+    </div>
     <p></p>
     <a routerLink="/register" routerLinkActive="active">Don't have an account?</a>
   </div>

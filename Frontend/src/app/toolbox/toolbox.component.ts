@@ -12,6 +12,7 @@ export class ToolboxComponent implements OnInit {
 
   selectedImageChanged: Subscription;
   imageSelected: boolean = false;
+  isDownloading: boolean = false;
 
   constructor(private downloadImageTriggeredService: DownloadImageTriggeredService,
               private selectedImageChangedService: SelectedImageChangedService,) {
@@ -21,6 +22,10 @@ export class ToolboxComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.selectedImageChanged.unsubscribe();
   }
 
   downloadTriggered() {

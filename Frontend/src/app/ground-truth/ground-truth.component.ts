@@ -54,6 +54,11 @@ export class GroundTruthComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+    this.selectedImageChanged.unsubscribe();
+    this.selectedDatasetChanged.unsubscribe();
+  }
+
   getGroundTruth() {
     this.loading = true;
     this.setClassColors();

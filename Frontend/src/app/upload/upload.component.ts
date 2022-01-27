@@ -32,6 +32,10 @@ export class UploadComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+    this.selectedDatasetChanged.unsubscribe();
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if ("dataset" in changes)
       this.dataset = changes["dataset"].currentValue;

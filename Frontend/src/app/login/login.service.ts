@@ -20,11 +20,14 @@ export class LoginService {
   }
 
   login(username: String, password: String) {
-    this.http.post<any>(this.loginUrl, {username, password}).subscribe(res => {
+    const response = this.http.post<any>(this.loginUrl, {username, password});
+    response.subscribe(res => {
       const decoded = this.jwtDecode<Token>(res.access)
       this.cookieService.set(this.cookieName, res.access, decoded.exp)
       this.userLoggedInService.publish(true);
     });
+
+    return response;
   }
 
   isLoggedIn(): Boolean {

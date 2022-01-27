@@ -63,7 +63,12 @@ export class PredictionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
 
+  ngOnDestroy(): void {
+    this.selectedImageChanged.unsubscribe();
+    this.selectedDatasetChanged.unsubscribe();
+    this.selectedPredictionChanged.unsubscribe();
   }
 
   getPrediction() {

@@ -68,6 +68,17 @@ export class ImageComponent implements OnInit {
     });
   }
 
+  ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.selectedImageChanged.unsubscribe();
+    this.selectedDatasetChanged.unsubscribe();
+    this.groundTruthChanged.unsubscribe();
+    this.predictionChanged.unsubscribe();
+    this.downloadImageTriggered.unsubscribe();
+  }
+
   setImage(image: Image) {
     this.image = image
     this.imageUrl = 'data:image/jpg;base64,' + image["file"];
@@ -133,8 +144,5 @@ export class ImageComponent implements OnInit {
     context.drawImage(img, 0, 0);
     img.src = this.predictionImageUrl.toString()
     context.drawImage(img, 0, 0);
-  }
-
-  ngOnInit(): void {
   }
 }

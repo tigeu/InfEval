@@ -152,4 +152,16 @@ describe('PredictionsComponent', () => {
     expect(component.predictionSettings.classes).toEqual([]);
     expect(component.predictionSettings.colors).toEqual([]);
   });
+
+  it('#ngOnDestroy unsubscribes from all subscriptions', () => {
+    const selectedImageChangedSpy = spyOn(component.selectedImageChanged, 'unsubscribe');
+    const selectedDatasetChangedSpy = spyOn(component.selectedDatasetChanged, 'unsubscribe');
+    const selectedPredictionChangesSpy = spyOn(component.selectedPredictionChanged, 'unsubscribe');
+
+    component.ngOnDestroy();
+
+    expect(selectedImageChangedSpy).toHaveBeenCalled();
+    expect(selectedDatasetChangedSpy).toHaveBeenCalled();
+    expect(selectedPredictionChangesSpy).toHaveBeenCalled();
+  });
 });

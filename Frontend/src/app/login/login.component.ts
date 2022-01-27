@@ -11,8 +11,11 @@ import {UserLoggedInService} from "../shared-services/user-logged-in-service";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  errorMessage: string = "";
+  usernameErrorMessage: string = "";
+  passwordErrorMessage: string = "";
   loginForm: FormGroup;
-  private userLoggedIn: Subscription;
+  userLoggedIn: Subscription;
 
   constructor(private loginService: LoginService,
               private formBuilder: FormBuilder,
@@ -32,17 +35,47 @@ export class LoginComponent implements OnInit {
       this.loginService.logout();
   }
 
-  login(username: String, password: String) {
-    this.loginService.login(username, password);
-  }
-
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+    this.userLoggedIn.unsubscribe();
+  }
+
+  login(username: String, password: String) {
+    this.loginService.login(username, password).subscribe({
+      next: () => {
+        this.resetErrorMessages();
+      },
+      error: (res) => {
+        this.errorMessage = res.error.detail;
+        this.loginForm.reset();
+      }
+    });
+  }
+
+  resetErrorMessages() {
+    this.errorMessage = "";
+    this.usernameErrorMessage = "";
+    this.passwordErrorMessage = "";
+  }
+
+  setErrorMessages(username: string, password: string) {
+    if (!username)
+      this.usernameErrorMessage = "Username missing";
+    if (!password)
+      this.passwordErrorMessage = "Password missing";
+  }
+
   onLogin() {
+    this.errorMessage = "";
     const value = this.loginForm.value;
-    if (value.username && value.password)
+    this.setErrorMessages(value.username, value.password);
+
+    if (value.username && value.password) {
+      this.resetErrorMessages();
       this.login(value.username, value.password);
+    }
   }
 
   onLoggedIn() {

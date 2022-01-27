@@ -62,4 +62,12 @@ describe('ToolboxComponent', () => {
 
     expect(component.imageSelected).toEqual(false);
   });
+
+  it('#ngOnDestroy unsubscribes from all subscriptions', () => {
+    const selectedImageChangedSpy = spyOn(component.selectedImageChanged, 'unsubscribe');
+
+    component.ngOnDestroy();
+
+    expect(selectedImageChangedSpy).toHaveBeenCalled();
+  });
 });

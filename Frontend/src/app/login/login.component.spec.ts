@@ -116,4 +116,12 @@ describe('LoginComponent', () => {
   it('should render loginForm', () => {
     expect(fixture.debugElement.query(By.css('#loginForm'))).toBeTruthy();
   });
+
+  it('#ngOnDestroy unsubscribes from all subscriptions', () => {
+    const userLoggedInSpy = spyOn(component.userLoggedIn, 'unsubscribe');
+
+    component.ngOnDestroy();
+
+    expect(userLoggedInSpy).toHaveBeenCalled();
+  });
 });
