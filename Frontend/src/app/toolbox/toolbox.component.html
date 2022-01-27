@@ -2,6 +2,10 @@
 <p></p>
 <app-prediction></app-prediction>
 <p></p>
-<button *ngIf="imageSelected" type="button" class="btn btn-success" (click)="downloadTriggered()">
+<button *ngIf="imageSelected" type="button" class="btn btn-success" [disabled]="isDownloading"
+        (click)="downloadTriggered()">
   Download image
 </button>
+<div *ngIf="isDownloading" class="spinner-border text-success ms-2 align-middle" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>

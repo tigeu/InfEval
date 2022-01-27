@@ -62,7 +62,7 @@ export class ImageComponent implements OnInit {
       else
         this.resetPredictionImage();
     });
-    this.downloadImageTriggered = this.downloadImageTriggeredService.newData.subscribe((data: any) => {
+    this.downloadImageTriggered = this.downloadImageTriggeredService.newData.subscribe((data: boolean) => {
       if (data)
         this.downloadImage();
     });
@@ -132,6 +132,7 @@ export class ImageComponent implements OnInit {
         this.downloadLink.download = this.image.name;
       this.downloadLink.click();
     }
+    this.downloadImageTriggeredService.publish(false);
   }
 
   createImage(context: CanvasRenderingContext2D) {
