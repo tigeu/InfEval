@@ -8,18 +8,30 @@
                formControlName="username">
         <label for="floatingUsername">Username</label>
       </div>
+      <div *ngIf="usernameErrorMessage" class="alert alert-danger d-flex align-items-center" role="alert">
+        {{usernameErrorMessage}}
+      </div>
       <div class="form-floating mb-1">
         <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com"
                formControlName="email">
         <label for="floatingEmail">Email address</label>
+      </div>
+      <div *ngIf="emailErrorMessage" class="alert alert-danger d-flex align-items-center" role="alert">
+        {{emailErrorMessage}}
       </div>
       <div class="form-floating mb-2">
         <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
                formControlName="password">
         <label for="floatingPassword">Password</label>
       </div>
+      <div *ngIf="passwordErrorMessage" class="alert alert-danger d-flex align-items-center" role="alert">
+        {{passwordErrorMessage}}
+      </div>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
     </form>
+    <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center" role="alert">
+      {{errorMessage}}
+    </div>
     <a routerLink="/login" routerLinkActive="active">Back to login</a>
   </div>
 </div>

@@ -61,6 +61,7 @@ export class LoginComponent implements OnInit {
   }
 
   setErrorMessages(username: string, password: string) {
+    this.errorMessage = "";
     if (!username)
       this.usernameErrorMessage = "Username missing";
     if (!password)
@@ -68,7 +69,6 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
-    this.errorMessage = "";
     const value = this.loginForm.value;
     this.setErrorMessages(value.username, value.password);
 
