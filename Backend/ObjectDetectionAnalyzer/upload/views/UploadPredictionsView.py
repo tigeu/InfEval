@@ -22,7 +22,7 @@ class UploadPredictionsView(UploadBaseView):
 
         return predictions_dir
 
-    def save_data(self, tmp_file_path, target_dir, dataset_name, dataset, user, file_name):
+    def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, user, file_name):
         predictions_path = self.upload_service.save_data(tmp_file_path, target_dir, file_name)
         prediction = Predictions.objects.filter(name=file_name, userId=user)
         if prediction:

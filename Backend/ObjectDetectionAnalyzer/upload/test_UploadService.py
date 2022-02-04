@@ -69,10 +69,10 @@ class TestUploadService(TestCase):
         self.assertEqual(result, True)
         is_valid.assert_called()
 
-    @patch('ObjectDetectionAnalyzer.upload.validators.ModelValidator.ModelValidator.is_valid')
-    def test_is_model_valid(self, is_valid):
+    @patch('ObjectDetectionAnalyzer.upload.validators.ModelValidator.ModelValidator.is_pytorch_valid')
+    def test_is_pytorch_model_valid(self, is_valid):
         is_valid.return_value = True
-        result = self.upload_service.is_model_valid("tmp")
+        result = self.upload_service.is_pytorch_valid("tmp")
 
         self.assertEqual(result, True)
         is_valid.assert_called()

@@ -1,3 +1,33 @@
+<form *ngIf="this.uploadInformation.isDataset">
+  <div class="mb-3 w-50">
+    <label for="datasetName" class="form-label">Dataset name: </label>
+    <input #datasetNameInput id="datasetName" class="form-control"
+           (input)="setDataset(datasetNameInput.value)" type="text" aria-describedby="datasetNameHelp">
+    <div id="datasetNameHelp" class="form-text">Name of uploaded dataset</div>
+  </div>
+</form>
+
+<div *ngIf="this.uploadInformation.isModel">
+  <select class="form-select" aria-label="Select dataset" #select (change)="selectedModelTypeChanged(select.value)">
+    <option value="none" selected disabled hidden>Select model type</option>
+    <option value="pytorch">PyTorch</option>
+    <option value="tf1">TensorFlow 1</option>
+    <option value="tf2">TensorFlow 2</option>
+    <option value="yolov3">Yolo v3</option>
+    <option value="yolov5">Yolo v5</option>
+  </select>
+
+  <form>
+    <div class="mb-3 w-50">
+      <label for="modelName" class="form-label">Model name: </label>
+      <input #modelNameInput id="modelName" class="form-control"
+             (input)="setModel(modelNameInput.value)" type="text" aria-describedby="modelNameHelp">
+      <div id="modelNameHelp" class="form-text">Name of uploaded model</div>
+    </div>
+  </form>
+</div>
+
+
 <input #fileUpload class="file-input" type="file"
        [accept]="uploadInformation?.uploadFileEnding" (change)="onFileSelected($event)" onclick="this.value=null">
 <div class="file-upload">
@@ -10,7 +40,8 @@
 </div>
 
 <p class="mt-3">
-  <button class="btn btn-primary" (click)="upload()" [disabled]="dataset.name === '' || fileName === ''">
+  <button class="btn btn-primary" (click)="upload()"
+          [disabled]="!uploadInformation.isModel && (dataset.name === '' || fileName === '')">
     Upload
   </button>
 </p>
@@ -23,4 +54,8 @@
     </div>
   </div>
 </div>
+<button *ngIf="uploadProgress == 100" class="btn btn-primary" type="button" disabled>
+  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="false"></span>
+  Validating upload
+</button>
 

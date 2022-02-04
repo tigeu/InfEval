@@ -14,7 +14,7 @@ class TestYoloService(TestCase):
     def setUp(self):
         self.yolo_service = YoloService()
 
-    def test_yolo_v5(self):
+    """def test_yolo_v5(self):
         model_path = "/home/leon/Development/Python/JupyterLab/yolov5"
         weight_path = "yolov5x6.pt"
         image_paths = ["/home/leon/Development/Python/JupyterLab/2018_0714_112546_051.JPG"]
@@ -22,7 +22,7 @@ class TestYoloService(TestCase):
         for image_path, preds in predictions.items():
             print(image_path)
             for pred in preds:
-                print(pred)
+                print(pred)"""
 
     @patch('ObjectDetectionAnalyzer.services.YoloService.YoloService.extract_predictions')
     @patch("torch.hub.load")

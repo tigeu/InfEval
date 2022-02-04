@@ -18,7 +18,7 @@ class UploadGroundTruthView(UploadBaseView):
 
         return dataset_dir
 
-    def save_data(self, tmp_file_path, target_dir, dataset_name, dataset, user, file_name):
+    def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, user, file_name):
         ground_truth_path = self.upload_service.save_data(tmp_file_path, target_dir, "ground_truth.csv")
 
         dataset.update(ground_truth_path=ground_truth_path)

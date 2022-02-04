@@ -44,7 +44,7 @@ class TestUploadLabelMapView(APITestCase):
         Dataset.objects.create(name="test_dataset", path=Path("target"), userId=user)
         dataset = Dataset.objects.filter(name="test_dataset", userId=user)
 
-        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", dataset, user, "label_map")
+        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, dataset, user, "label_map")
 
         save_data.assert_called_with(Path("tmp"), Path("target"), 'label_map.txt')
         update.assert_called()

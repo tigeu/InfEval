@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
+from ObjectDetectionAnalyzer.upload.ModelTypes import ModelTypes
+
 
 class Dataset(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -21,7 +23,16 @@ class Predictions(models.Model):
 
 
 class Models(models.Model):
+    MODEL_TYPES = (
+        (ModelTypes.PYTORCH, 'PyTorch'),
+        (ModelTypes.TENSORFLOW1, 'TensorFlow 1'),
+        (ModelTypes.TENSORFLOW2, 'TensorFlow 2'),
+        (ModelTypes.YOLOV3, 'Yolo v3'),
+        (ModelTypes.YOLOV5, 'Yolo v5'),
+    )
+
     name = models.CharField(max_length=50, unique=True)
     path = models.FilePathField()
+    type = models.CharField(choices=MODEL_TYPES, max_length=7)
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
     uploaded_at = models.DateTimeField(default=timezone.now)

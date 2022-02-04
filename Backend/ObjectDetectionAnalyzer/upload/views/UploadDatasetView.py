@@ -23,7 +23,7 @@ class UploadDatasetView(UploadBaseView):
     def create_dir(self, directory: Path) -> bool:
         return self.path_service.create_dir(directory, True)
 
-    def save_data(self, tmp_file_path, target_dir, dataset_name, dataset, user, file_name):
+    def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, user, file_name):
         self.upload_service.save_compressed_data(tmp_file_path, target_dir, IMAGE_ENDINGS)
         dataset = Dataset.objects.filter(name=dataset_name, userId=user)
         if dataset:

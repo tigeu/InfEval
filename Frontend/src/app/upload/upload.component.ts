@@ -1,10 +1,11 @@
-import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {HttpEventType} from "@angular/common/http";
 import {finalize, Subscription} from "rxjs";
 import {UploadService} from "./upload.service";
 import {UploadInformation} from "./UploadInformation";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 import {DatasetFile} from "../dataset-list/dataset-file";
+import {ModelFile} from "../model-list/model-file";
 
 @Component({
   selector: 'app-upload',
@@ -13,7 +14,8 @@ import {DatasetFile} from "../dataset-list/dataset-file";
 })
 export class UploadComponent implements OnInit {
   @Input() uploadInformation!: UploadInformation;
-  @Input() dataset!: DatasetFile;
+  dataset: DatasetFile = {name: ''};
+  model: ModelFile = {name: ''};
 
   file!: File | null;
   fileName: String = '';
@@ -25,7 +27,8 @@ export class UploadComponent implements OnInit {
   constructor(private uploadService: UploadService,
               private selectedDatasetChangedService: SelectedDatasetChangedService) {
     this.selectedDatasetChanged = this.selectedDatasetChangedService.newData.subscribe((data: DatasetFile) => {
-      this.dataset = data;
+      if (!this.uploadInformation.isDataset)
+        this.dataset = data;
     })
   }
 
@@ -36,14 +39,9 @@ export class UploadComponent implements OnInit {
     this.selectedDatasetChanged.unsubscribe();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if ("dataset" in changes)
-      this.dataset = changes["dataset"].currentValue;
-  }
-
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (!file || file.type !== this.uploadInformation.uploadFileType)
+    if (!file || (this.uploadInformation.uploadFileType && file.type !== this.uploadInformation.uploadFileType))
       return
 
     this.file = file
@@ -52,7 +50,7 @@ export class UploadComponent implements OnInit {
 
   upload() {
     if (this.file && this.fileName) {
-      this.uploadSub = this.uploadService.upload(this.fileName, this.file, this.dataset.name, this.uploadInformation.apiEndpoint)
+      this.uploadSub = this.uploadService.upload(this.fileName, this.file, this.dataset.name, this.model.name, this.uploadInformation.apiEndpoint)
         .pipe(finalize(() => this.reset()))
         .subscribe(event => {
           if (event.type == HttpEventType.UploadProgress) {
@@ -78,5 +76,17 @@ export class UploadComponent implements OnInit {
     this.uploadSub = null;
     this.file = null;
     this.fileName = '';
+  }
+
+  setDataset(value: string) {
+    this.dataset = {name: value};
+  }
+
+  setModel(value: string) {
+    this.model = {name: value};
+  }
+
+  selectedModelTypeChanged(value: string) {
+    this.uploadInformation.apiEndpoint = value;
   }
 }

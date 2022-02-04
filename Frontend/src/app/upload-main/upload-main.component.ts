@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UploadFileTypes} from "../upload/UploadFileTypes";
 import {UploadInformation} from "../upload/UploadInformation";
-import {debounceTime, distinctUntilChanged, Subject} from "rxjs";
-import {DatasetFile} from "../dataset-list/dataset-file";
 
 @Component({
   selector: 'app-upload-main',
@@ -11,47 +9,45 @@ import {DatasetFile} from "../dataset-list/dataset-file";
 })
 export class UploadMainComponent implements OnInit {
   datasetInformation: UploadInformation = {
+    isDataset: true,
+    isModel: false,
     uploadFileType: UploadFileTypes.Compressed,
     uploadFileEnding: ".zip",
     apiEndpoint: "dataset"
   };
   groundTruthInformation: UploadInformation = {
+    isDataset: false,
+    isModel: false,
     uploadFileType: UploadFileTypes.Csv,
     uploadFileEnding: ".csv",
     apiEndpoint: "ground-truth"
   };
   labelMapInformation: UploadInformation = {
+    isDataset: false,
+    isModel: false,
     uploadFileType: UploadFileTypes.Text,
     uploadFileEnding: ".txt",
     apiEndpoint: "label-map"
   };
   predictionsInformation: UploadInformation = {
+    isDataset: false,
+    isModel: false,
     uploadFileType: UploadFileTypes.Csv,
     uploadFileEnding: ".csv",
     apiEndpoint: "prediction"
   };
   modelInformation: UploadInformation = {
+    isDataset: false,
+    isModel: true,
     uploadFileType: UploadFileTypes.Binary,
-    uploadFileEnding: ".pb",
-    apiEndpoint: "model"
+    uploadFileEnding: ".pt",
+    apiEndpoint: "pytorch"
   };
-
-  dataset: DatasetFile = {name: ""};
-  datasetSubject = new Subject<DatasetFile>();
 
   constructor() {
   }
 
   ngOnInit(): void {
-    this.datasetSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(dataset => {
-      this.dataset = dataset;
-    });
-  }
 
-  createDataset(datasetName: string) {
-    this.datasetSubject.next({name: datasetName})
   }
 }

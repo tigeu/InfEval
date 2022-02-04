@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 
 from ObjectDetectionAnalyzer.upload.UploadModels import Models
-from ObjectDetectionAnalyzer.upload.views.UploadModelView import UploadModelView
+from ObjectDetectionAnalyzer.upload.views.UploadPyTorchModelView import UploadPyTorchModelView
 
 
 class TestUploadModelView(APITestCase):
@@ -14,16 +14,16 @@ class TestUploadModelView(APITestCase):
     """
 
     def setUp(self):
-        self.view = UploadModelView()
+        self.view = UploadPyTorchModelView()
         self.user_dir = Path("dir/test")
 
     def test_requires_dataset(self):
         result = self.view.requires_dataset()
         self.assertEqual(result, False)
 
-    @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.is_model_valid')
-    def test_is_file_valid(self, is_prediction_valid):
-        is_prediction_valid.return_value = True
+    @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.is_pytorch_valid')
+    def test_is_file_valid(self, is_pytorch_valid):
+        is_pytorch_valid.return_value = True
         result = self.view.is_file_valid(Path("tmp_file_path"))
         self.assertEqual(result, True)
 
@@ -43,11 +43,11 @@ class TestUploadModelView(APITestCase):
         save_data.return_value = Path("target")
         user = User.objects.create_user("test", "test@test.test", "test")
 
-        Models.objects.create(name="model", path="target", userId=user)
+        Models.objects.create(name="model_name", path="target", userId=user)
 
-        self.view.save_data(Path("tmp"), Path("target"), None, None, user, "model")
+        self.view.save_data(Path("tmp"), Path("target"), None, "model_name", None, user, "model")
 
-        save_data.assert_called_with(Path("tmp"), Path("target"), "model")
+        save_data.assert_called_with(Path("tmp"), Path("target"), "model_name")
         update.assert_called()
 
     @patch('django.db.models.query.QuerySet.create')
@@ -56,7 +56,7 @@ class TestUploadModelView(APITestCase):
         save_data.return_value = Path("target")
         user = User.objects.create_user("test", "test@test.test", "test")
 
-        self.view.save_data(Path("tmp"), Path("target"), None, None, user, "model")
+        self.view.save_data(Path("tmp"), Path("target"), None, "model_name", None, user, "model")
 
-        save_data.assert_called_with(Path("tmp"), Path("target"), "model")
-        create.assert_called_with(name="model", path=Path("target"), userId=user)
+        save_data.assert_called_with(Path("tmp"), Path("target"), "model_name")
+        create.assert_called_with(name="model_name", path=Path("target"), userId=user)

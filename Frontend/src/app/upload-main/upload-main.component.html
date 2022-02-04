@@ -3,36 +3,28 @@
     <mat-tab label="Dataset">
       <ng-template matTabContent>
         <h1>Upload dataset</h1>
-        <form>
-          <div class="mb-3 w-50">
-            <label for="datasetName" class="form-label">Dataset name: </label>
-            <input #datasetNameInput id="datasetName" class="form-control"
-                   (input)="createDataset(datasetNameInput.value)" type="text" aria-describedby="datasetNameHelp">
-            <div id="datasetNameHelp" class="form-text">Name of uploaded dataset</div>
-          </div>
-        </form>
-        <app-upload [uploadInformation]="datasetInformation" [dataset]="dataset"></app-upload>
+        <app-upload [uploadInformation]="datasetInformation"></app-upload>
       </ng-template>
     </mat-tab>
     <mat-tab label="Ground truth">
       <ng-template matTabContent>
         <h1>Upload ground truth values</h1>
         <app-dataset-list class="w-50"></app-dataset-list>
-        <app-upload [uploadInformation]="groundTruthInformation" [dataset]="dataset"></app-upload>
+        <app-upload [uploadInformation]="groundTruthInformation"></app-upload>
       </ng-template>
     </mat-tab>
     <mat-tab label="Label map">
       <ng-template matTabContent>
         <h1>Upload label map</h1>
         <app-dataset-list class="w-50"></app-dataset-list>
-        <app-upload [uploadInformation]="labelMapInformation" [dataset]="dataset"></app-upload>
+        <app-upload [uploadInformation]="labelMapInformation"></app-upload>
       </ng-template>
     </mat-tab>
     <mat-tab label="Predictions">
       <ng-template matTabContent>
         <h1>Upload predictions</h1>
         <app-dataset-list class="w-50"></app-dataset-list>
-        <app-upload [uploadInformation]="predictionsInformation" [dataset]="dataset"></app-upload>
+        <app-upload [uploadInformation]="predictionsInformation"></app-upload>
       </ng-template>
     </mat-tab>
     <mat-tab label="Model">

@@ -22,7 +22,8 @@ class TestUploadBaseView(APITestCase):
         self.url = reverse('upload-dataset', kwargs={'file_name': 'test_dataset.zip'})
         self.request = {
             "file": io.StringIO(),
-            "dataset_name": "test_dataset"
+            "dataset_name": "test_dataset",
+            "model_name": "model_name"
         }
         self.user = User.objects.create_user("test", "test@test.test", "test")
         self.client.force_authenticate(user=self.user)
@@ -118,7 +119,7 @@ class TestUploadBaseView(APITestCase):
 
     def test_dummy_method_save_data(self):
         view = UploadBaseView()
-        result = view.save_data(Path("tmp"), Path("target"), "test_dataset", None, self.user, "file_name")
+        result = view.save_data(Path("tmp"), Path("target"), "test_dataset", None, None, self.user, "file_name")
         self.assertEqual(result, None)
 
     @patch('ObjectDetectionAnalyzer.services.PathService.PathService.create_dir')

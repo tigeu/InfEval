@@ -14,8 +14,10 @@ from ObjectDetectionAnalyzer.register.RegisterView import RegisterView
 from ObjectDetectionAnalyzer.upload.views.UploadDatasetView import UploadDatasetView
 from ObjectDetectionAnalyzer.upload.views.UploadGroundTruthView import UploadGroundTruthView
 from ObjectDetectionAnalyzer.upload.views.UploadLabelMapView import UploadLabelMapView
-from ObjectDetectionAnalyzer.upload.views.UploadModelView import UploadModelView
 from ObjectDetectionAnalyzer.upload.views.UploadPredictionsView import UploadPredictionsView
+from ObjectDetectionAnalyzer.upload.views.UploadPyTorchModelView import UploadPyTorchModelView
+from ObjectDetectionAnalyzer.upload.views.UploadTensorFlow1ModelView import UploadTensorFlow1ModelView
+from ObjectDetectionAnalyzer.upload.views.UploadTensorFlow2ModelView import UploadTensorFlow2ModelView
 
 router = routers.DefaultRouter()
 
@@ -28,7 +30,9 @@ urlpatterns = [
     path('upload/ground-truth/<str:file_name>', UploadGroundTruthView.as_view(), name="upload"),
     path('upload/label-map/<str:file_name>', UploadLabelMapView.as_view(), name="upload"),
     path('upload/prediction/<str:file_name>', UploadPredictionsView.as_view(), name="upload"),
-    path('upload/model/<str:file_name>', UploadModelView.as_view(), name="upload"),
+    path('upload/pytorch/<str:file_name>', UploadPyTorchModelView.as_view(), name="upload"),
+    path('upload/tf1/<str:file_name>', UploadTensorFlow1ModelView.as_view(), name="upload"),
+    path('upload/tf2/<str:file_name>', UploadTensorFlow2ModelView.as_view(), name="upload"),
     path('dataset-list', DatasetListView.as_view(), name="dataset-list"),
     path('prediction-list/<str:dataset>', PredictionListView.as_view(), name="prediction-list"),
     path('ground-truth/<str:dataset>/<str:image_name>', GroundTruthView.as_view(),

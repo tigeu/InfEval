@@ -18,7 +18,7 @@ class UploadLabelMapView(UploadBaseView):
 
         return dataset_dir
 
-    def save_data(self, tmp_file_path, target_dir, dataset_name, dataset, user, file_name):
+    def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, user, file_name):
         label_map_path = self.upload_service.save_data(tmp_file_path, target_dir, "label_map.txt")
 
         dataset.update(label_map_path=label_map_path)
