@@ -1,7 +1,9 @@
+from io import BytesIO
 from unittest import TestCase
 from unittest.mock import patch
 
 import pandas as pd
+from PIL import Image
 
 from ObjectDetectionAnalyzer.services.YoloService import YoloService
 
@@ -14,15 +16,22 @@ class TestYoloService(TestCase):
     def setUp(self):
         self.yolo_service = YoloService()
 
-    """def test_yolo_v5(self):
-        model_path = "/home/leon/Development/Python/JupyterLab/yolov5"
-        weight_path = "yolov5x6.pt"
-        image_paths = ["/home/leon/Development/Python/JupyterLab/2018_0714_112546_051.JPG"]
+    def test_yolo_v5(self):
+        model_path = "/home/leon/Development/ObjectDetectionAnalyzer/Backend/YOLO/yolov5"
+        weight_path = "/home/leon/Development/Python/JupyterLab/yolov5/yolov5x6.pt"
+        # image_paths = ["/home/leon/Development/Python/JupyterLab/2018_0714_112546_051.JPG"]
+        file = BytesIO()
+        file.name = "test_image"
+        image = Image.new('RGBA', size=(500, 500))
+        image.save(file, 'png')
+        image = Image.open(file)
+
+        image_paths = [image]
         predictions = self.yolo_service.get_detections_for_images(model_path, weight_path, image_paths)
         for image_path, preds in predictions.items():
             print(image_path)
             for pred in preds:
-                print(pred)"""
+                print(pred)
 
     @patch('ObjectDetectionAnalyzer.services.YoloService.YoloService.extract_predictions')
     @patch("torch.hub.load")

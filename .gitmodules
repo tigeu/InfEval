@@ -1,0 +1,6 @@
+[submodule "Backend/YOLO/yolov3"]
+	path = Backend/YOLO/yolov3
+	url = https://github.com/ultralytics/yolov3.git
+[submodule "Backend/YOLO/yolov5"]
+	path = Backend/YOLO/yolov5
+	url = https://github.com/ultralytics/yolov5.git

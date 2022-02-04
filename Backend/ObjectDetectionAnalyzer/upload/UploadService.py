@@ -48,8 +48,8 @@ class UploadService:
 
         return is_valid
 
-    def is_yolo_valid(self, yolo_dir: Path, tmp_file_path: Path):
-        return YoloValidator().is_valid(yolo_dir, tmp_file_path)
+    def is_yolo_valid(self, tmp_file_path: Path, yolo_dir: Path):
+        return YoloValidator().is_valid(tmp_file_path, yolo_dir)
 
     def save_compressed_data(self, tmp_file_path, dataset_dir, image_endings):
         with zipfile.ZipFile(tmp_file_path, 'r') as zip_ref:

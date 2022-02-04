@@ -8,7 +8,7 @@ class YoloService:
         detections = {}
         for image_path in image_paths:
             results = model(image_path)
-            detections[image_path] = self.extract_predictions(results)
+            detections[str(image_path)] = self.extract_predictions(results)  # use string to avoid unhashable exception
 
         return detections
 
