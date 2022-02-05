@@ -14,6 +14,7 @@ class TestUploadService(TestCase):
     def setUp(self):
         self.upload_service = UploadService()
         self.files = ["test.csv", "test2.jpg", "test3.png", "test4.c", "test5", "test6.zip"]
+        self.saved_model_files = ["test/", "test/something", "saved_model/", "saved_model/model"]
 
     @patch("zipfile.ZipFile")
     @patch("zipfile.is_zipfile")
@@ -64,15 +65,35 @@ class TestUploadService(TestCase):
     @patch('ObjectDetectionAnalyzer.upload.validators.PredictionsValidator.PredictionsValidator.is_valid')
     def test_is_prediction_valid(self, is_valid):
         is_valid.return_value = True
-        result = self.upload_service.is_prediction_valid("tmp")
+        result = self.upload_service.is_prediction_valid(Path("tmp"))
 
         self.assertEqual(result, True)
         is_valid.assert_called()
 
-    @patch('ObjectDetectionAnalyzer.upload.validators.ModelValidator.ModelValidator.is_pytorch_valid')
+    @patch('ObjectDetectionAnalyzer.upload.validators.PyTorchValidator.PyTorchValidator.is_valid')
     def test_is_pytorch_model_valid(self, is_valid):
         is_valid.return_value = True
-        result = self.upload_service.is_pytorch_valid("tmp")
+        result = self.upload_service.is_pytorch_valid(Path("tmp"))
+
+        self.assertEqual(result, True)
+        is_valid.assert_called()
+
+    @patch('shutil.rmtree')
+    @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.save_compressed_model')
+    @patch('ObjectDetectionAnalyzer.upload.validators.TensorFlowValidator.TensorFlowValidator.is_valid')
+    def test_is_tensorflow_model_valid(self, is_valid, save_compressed_model, rmtree):
+        is_valid.return_value = True
+        save_compressed_model.return_value = Path("tmp/file")
+
+        result = self.upload_service.is_tf_valid(Path("file"), Path("tmp"))
+
+        self.assertEqual(result, True)
+        is_valid.assert_called()
+
+    @patch('ObjectDetectionAnalyzer.upload.validators.YoloValidator.YoloValidator.is_valid')
+    def test_is_yolo_model_valid(self, is_valid):
+        is_valid.return_value = True
+        result = self.upload_service.is_yolo_valid(Path("tmp"), Path("yolov3"))
 
         self.assertEqual(result, True)
         is_valid.assert_called()
@@ -90,6 +111,18 @@ class TestUploadService(TestCase):
         self.upload_service.save_compressed_data("tmp", "test_dataset", image_endings)
 
         self.assertEqual(copyfileobj.call_count, 2)
+
+    @patch("zipfile.ZipFile.extract")
+    @patch("builtins.open")
+    @patch("zipfile.ZipFile")
+    @patch("zipfile.is_zipfile")
+    def test_save_compressed_model(self, is_zipfile, ZipFile, open, extract):
+        is_zipfile.return_value = True
+        ZipFile.return_value.__enter__.return_value.namelist.return_value = self.saved_model_files
+
+        result = self.upload_service.save_compressed_model("tmp", "model_dir", "model_name")
+
+        self.assertEqual(result, "model_dir/model_name/saved_model/")
 
     @patch("shutil.copy")
     def test_save_data(self, copy):

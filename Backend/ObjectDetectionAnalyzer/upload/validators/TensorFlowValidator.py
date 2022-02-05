@@ -10,10 +10,7 @@ class TensorFlowValidator:
         self.tensorflow_service = TensorFlowService()
 
     def is_valid(self, file_path, is_tensor_flow_1):
-        file = BytesIO()
-        file.name = "test_image"
-        image = Image.new('RGB', size=(500, 500))
-        image.save(file, 'png')
+        file = self.create_test_image()
 
         try:
             self.tensorflow_service.get_detections_for_images(file_path, [file], is_tensor_flow_1)
@@ -22,3 +19,11 @@ class TensorFlowValidator:
             return False
 
         return True
+
+    def create_test_image(self):
+        file = BytesIO()
+        file.name = "test_image"
+        image = Image.new('RGB', size=(500, 500))
+        image.save(file, 'png')
+        
+        return file
