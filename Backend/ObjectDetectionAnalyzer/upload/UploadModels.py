@@ -6,7 +6,10 @@ from ObjectDetectionAnalyzer.upload.ModelTypes import ModelTypes
 
 
 class Dataset(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    class Meta:
+        unique_together = ("name", "userId")
+
+    name = models.CharField(max_length=50)
     path = models.FilePathField()
     ground_truth_path = models.FilePathField(blank=True)
     label_map_path = models.FilePathField(blank=True)
@@ -15,7 +18,10 @@ class Dataset(models.Model):
 
 
 class Predictions(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    class Meta:
+        unique_together = ("name", "datasetId", "userId")
+
+    name = models.CharField(max_length=50)
     path = models.FilePathField()
     datasetId = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -23,6 +29,9 @@ class Predictions(models.Model):
 
 
 class Models(models.Model):
+    class Meta:
+        unique_together = ("name", "type", "userId")
+
     MODEL_TYPES = (
         (ModelTypes.PYTORCH, 'PyTorch'),
         (ModelTypes.TENSORFLOW1, 'TensorFlow 1'),
