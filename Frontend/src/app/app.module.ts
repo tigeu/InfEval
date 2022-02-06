@@ -27,6 +27,7 @@ import {ToolboxComponent} from "./toolbox/toolbox.component";
 import {GroundTruthComponent} from "./ground-truth/ground-truth.component";
 import {PredictionListComponent} from './prediction-list/prediction-list.component';
 import {PredictionComponent} from './prediction/prediction.component';
+import { ModelListComponent } from './model-list/model-list.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {PredictionComponent} from './prediction/prediction.component';
     GroundTruthComponent,
     PredictionListComponent,
     PredictionComponent,
+    ModelListComponent,
   ],
   imports: [
     BrowserModule,
