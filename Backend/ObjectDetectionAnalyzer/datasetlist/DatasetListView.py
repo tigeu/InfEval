@@ -40,6 +40,8 @@ class DatasetListView(APIView):
                 data['colors'] = self.color_service.get_class_colors(classes)
             else:
                 data['ground_truth'] = False
+                data['classes'] = []
+                data['colors'] = []
             predictions = Predictions.objects.filter(datasetId=dataset, userId=user)
             if predictions:
                 data['predictions'] = True
