@@ -23,14 +23,25 @@ class TestCSVParseService(TestCase):
         self.invalid_file = io.StringIO("")
         self.invalid_csv_file = io.StringIO("file1.jpg 0 class")
 
-    def test_get_values_with_one_prediction(self, open):
+    def test_get_values(self, open):
+        open.return_value = self.csv_file
+        values = self.csv_parse_service.get_values(self.csv_file, self.indices)
+        expected = {
+            "file1.jpg": [{'class': 'class1', 'confidence': 55, 'xmin': 0, 'ymin': 0, 'xmax': 100, 'ymax': 100}],
+            "file2.png": [{'class': 'class1', 'confidence': 43, 'xmin': 25, 'ymin': 25, 'xmax': 100, 'ymax': 100},
+                          {'class': 'class2', 'confidence': 67, 'xmin': 100, 'ymin': 100, 'xmax': 101, 'ymax': 101},
+                          {'class': 'class3', 'confidence': 10, 'xmin': 50, 'ymin': 50, 'xmax': 100, 'ymax': 100}]}
+
+        self.assertEqual(values, expected)
+
+    def test_get_values_for_image_with_one_prediction(self, open):
         open.return_value = self.csv_file
         values = self.csv_parse_service.get_values_for_image(self.csv_file, "file1.jpg", self.indices)
         expected = [{'class': 'class1', 'confidence': 55, 'xmin': 0, 'ymin': 0, 'xmax': 100, 'ymax': 100}]
 
         self.assertEqual(values, expected)
 
-    def test_get_values_with_several_predictions(self, open):
+    def test_get_values_for_image_with_several_predictions(self, open):
         open.return_value = self.csv_file
         values = self.csv_parse_service.get_values_for_image(self.csv_file, "file2.png", self.indices)
         expected = [{'class': 'class1', 'confidence': 43, 'xmin': 25, 'ymin': 25, 'xmax': 100, 'ymax': 100},
@@ -39,7 +50,7 @@ class TestCSVParseService(TestCase):
 
         self.assertEqual(values, expected)
 
-    def test_get_values_with_invalid_file(self, open):
+    def test_get_values_for_image_with_invalid_file(self, open):
         open.return_value = self.invalid_file
         values = self.csv_parse_service.get_values_for_image(self.invalid_file, "file1.jpg", self.indices)
 

@@ -2,6 +2,18 @@ import csv
 
 
 class CSVParseService:
+    def get_values(self, file, indices):
+        values = {}
+        with open(file, newline='') as csv_file:
+            reader = csv.reader(csv_file, delimiter=' ', quotechar='|')
+            for row in reader:
+                file_name = row[indices['file_name']]
+                if file_name not in values:
+                    values[file_name] = []
+                values[file_name].append(self.get_value(row, indices))
+
+            return values
+
     def get_values_for_image(self, file, image_name, indices):
         values = []
         with open(file, newline='') as csv_file:
