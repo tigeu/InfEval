@@ -7,7 +7,7 @@ import {UploadService} from "./upload.service";
 import {of, Subscription} from "rxjs";
 import {UploadFileTypes} from "./UploadFileTypes";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
-import {SimpleChange, SimpleChanges} from "@angular/core";
+import {SelectedModelChangedService} from "../shared-services/selected-model-changed.service";
 
 describe('UploadComponent', () => {
   let component: UploadComponent;
@@ -29,6 +29,8 @@ describe('UploadComponent', () => {
     component = fixture.componentInstance;
 
     const uploadInformation = {
+      isDataset: false,
+      isModel: false,
       uploadFileType: UploadFileTypes.Compressed,
       uploadFileEnding: ".zip",
       apiEndpoint: "dataset"
@@ -45,10 +47,20 @@ describe('UploadComponent', () => {
 
   it('dataset subscription should set datasetName', () => {
     const selectedDatasetChangedService = TestBed.inject(SelectedDatasetChangedService);
+    const dataset = {name: 'test_dataset'}
 
-    selectedDatasetChangedService.publish(component.dataset)
+    selectedDatasetChangedService.publish(dataset)
 
-    expect(component.dataset).toEqual(component.dataset);
+    expect(component.dataset).toEqual(dataset);
+  });
+
+  it('model subscription should set datasetName', () => {
+    const selectedModelChangedService = TestBed.inject(SelectedModelChangedService);
+    const model = {name: 'test_model', type: ''}
+
+    selectedModelChangedService.publish(model)
+
+    expect(component.model).toEqual(model);
   });
 
   it('#upload should update progress and finally reset', () => {
@@ -60,7 +72,7 @@ describe('UploadComponent', () => {
     component.fileName = "test.txt"
 
     spyOn(uploadService, "upload")
-      .withArgs("test.txt", file, "test_dataset", "dataset")
+      .withArgs("test.txt", file, "test_dataset", "", "dataset")
       .and.returnValue(httpEvent);
     spyOn(component, "reset");
     spyOn(component, "updateProgress").withArgs(7, 10);
@@ -145,36 +157,29 @@ describe('UploadComponent', () => {
     expect(component.fileName).not.toBeTruthy();
   })
 
-  it('#ngOnChanges should set datasetName', () => {
-    const change: SimpleChange = {
-      previousValue: "",
-      currentValue: {name: "test_dataset1"},
-      firstChange: true,
-      isFirstChange(): boolean {
-        return true;
-      }
-    };
-    const changes: SimpleChanges = {"dataset": change};
-
-    component.ngOnChanges(changes)
-
-    expect(component.dataset).toEqual({name: "test_dataset1"});
-  });
-
-  it('#ngOnChanges should not set datasetName if not provided', () => {
-    const changes: SimpleChanges = {};
-    const previousValue = component.dataset;
-
-    component.ngOnChanges(changes);
-
-    expect(component.dataset).toEqual(previousValue);
-  });
-
   it('#ngOnDestroy unsubscribes from all subscriptions', () => {
     const selectedDatasetChangedSpy = spyOn(component.selectedDatasetChanged, 'unsubscribe');
 
     component.ngOnDestroy();
 
     expect(selectedDatasetChangedSpy).toHaveBeenCalled();
+  });
+
+  it('#setDataset should set dataset', () => {
+    component.setDataset("test_dataset");
+
+    expect(component.dataset.name).toEqual("test_dataset");
+  });
+
+  it('#setModel should set model', () => {
+    component.setModel("test_model");
+
+    expect(component.model.name).toEqual("test_model");
+  });
+
+  it('#selectedModelTypeChanged should set apiEndpoint', () => {
+    component.selectedModelTypeChanged("new_endpoint");
+
+    expect(component.uploadInformation.apiEndpoint).toEqual("new_endpoint");
   });
 });

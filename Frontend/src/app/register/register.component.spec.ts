@@ -1,11 +1,11 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {RegisterComponent} from './register.component';
-import {HttpClientModule, HttpResponse} from "@angular/common/http";
+import {HttpClientModule, HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterTestingModule} from "@angular/router/testing";
 import {RegisterService} from "./register.service";
-import {of} from "rxjs";
+import {of, throwError} from "rxjs";
 import {Router} from "@angular/router";
 import {MatSelectModule} from "@angular/material/select";
 
@@ -48,6 +48,17 @@ describe('RegisterComponent', () => {
     expect(component.successfulRegister).toHaveBeenCalled();
   });
 
+  it('#register should call setResponseErrorMessage on invalid response', () => {
+    const registerService = TestBed.inject(RegisterService);
+    spyOn(registerService, "register").withArgs("test", "testEmail", "testPassword")
+      .and.returnValue(throwError(() => "error"));
+    spyOn(component, "setResponseErrorMessage");
+
+    component.register("test", "testEmail", "testPassword");
+
+    expect(component.setResponseErrorMessage).toHaveBeenCalled();
+  });
+
   it('#successfulRegister should navigate to /login/', () => {
     const router = TestBed.inject(Router);
     spyOn(router, "navigate").withArgs(['/login/']);
@@ -57,10 +68,90 @@ describe('RegisterComponent', () => {
     expect(router.navigate).toHaveBeenCalled();
   });
 
+  it('#setResponseErrorMessage should set error messages', () => {
+    const httpErrorResponse = new HttpErrorResponse({
+      error: {username: "Invalid username", email: "Invalid email", password: "Invalid password"},
+      status: 400,
+      statusText: 'Bad Request'
+    })
+
+    component.setResponseErrorMessage(httpErrorResponse);
+
+    expect(component.errorMessage).toEqual("Invalid username\nInvalid email\nInvalid password");
+  });
+
+  it('#validateForm should call validation methods', () => {
+    spyOn(component, "validateUserName").withArgs("user");
+    spyOn(component, "validateEmail").withArgs("email");
+    spyOn(component, "validatePassword").withArgs("password");
+
+    component.validateForm("user", "email", "password");
+
+    expect(component.validateUserName).toHaveBeenCalled();
+    expect(component.validatePassword).toHaveBeenCalled();
+    expect(component.validatePassword).toHaveBeenCalled();
+  });
+
+  it('#validateUserName should return true and reset message if valid', () => {
+    const result = component.validateUserName("validUsername");
+
+    expect(result).toBeTruthy();
+    expect(component.usernameErrorMessage).toEqual("");
+  });
+
+  it('#validateUserName should return false if no username and set message', () => {
+    const result = component.validateUserName("");
+
+    expect(result).not.toBeTruthy();
+    expect(component.usernameErrorMessage).toEqual("Username missing");
+  });
+
+  it('#validateUserName should return false if no alphanumeric username and set message', () => {
+    const result = component.validateUserName("<<>><><>!!!!");
+
+    expect(result).not.toBeTruthy();
+    expect(component.usernameErrorMessage).toEqual("Username is not alphanumeric");
+  });
+
+  it('#validateEmail should return true and reset message if valid', () => {
+    const result = component.validateEmail("valid@e.mail");
+
+    expect(result).toBeTruthy();
+    expect(component.emailErrorMessage).toEqual("");
+  });
+
+  it('#validateEmail should return false if no email and set message', () => {
+    const result = component.validateEmail("");
+
+    expect(result).not.toBeTruthy();
+    expect(component.emailErrorMessage).toEqual("Email missing");
+  });
+
+  it('#validateEmail should return false if email is invalid', () => {
+    const result = component.validateEmail("invalid@email");
+
+    expect(result).not.toBeTruthy();
+    expect(component.emailErrorMessage).toEqual("Invalid email");
+  });
+
+  it('#validatePassword should return true and reset message if valid', () => {
+    const result = component.validatePassword("valid@e.mail");
+
+    expect(result).toBeTruthy();
+    expect(component.passwordErrorMessage).toEqual("");
+  });
+
+  it('#validatePassword should return false if no password and set message', () => {
+    const result = component.validatePassword("");
+
+    expect(result).not.toBeTruthy();
+    expect(component.passwordErrorMessage).toEqual("Password missing");
+  });
+
   it('#onRegister should call register if form is filled', () => {
-    spyOn(component, "register").withArgs("test", "testEmail", "testPassword");
+    spyOn(component, "register").withArgs("test", "testEmail@test.test", "testPassword");
     component.registerForm.value.username = "test";
-    component.registerForm.value.email = "testEmail";
+    component.registerForm.value.email = "testEmail@test.test";
     component.registerForm.value.password = "testPassword";
 
     component.onRegister();

@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router"
 import {Subscription} from "rxjs";
 import {UserLoggedInService} from "../shared-services/user-logged-in-service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -47,10 +48,7 @@ export class LoginComponent implements OnInit {
       next: () => {
         this.resetErrorMessages();
       },
-      error: (res) => {
-        this.errorMessage = res.error.detail;
-        this.loginForm.reset();
-      }
+      error: this.setErrorMessage.bind(this)
     });
   }
 
@@ -58,6 +56,11 @@ export class LoginComponent implements OnInit {
     this.errorMessage = "";
     this.usernameErrorMessage = "";
     this.passwordErrorMessage = "";
+  }
+
+  setErrorMessage(res: HttpErrorResponse) {
+    this.errorMessage = res.error.detail;
+    this.loginForm.reset();
   }
 
   setErrorMessages(username: string, password: string) {

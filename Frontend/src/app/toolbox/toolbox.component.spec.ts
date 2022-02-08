@@ -36,16 +36,25 @@ describe('ToolboxComponent', () => {
     expect(component).toBeTruthy();
   });
 
-
-  it('click should publish true', () => {
-    const downloadImageTriggeredService = TestBed.inject(DownloadImageTriggeredService);
-    spyOn(downloadImageTriggeredService, 'publish').withArgs(true);
+  it('click should call startDownload promise', () => {
+    spyOn(component, 'startDownload');
 
     component.downloadTriggered();
 
-    expect(downloadImageTriggeredService.publish).toHaveBeenCalledWith(true);
+    expect(component.startDownload).toHaveBeenCalled();
   });
 
+  it('expect startDownload to be awaited', async () => {
+    await expectAsync(component.downloadTriggered()).toBeResolved();
+  })
+
+  it('download subscription should reset isDownloading', () => {
+    const downloadImageTriggeredService = TestBed.inject(DownloadImageTriggeredService);
+
+    downloadImageTriggeredService.publish(false);
+
+    expect(component.isDownloading).not.toBeTruthy();
+  });
 
   it('image subscription should set imageSelected', () => {
     const selectedImageChangedService = TestBed.inject(SelectedImageChangedService);

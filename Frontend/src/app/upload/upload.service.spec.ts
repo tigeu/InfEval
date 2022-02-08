@@ -25,7 +25,7 @@ describe('UploadService', () => {
 
     spyOn(http, "put")
 
-    service.upload("test.txt", file, "test", "dataset");
+    service.upload("test.txt", file, "test", "", "dataset");
 
     expect(http.put).toHaveBeenCalled();
   });

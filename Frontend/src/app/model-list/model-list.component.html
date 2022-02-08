@@ -1,1 +1,7 @@
-<p>model-list works!</p>
+<select class="form-select" aria-label="Select dataset" #select
+        *ngIf="modelList" (change)="selectedModelChanged(select.value)">
+  <option value="none" selected disabled hidden>Select model</option>
+  <option *ngFor="let model of modelList">
+    {{model.name}}
+  </option>
+</select>
