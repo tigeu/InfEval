@@ -31,7 +31,7 @@ describe('UploadComponent', () => {
     const uploadInformation = {
       isDataset: false,
       isModel: false,
-      uploadFileType: UploadFileTypes.Compressed,
+      uploadFileTypes: [UploadFileTypes.Zip],
       uploadFileEnding: ".zip",
       apiEndpoint: "dataset"
     };
@@ -65,7 +65,7 @@ describe('UploadComponent', () => {
 
   it('#upload should update progress and finally reset', () => {
     const uploadService = TestBed.inject(UploadService);
-    const file = new File(["content"], "test.txt", {type: UploadFileTypes.Compressed});
+    const file = new File(["content"], "test.txt", {type: UploadFileTypes.Zip});
 
     const httpEvent = of({type: HttpEventType.UploadProgress, loaded: 7, total: 10} as HttpProgressEvent)
     component.file = file
@@ -94,7 +94,7 @@ describe('UploadComponent', () => {
   });
 
   it('#onFileSelected should set file and fileName', () => {
-    const file = new File(["content"], "test.txt", {type: UploadFileTypes.Compressed});
+    const file = new File(["content"], "test.txt", {type: UploadFileTypes.Zip});
     const event = {target: {files: [file]}}
 
     component.onFileSelected(event);
