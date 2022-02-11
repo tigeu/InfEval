@@ -39,7 +39,7 @@ export class UploadMainComponent implements OnInit {
   modelInformation: UploadInformation = {
     isDataset: false,
     isModel: true,
-    uploadFileTypes: [UploadFileTypes.Binary],
+    uploadFileTypes: [],
     uploadFileEnding: "*",
     apiEndpoint: ""
   };

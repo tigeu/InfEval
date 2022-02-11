@@ -50,7 +50,7 @@ export class UploadComponent implements OnInit {
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (!file || !this.uploadInformation.uploadFileTypes.some(type => type === file.type))
+    if (!file || (this.uploadInformation.uploadFileTypes.length && this.uploadInformation.uploadFileTypes.some(type => type === file.type)))
       return
 
     this.file = file
