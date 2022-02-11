@@ -42,7 +42,13 @@ class UploadService:
         return PyTorchValidator().is_valid(tmp_file_path)
 
     def is_tf_valid(self, tmp_file_path: Path, tmp_dir: Path, is_tensor_flow_1: bool = False) -> bool:
+        if not zipfile.is_zipfile(tmp_file_path):
+            return False
+
         dir = self.save_compressed_model(tmp_file_path, tmp_dir, "")
+        if not dir:
+            return False
+        
         is_valid = TensorFlowValidator().is_valid(dir, is_tensor_flow_1)
         shutil.rmtree(dir)
 
@@ -64,13 +70,18 @@ class UploadService:
                     shutil.copyfileobj(source, target)
 
     def save_compressed_model(self, tmp_file_path, model_dir, model_name):
+        extracted = False
         target_path = os.path.join(model_dir, model_name)
         with zipfile.ZipFile(tmp_file_path, 'r') as zip_ref:
             for file in zip_ref.namelist():
                 if 'saved_model/' in file:
+                    extracted = True
                     zip_ref.extract(file, target_path)
 
-        return os.path.join(target_path, "saved_model/")
+        if extracted:
+            return os.path.join(target_path, "saved_model/")
+
+        return ""
 
     def save_data(self, tmp_file_path, target_dir, file_name):
         path = target_dir / file_name

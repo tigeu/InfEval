@@ -33,7 +33,7 @@ class TestUploadGroundTruthView(APITestCase):
         get_combined_dir.return_value = Path("data/test")
         get_dataset_dir.return_value = Path("data/test/datasets/test_dataset")
 
-        result = self.view.get_target_dir("test", "test_dataset")
+        result = self.view.get_target_dir("test", "test_dataset", "")
 
         self.assertEqual(result, Path("data/test/datasets/test_dataset"))
 
@@ -44,7 +44,7 @@ class TestUploadGroundTruthView(APITestCase):
         Dataset.objects.create(name="test_dataset", path=Path("target"), userId=user)
         dataset = Dataset.objects.filter(name="test_dataset", userId=user)
 
-        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, dataset, user, "gt")
+        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, dataset, None, user, "gt")
 
         save_data.assert_called_with(Path("tmp"), Path("target"), 'ground_truth.csv')
         update.assert_called()

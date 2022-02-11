@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 
 from ObjectDetectionAnalyzer.services.PathService import PathService
 from ObjectDetectionAnalyzer.settings import TMP_DIR
-from ObjectDetectionAnalyzer.upload.UploadModels import Dataset
+from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Models
 from ObjectDetectionAnalyzer.upload.UploadService import UploadService
 
 
@@ -22,16 +22,19 @@ class UploadBaseView(APIView):
     def requires_dataset(self):
         return True
 
+    def requires_model(self):
+        return False
+
     def is_file_valid(self, tmp_file_path: Path) -> bool:
         pass
 
-    def get_target_dir(self, username, dataset_name):
+    def get_target_dir(self, username, dataset_name, model_name):
         pass
 
     def create_dir(self, dir: Path) -> bool:
         return self.path_service.create_dir(dir, False)
 
-    def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, user, file_name):
+    def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, model, user, file_name):
         pass
 
     def put(self, request, file_name):
@@ -51,16 +54,22 @@ class UploadBaseView(APIView):
                 self.path_service.delete_tmp_file(tmp_file_path)
                 return Response("Dataset does not exist yet", status=status.HTTP_400_BAD_REQUEST)
 
+        model = Models.objects.filter(name=model_name, userId=user)
+        if self.requires_model():
+            if not model:
+                self.path_service.delete_tmp_file(tmp_file_path)
+                return Response("Model does not exist yet", status=status.HTTP_400_BAD_REQUEST)
+
         if not self.is_file_valid(tmp_file_path):
             self.path_service.delete_tmp_file(tmp_file_path)
             return Response("Invalid file uploaded", status=status.HTTP_400_BAD_REQUEST)
 
-        target_dir = self.get_target_dir(username, dataset_name)
+        target_dir = self.get_target_dir(username, dataset_name, model_name)
         if not self.create_dir(target_dir):
             self.path_service.delete_tmp_file(tmp_file_path)
             return Response("Dataset directory could not be created", status=status.HTTP_400_BAD_REQUEST)
 
-        self.save_data(tmp_file_path, target_dir, dataset_name, model_name, dataset, user, file_name)
+        self.save_data(tmp_file_path, target_dir, dataset_name, model_name, dataset, model, user, file_name)
         self.path_service.delete_tmp_file(tmp_file_path)
 
         return Response(status=status.HTTP_204_NO_CONTENT)

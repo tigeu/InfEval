@@ -114,12 +114,12 @@ class TestUploadBaseView(APITestCase):
 
     def test_dummy_method_get_target_dir(self):
         view = UploadBaseView()
-        result = view.get_target_dir("test", "test_dataset")
+        result = view.get_target_dir("test", "test_dataset", "test_model")
         self.assertEqual(result, None)
 
     def test_dummy_method_save_data(self):
         view = UploadBaseView()
-        result = view.save_data(Path("tmp"), Path("target"), "test_dataset", None, None, self.user, "file_name")
+        result = view.save_data(Path("tmp"), Path("target"), "test_dataset", None, None, None, self.user, "file_name")
         self.assertEqual(result, None)
 
     @patch('ObjectDetectionAnalyzer.services.PathService.PathService.create_dir')

@@ -34,7 +34,7 @@ class TestUploadDatasetView(APITestCase):
         get_combined_dir.return_value = Path("data/test")
         get_dataset_dir.return_value = Path("data/test/datasets/test_dataset")
 
-        result = self.view.get_target_dir("test", "test_dataset")
+        result = self.view.get_target_dir("test", "test_dataset", "")
 
         self.assertEqual(result, Path("data/test/datasets/test_dataset"))
 
@@ -52,7 +52,7 @@ class TestUploadDatasetView(APITestCase):
         user = User.objects.create_user("test", "test@test.test", "test")
         Dataset.objects.create(name="test_dataset", path=Path("target"), userId=user)
 
-        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, None, user, "file")
+        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, None, None, user, "file")
 
         save_compressed_data.assert_called_with(Path("tmp"), Path("target"), IMAGE_ENDINGS)
         update.assert_called()
@@ -62,7 +62,7 @@ class TestUploadDatasetView(APITestCase):
     def test_save_data_without_dataset(self, save_compressed_data, create):
         user = User.objects.create_user("test", "test@test.test", "test")
 
-        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, None, user, "file")
+        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, None, None, user, "file")
 
         save_compressed_data.assert_called_with(Path("tmp"), Path("target"), IMAGE_ENDINGS)
         create.assert_called_with(name="test_dataset", path=Path("target"), userId=user)

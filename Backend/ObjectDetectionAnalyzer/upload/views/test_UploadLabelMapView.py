@@ -4,7 +4,7 @@ from unittest.mock import patch
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 
-from ObjectDetectionAnalyzer.upload.UploadModels import Dataset
+from ObjectDetectionAnalyzer.upload.UploadModels import Models
 from ObjectDetectionAnalyzer.upload.views.UploadLabelMapView import UploadLabelMapView
 
 
@@ -27,24 +27,24 @@ class TestUploadLabelMapView(APITestCase):
         result = self.view.is_file_valid(Path("tmp_file_path"))
         self.assertEqual(result, True)
 
-    @patch('ObjectDetectionAnalyzer.services.PathService.PathService.get_dataset_dir')
+    @patch('ObjectDetectionAnalyzer.services.PathService.PathService.get_model_dir')
     @patch('ObjectDetectionAnalyzer.services.PathService.PathService.get_combined_dir')
-    def test_get_target_dir(self, get_combined_dir, get_dataset_dir):
+    def test_get_target_dir(self, get_combined_dir, get_model_dir):
         get_combined_dir.return_value = Path("data/test")
-        get_dataset_dir.return_value = Path("data/test/datasets/test_dataset")
+        get_model_dir.return_value = Path("data/test/models/test_model")
 
-        result = self.view.get_target_dir("test", "test_dataset")
+        result = self.view.get_target_dir("test", "", "test_model")
 
-        self.assertEqual(result, Path("data/test/datasets/test_dataset"))
+        self.assertEqual(result, Path("data/test/models/test_model"))
 
     @patch('django.db.models.query.QuerySet.update')
     @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.save_data')
     def test_save_data_with_dataset(self, save_data, update):
         user = User.objects.create_user("test", "test@test.test", "test")
-        Dataset.objects.create(name="test_dataset", path=Path("target"), userId=user)
-        dataset = Dataset.objects.filter(name="test_dataset", userId=user)
+        Models.objects.create(name="test_model", path=Path("target"), userId=user)
+        model = Models.objects.filter(name="test_model", userId=user)
 
-        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, dataset, user, "label_map")
+        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", "", None, model, user, "label_map")
 
         save_data.assert_called_with(Path("tmp"), Path("target"), 'label_map.txt')
         update.assert_called()

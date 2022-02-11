@@ -31,11 +31,11 @@ class TestUploadYolov3ModelView(APITestCase):
     @patch('ObjectDetectionAnalyzer.services.PathService.PathService.get_combined_dir')
     def test_get_target_dir(self, get_combined_dir, get_model_dir):
         get_combined_dir.return_value = Path("data/test")
-        get_model_dir.return_value = Path("data/test/models")
+        get_model_dir.return_value = Path("data/test/models/test_model")
 
-        result = self.view.get_target_dir("test", "test_dataset")
+        result = self.view.get_target_dir("test", "", "test_model")
 
-        self.assertEqual(result, Path("data/test/models"))
+        self.assertEqual(result, Path("data/test/models/test_model"))
 
     @patch('django.db.models.query.QuerySet.update')
     @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.save_data')
@@ -45,7 +45,7 @@ class TestUploadYolov3ModelView(APITestCase):
 
         Models.objects.create(name="model_name", path="target", type='yolov3', userId=user)
 
-        self.view.save_data(Path("tmp"), Path("target"), None, "model_name", None, user, "model")
+        self.view.save_data(Path("tmp"), Path("target"), None, "model_name", None, None, user, "model")
 
         save_data.assert_called_with(Path("tmp"), Path("target"), "model_name")
         update.assert_called()
@@ -53,10 +53,11 @@ class TestUploadYolov3ModelView(APITestCase):
     @patch('django.db.models.query.QuerySet.create')
     @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.save_data')
     def test_save_data_without_prediction(self, save_data, create):
-        save_data.return_value = Path("target")
+        save_data.return_value = Path("new_model_name/new_model_name")
         user = User.objects.create_user("test", "test@test.test", "test")
 
-        self.view.save_data(Path("tmp"), Path("target"), None, "new_model_name", None, user, "model")
+        self.view.save_data(Path("tmp"), Path("new_model_name"), None, "new_model_name", None, None, user, "model")
 
-        save_data.assert_called_with(Path("tmp"), Path("target"), "new_model_name")
-        create.assert_called_with(name="new_model_name", path=Path("target"), type='yolov3', userId=user)
+        save_data.assert_called_with(Path("tmp"), Path("new_model_name"), "new_model_name")
+        create.assert_called_with(name="new_model_name",
+                                  path=Path("new_model_name/new_model_name"), type='yolov3', userId=user)

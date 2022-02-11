@@ -19,13 +19,13 @@ class UploadPyTorchModelView(UploadBaseView):
     def is_file_valid(self, tmp_file_path: Path) -> bool:
         return self.upload_service.is_pytorch_valid(tmp_file_path)
 
-    def get_target_dir(self, username, dataset_name):
+    def get_target_dir(self, username, dataset_name, model_name):
         user_dir = self.path_service.get_combined_dir(DATA_DIR, username)
-        model_dir = self.path_service.get_model_dir(user_dir)
+        model_dir = self.path_service.get_model_dir(user_dir, model_name)
 
         return model_dir
 
-    def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, user, file_name):
+    def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, model, user, file_name):
         model_type = str(ModelTypes.PYTORCH)
         model_path = self.upload_service.save_data(tmp_file_path, target_dir, model_name)
         model = Models.objects.filter(name=model_name, type=model_type, userId=user)

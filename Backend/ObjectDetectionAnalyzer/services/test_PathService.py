@@ -27,7 +27,7 @@ class TestPathService(TestCase):
         self.assertEqual(user_dir, None)
 
     def test_path_service_get_combined_dir_without_directory(self):
-        user_dir = self.path_service.get_combined_dir("", self.user_name)
+        user_dir = self.path_service.get_combined_dir(None, self.user_name)
 
         self.assertEqual(user_dir, None)
 
@@ -70,11 +70,11 @@ class TestPathService(TestCase):
         self.assertEqual(result, None)
 
     def test_get_model_dir(self):
-        result = self.path_service.get_model_dir(Path("user_dir"))
-        self.assertEqual(result, Path("user_dir/models"))
+        result = self.path_service.get_model_dir(Path("user_dir"), "test_model")
+        self.assertEqual(result, Path("user_dir/models/test_model"))
 
     def test_get_model_dir_without_user_dir(self):
-        result = self.path_service.get_model_dir(None)
+        result = self.path_service.get_model_dir(None, "test_model")
         self.assertEqual(result, None)
 
     @patch('builtins.open')
@@ -86,7 +86,7 @@ class TestPathService(TestCase):
         open = mock_open()
         file = io.StringIO("some data")
 
-        result = self.path_service.save_tmp_file("tmp_dir", "file_name", file)
+        result = self.path_service.save_tmp_file(Path("tmp_dir"), "file_name", file)
 
         self.assertEqual(result, "tmp_dir/file_name")
 
@@ -95,7 +95,7 @@ class TestPathService(TestCase):
     @patch('ObjectDetectionAnalyzer.services.PathService.PathService.create_dir')
     def test_save_tmp_file_without_tmp_dir(self, create_dir, get_combined_dir, open):
         create_dir.return_value = False
-        result = self.path_service.save_tmp_file(None, "file_name", None)
+        result = self.path_service.save_tmp_file(Path(""), "file_name", None)
 
         self.assertEqual(result, None)
 

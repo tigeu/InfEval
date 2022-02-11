@@ -32,9 +32,9 @@ class PathService:
             predictions_dir = dataset_dir / "predictions"
             return Path(predictions_dir)
 
-    def get_model_dir(self, user_dir):
-        if user_dir:
-            model_dir = user_dir / "models"
+    def get_model_dir(self, user_dir, model_name):
+        if user_dir and model_name:
+            model_dir = user_dir / "models" / model_name
             return Path(model_dir)
 
     def save_tmp_file(self, tmp_dir: Path, file_name: str, file_obj: any) -> Path:

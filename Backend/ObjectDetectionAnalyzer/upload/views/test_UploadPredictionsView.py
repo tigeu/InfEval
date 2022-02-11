@@ -35,7 +35,7 @@ class TestUploadPredictionsView(APITestCase):
         get_dataset_dir.return_value = Path("data/test/datasets/test_dataset")
         get_predictions_dir.return_value = Path("data/test/datasets/test_dataset/predictions")
 
-        result = self.view.get_target_dir("test", "test_dataset")
+        result = self.view.get_target_dir("test", "test_dataset", "")
 
         self.assertEqual(result, Path("data/test/datasets/test_dataset/predictions"))
 
@@ -47,7 +47,7 @@ class TestUploadPredictionsView(APITestCase):
 
         Predictions.objects.create(name="pred", path="target", datasetId=dataset, userId=user)
 
-        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, None, user, "pred")
+        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, None, None, user, "pred")
 
         save_data.assert_called_with(Path("tmp"), Path("target"), "pred")
         update.assert_called()
@@ -60,7 +60,7 @@ class TestUploadPredictionsView(APITestCase):
         Dataset.objects.create(name="test_dataset", path=Path("target"), userId=user)
         dataset = Dataset.objects.filter(name="test_dataset", userId=user)
 
-        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, dataset, user, "pred")
+        self.view.save_data(Path("tmp"), Path("target"), "test_dataset", None, dataset, None, user, "pred")
 
         save_data.assert_called_with(Path("tmp"), Path("target"), "pred")
         create.assert_called_with(name="pred", path=Path("target"), datasetId=dataset.first(), userId=user)

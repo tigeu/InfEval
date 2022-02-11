@@ -41,6 +41,7 @@ class Models(models.Model):
     )
 
     name = models.CharField(max_length=50, unique=True)
+    label_map_path = models.FilePathField()
     path = models.FilePathField()
     type = models.CharField(choices=MODEL_TYPES, max_length=7)
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
