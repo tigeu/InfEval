@@ -71,6 +71,21 @@ class TestUploadBaseView(APITestCase):
         self.assertEqual(response.data, "Dataset does not exist yet")
 
     @patch('ObjectDetectionAnalyzer.services.PathService.PathService.delete_tmp_file')
+    @patch('ObjectDetectionAnalyzer.upload.views.UploadDatasetView.UploadDatasetView.requires_model')
+    @patch('ObjectDetectionAnalyzer.upload.views.UploadDatasetView.UploadDatasetView.requires_dataset')
+    @patch('ObjectDetectionAnalyzer.services.PathService.PathService.save_tmp_file')
+    def test_upload_base_view_without_required_model(self, save_tmp_file, requires_dataset, requires_model,
+                                                     delete_tmp_file):
+        save_tmp_file.return_value = Path("tmp_path")
+        requires_dataset.return_value = False
+        requires_model.return_value = True
+
+        response = self.client.put(self.url, self.request)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, "Model does not exist yet")
+
+    @patch('ObjectDetectionAnalyzer.services.PathService.PathService.delete_tmp_file')
     @patch('ObjectDetectionAnalyzer.upload.views.UploadDatasetView.UploadDatasetView.is_file_valid')
     @patch('ObjectDetectionAnalyzer.upload.views.UploadDatasetView.UploadDatasetView.requires_dataset')
     @patch('ObjectDetectionAnalyzer.services.PathService.PathService.save_tmp_file')

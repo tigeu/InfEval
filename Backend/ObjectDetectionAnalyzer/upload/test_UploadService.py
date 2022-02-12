@@ -81,7 +81,9 @@ class TestUploadService(TestCase):
     @patch('shutil.rmtree')
     @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.save_compressed_model')
     @patch('ObjectDetectionAnalyzer.upload.validators.TensorFlowValidator.TensorFlowValidator.is_valid')
-    def test_is_tensorflow_model_valid(self, is_valid, save_compressed_model, rmtree):
+    @patch("zipfile.is_zipfile")
+    def test_is_tensorflow_model_valid(self, is_zip_file, is_valid, save_compressed_model, rmtree):
+        is_zip_file.return_value = True
         is_valid.return_value = True
         save_compressed_model.return_value = Path("tmp/file")
 
@@ -89,6 +91,24 @@ class TestUploadService(TestCase):
 
         self.assertEqual(result, True)
         is_valid.assert_called()
+
+    @patch("zipfile.is_zipfile")
+    def test_is_tensorflow_model_valid_without_zip(self, is_zip_file):
+        is_zip_file.return_value = False
+
+        result = self.upload_service.is_tf_valid(Path("file"), Path("tmp"))
+
+        self.assertEqual(result, False)
+
+    @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.save_compressed_model')
+    @patch("zipfile.is_zipfile")
+    def test_is_tensorflow_model_valid_without_dir(self, is_zip_file, save_compressed_model):
+        is_zip_file.return_value = True
+        save_compressed_model.return_value = ""
+
+        result = self.upload_service.is_tf_valid(Path("file"), Path("tmp"))
+
+        self.assertEqual(result, False)
 
     @patch('ObjectDetectionAnalyzer.upload.validators.YoloValidator.YoloValidator.is_valid')
     def test_is_yolo_model_valid(self, is_valid):
@@ -123,6 +143,18 @@ class TestUploadService(TestCase):
         result = self.upload_service.save_compressed_model("tmp", "model_dir", "model_name")
 
         self.assertEqual(result, "model_dir/model_name/saved_model/")
+
+    @patch("zipfile.ZipFile.extract")
+    @patch("builtins.open")
+    @patch("zipfile.ZipFile")
+    @patch("zipfile.is_zipfile")
+    def test_save_compressed_model_without_saved_model(self, is_zipfile, ZipFile, open, extract):
+        is_zipfile.return_value = True
+        ZipFile.return_value.__enter__.return_value.namelist.return_value = ["some/file", "an/other/file"]
+
+        result = self.upload_service.save_compressed_model("tmp", "model_dir", "model_name")
+
+        self.assertEqual(result, "")
 
     @patch("shutil.copy")
     def test_save_data(self, copy):

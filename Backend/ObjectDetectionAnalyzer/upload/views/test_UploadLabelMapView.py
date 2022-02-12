@@ -19,6 +19,10 @@ class TestUploadLabelMapView(APITestCase):
 
     def test_requires_dataset(self):
         result = self.view.requires_dataset()
+        self.assertEqual(result, False)
+
+    def test_requires_model(self):
+        result = self.view.requires_model()
         self.assertEqual(result, True)
 
     @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.is_label_map_valid')
