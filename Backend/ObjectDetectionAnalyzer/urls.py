@@ -12,6 +12,7 @@ from ObjectDetectionAnalyzer.modellist.ModelListView import ModelListView
 from ObjectDetectionAnalyzer.prediction.PredictionView import PredictionView
 from ObjectDetectionAnalyzer.predictionlist.PredictionListView import PredictionListView
 from ObjectDetectionAnalyzer.register.RegisterView import RegisterView
+from ObjectDetectionAnalyzer.tasks.TasksView import TasksView
 from ObjectDetectionAnalyzer.upload.views.UploadDatasetView import UploadDatasetView
 from ObjectDetectionAnalyzer.upload.views.UploadGroundTruthView import UploadGroundTruthView
 from ObjectDetectionAnalyzer.upload.views.UploadLabelMapView import UploadLabelMapView
@@ -46,6 +47,8 @@ urlpatterns = [
 
     path('ground-truth/<str:dataset>/<str:image_name>', GroundTruthView.as_view(), name="ground-truth"),
     path('prediction/<str:dataset>/<str:prediction>/<str:image_name>', PredictionView.as_view(), name="prediction"),
+
+    path('tasks/<str:task_name>', TasksView.as_view(), name="tasks"),
 
     path('register/', RegisterView.as_view(), name="register"),
     path('login/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),

@@ -4,6 +4,18 @@ from PIL import Image
 
 
 class TensorFlowService:
+    def get_detections_for_task_images(self, model_path, image_paths, task, is_tensor_flow_1=False):
+        saved_model = self.load_model(is_tensor_flow_1, model_path)
+
+        detections = {}
+        progress_step = 100 / len(image_paths)
+        for image_path in image_paths:
+            detections[image_path] = self.get_detections(saved_model, image_path)
+            task.progress = task.progress + progress_step
+            task.save()
+
+        return detections
+
     def get_detections_for_images(self, model_path, image_paths, is_tensor_flow_1=False):
         saved_model = self.load_model(is_tensor_flow_1, model_path)
 
@@ -45,5 +57,5 @@ class TensorFlowService:
                           'ymax': round(boxes[index][2] * image_height)}
             if prediction['xmin'] < prediction['xmax'] and prediction['ymin'] < prediction['ymax']:
                 predictions.append(prediction)
-        
+
         return predictions

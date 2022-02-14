@@ -28,6 +28,7 @@ import {GroundTruthComponent} from "./ground-truth/ground-truth.component";
 import {PredictionListComponent} from './prediction-list/prediction-list.component';
 import {PredictionComponent} from './prediction/prediction.component';
 import { ModelListComponent } from './model-list/model-list.component';
+import { TasksComponent } from './tasks/tasks.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { ModelListComponent } from './model-list/model-list.component';
     PredictionListComponent,
     PredictionComponent,
     ModelListComponent,
+    TasksComponent,
   ],
   imports: [
     BrowserModule,

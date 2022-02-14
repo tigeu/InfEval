@@ -5,7 +5,24 @@ from PIL import Image
 
 
 class PyTorchService:
-    def get_detections_for_images(self, model_path, image_paths):
+    def get_detections_for_task_images(self, model_path, image_paths, task):
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        model = self.load_model(model_path, device)
+
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+
+        detections = {}
+        progress_step = 100 / len(image_paths)
+        for image_path in image_paths:
+            detections[image_path] = self.get_detections(model, device, image_path, transform)
+            task.progress = task.progress + progress_step
+            task.save()
+
+        return detections
+
+    def get_detections_for_images(self, model_path, image_paths, task):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         model = self.load_model(model_path, device)
 

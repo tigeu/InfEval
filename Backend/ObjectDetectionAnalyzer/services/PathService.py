@@ -49,3 +49,12 @@ class PathService:
 
     def get_files_from_dir(self, dir):
         return os.listdir(dir)
+
+    def get_image_files_from_dir(self, dir, image_endings):
+        image_names = []
+        for file_name in os.listdir(dir):
+            extension = os.path.splitext(file_name)[1]
+            if extension.lower() in image_endings:
+                image_names.append(os.path.join(dir, file_name))
+
+        return image_names

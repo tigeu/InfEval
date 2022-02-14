@@ -2,7 +2,20 @@ import torch
 
 
 class YoloService:
-    def get_detections_for_images(self, yolo_dir, weight_path, image_paths):
+    def get_detections_for_task_images(self, yolo_dir, weight_path, image_paths, task):
+        model = torch.hub.load(yolo_dir, 'custom', path=weight_path, source='local')
+
+        detections = {}
+        progress_step = 100 / len(image_paths)
+        for image_path in image_paths:
+            results = model(image_path)
+            detections[str(image_path)] = self.extract_predictions(results)  # use string to avoid unhashable exception
+            task.progress = task.progress + progress_step
+            task.save()
+
+        return detections
+
+    def get_detections_for_images(self, yolo_dir, weight_path, image_paths, task):
         model = torch.hub.load(yolo_dir, 'custom', path=weight_path, source='local')
 
         detections = {}

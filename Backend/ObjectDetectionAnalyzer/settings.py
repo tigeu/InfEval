@@ -34,7 +34,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'ObjectDetectionAnalyzer',
-    'ObjectDetectionAnalyzer.upload'
+    'ObjectDetectionAnalyzer.upload',
+    'ObjectDetectionAnalyzer.tasks',
 ]
 
 MIDDLEWARE = [

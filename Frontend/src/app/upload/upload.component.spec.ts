@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {UploadComponent} from './upload.component';
-import {HttpClientModule, HttpEventType, HttpProgressEvent} from "@angular/common/http";
+import {HttpClientModule, HttpErrorResponse, HttpEventType, HttpProgressEvent} from "@angular/common/http";
 import {MatIconModule} from "@angular/material/icon";
 import {UploadService} from "./upload.service";
 import {of, Subscription} from "rxjs";
@@ -181,5 +181,17 @@ describe('UploadComponent', () => {
     component.selectedModelTypeChanged("new_endpoint");
 
     expect(component.uploadInformation.apiEndpoint).toEqual("new_endpoint");
+  });
+
+  it('#setErrorMessage should set error message', () => {
+    const httpErrorResponse = new HttpErrorResponse({
+      error: 'error',
+      status: 400,
+      statusText: 'Bad Request'
+    })
+
+    component.setErrorMessage(httpErrorResponse);
+
+    expect(component.errorMessage).toEqual("error");
   });
 });

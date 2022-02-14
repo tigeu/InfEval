@@ -46,6 +46,7 @@ export class UploadComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.selectedDatasetChanged.unsubscribe();
+    this.selectedModelChanged.unsubscribe();
   }
 
   onFileSelected(event: any) {

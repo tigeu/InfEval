@@ -4,12 +4,14 @@ import {LoginComponent} from "./login/login.component";
 import {RegisterComponent} from "./register/register.component";
 import {MainComponent} from "./main/main.component";
 import {UploadMainComponent} from "./upload-main/upload-main.component";
+import {TasksComponent} from "./tasks/tasks.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
   {path: 'upload', component: UploadMainComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'tasks', component: TasksComponent}
 ];
 
 @NgModule({
