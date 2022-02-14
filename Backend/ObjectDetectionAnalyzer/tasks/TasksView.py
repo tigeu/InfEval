@@ -72,12 +72,15 @@ class TasksView(APIView):
 
         self.write_model_predictions(dataset, dataset_name, file_name, model_predictions, user)
 
-        Tasks.objects.update(name=task_name, userId=user, progress=100, finished=timezone.now())
+        task.progress = 100
+        task.finished = timezone.now()
+        task.save()
 
     def write_model_predictions(self, dataset, dataset_name, file_name, model_predictions, user):
         user_dir = self.path_service.get_combined_dir(DATA_DIR, user.username)
         dataset_dir = self.path_service.get_dataset_dir(user_dir, dataset_name)
         predictions_dir = self.path_service.get_predictions_dir(dataset_dir)
+        self.path_service.create_dir(predictions_dir)
         file_path = predictions_dir / file_name
         self.csv_write_service.write_predictions(model_predictions, file_path)
         Predictions.objects.update_or_create(name=file_name, path=file_path, datasetId=dataset, userId=user)
