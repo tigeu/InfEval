@@ -82,12 +82,12 @@ export class PredictionComponent implements OnInit {
   }
 
   setClassColors() {
-    if (this.selectedDataset.classes) {
+    if (this.selectedPrediction.classes) {
       let classes: string[] = [];
       let colors: string[] = [];
-      for (let i = 0; i < this.selectedDataset.classes?.length; i++) {
+      for (let i = 0; i < this.selectedPrediction.classes?.length; i++) {
         if (this.showClasses[i]) {
-          classes.push(this.selectedDataset.classes[i]);
+          classes.push(this.selectedPrediction.classes[i]);
           colors.push(this.classColors[i]);
         }
       }
