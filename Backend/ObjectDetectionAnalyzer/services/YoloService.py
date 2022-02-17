@@ -15,7 +15,7 @@ class YoloService:
 
         return detections
 
-    def get_detections_for_images(self, yolo_dir, weight_path, image_paths, task):
+    def get_detections_for_images(self, yolo_dir, weight_path, image_paths):
         model = torch.hub.load(yolo_dir, 'custom', path=weight_path, source='local')
 
         detections = {}

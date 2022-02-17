@@ -13,7 +13,6 @@ export class TasksService {
   }
 
   startTask(name: string, description: string, file_name: string, dataset_name: string, model_name: string): Observable<any> {
-    console.log(name)
     const queryUrl = `${this.tasksUrl}/${name}`
     return this.http.post(queryUrl, {
       "task_description": description,

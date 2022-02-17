@@ -55,7 +55,6 @@ export class TasksComponent implements OnInit {
   }
 
   startTask(taskName: string, taskDescription: string, fileName: string, dataset: string, model: string) {
-    this.errorMessage = "";
     this.tasksService.startTask(taskName, taskDescription, fileName, dataset, model)
       .subscribe({
         next: this.setSuccessMessage.bind(this),
@@ -123,6 +122,7 @@ export class TasksComponent implements OnInit {
       this.datasetErrorMessage = "No dataset selected";
       return false;
     }
+    this.datasetErrorMessage = "";
     return true;
   }
 
@@ -131,6 +131,7 @@ export class TasksComponent implements OnInit {
       this.modelErrorMessage = "No model selected";
       return false;
     }
+    this.modelErrorMessage = "";
     return true;
   }
 
@@ -139,6 +140,6 @@ export class TasksComponent implements OnInit {
   }
 
   setSuccessMessage() {
-    this.successMessage = "Task successfully started"
+    this.successMessage = "Task successfully started";
   }
 }

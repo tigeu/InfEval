@@ -22,7 +22,7 @@ class PyTorchService:
 
         return detections
 
-    def get_detections_for_images(self, model_path, image_paths, task):
+    def get_detections_for_images(self, model_path, image_paths):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         model = self.load_model(model_path, device)
 

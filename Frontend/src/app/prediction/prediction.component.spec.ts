@@ -134,7 +134,11 @@ describe('PredictionsComponent', () => {
   it('#setClassColors should set classes in predictionsettings', () => {
     component.showClasses = [true, true]
     component.classColors = ["color1", "newColor"]
-    component.selectedDataset = {name: "test_dataset", classes: ["class1", "class2"], colors: ["color1", "color2"]};
+    component.selectedPrediction = {
+      name: "test_prediction",
+      classes: ["class1", "class2"],
+      colors: ["color1", "color2"]
+    };
 
     component.setClassColors();
 

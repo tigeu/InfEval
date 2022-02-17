@@ -46,19 +46,19 @@ class TasksView(APIView):
 
         dataset = Dataset.objects.filter(name=dataset_name, userId=user)
         if not dataset:
-            return Response("Dataset does not exist yet", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Dataset does not exist yet", status=status.HTTP_404_NOT_FOUND)
         dataset = dataset.first()
 
         model = Models.objects.filter(name=model_name, userId=user)
         if not model:
-            return Response("Model does not exist yet", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Model does not exist yet", status=status.HTTP_404_NOT_FOUND)
         model = model.first()
 
-        self.execute_task(dataset, dataset_name, desc, file_name, model, task_name, user)
+        self.execute_task(dataset, desc, file_name, model, task_name, user)
 
         return Response("Task finished successfully", status=status.HTTP_200_OK)
 
-    def execute_task(self, dataset, dataset_name, desc, file_name, model, task_name, user):
+    def execute_task(self, dataset, desc, file_name, model, task_name, user):
         task = Tasks.objects.update_or_create(name=task_name, userId=user,
                                               defaults={'name': task_name, 'description': desc, 'file_name': file_name,
                                                         'progress': 0, 'userId': user, 'datasetId': dataset,
@@ -70,15 +70,15 @@ class TasksView(APIView):
             label_map = self.json_service.read_label_map(model.label_map_path)
             self.task_service.replace_class_names(model_predictions, label_map)
 
-        self.write_model_predictions(dataset, dataset_name, file_name, model_predictions, user)
+        self.write_model_predictions(dataset, file_name, model_predictions, user)
 
         task.progress = 100
         task.finished = timezone.now()
         task.save()
 
-    def write_model_predictions(self, dataset, dataset_name, file_name, model_predictions, user):
+    def write_model_predictions(self, dataset, file_name, model_predictions, user):
         user_dir = self.path_service.get_combined_dir(DATA_DIR, user.username)
-        dataset_dir = self.path_service.get_dataset_dir(user_dir, dataset_name)
+        dataset_dir = self.path_service.get_dataset_dir(user_dir, dataset.name)
         predictions_dir = self.path_service.get_predictions_dir(dataset_dir)
         self.path_service.create_dir(predictions_dir)
         file_path = predictions_dir / file_name

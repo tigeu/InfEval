@@ -109,3 +109,11 @@ class TestPathService(TestCase):
         self.path_service.get_files_from_dir("test_dir")
 
         listdir.assert_called()
+
+    @patch("os.listdir")
+    def test_get_image_files_from_dir(self, listdir):
+        listdir.return_value = ["file1.jpg", "file2.png", "file3.xxx"]
+
+        file_names = self.path_service.get_image_files_from_dir(self.directory, {".jpg", ".png"})
+
+        self.assertEqual(file_names, ["dir/file1.jpg", "dir/file2.png"])

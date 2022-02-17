@@ -28,6 +28,27 @@ class TestPyTorchService(TestCase):
         self.assertEqual(result['path1'], [1, 2, 3])
         self.assertEqual(result['path2'], [1, 2, 3])
 
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.get_detections')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.load_model')
+    def test_get_detections_for_task_images(self, load_model, get_detections):
+        get_detections.return_value = [1, 2, 3]
+        load_model.return_value = lambda x: x
+
+        class Task:
+            def __init__(self):
+                self.progress = 0
+
+            def save(self):
+                pass
+
+        task = Task()
+
+        result = self.pytorch_service.get_detections_for_task_images("model_path", ["path1", "path2"], task)
+
+        self.assertEqual(result['path1'], [1, 2, 3])
+        self.assertEqual(result['path2'], [1, 2, 3])
+        self.assertEqual(task.progress, 100)
+
     @patch("torch.load")
     def test_load_model(self, load):
         class Model:
