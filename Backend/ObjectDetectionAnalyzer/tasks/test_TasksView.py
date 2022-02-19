@@ -6,6 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from ObjectDetectionAnalyzer.tasks.TasksModels import Tasks
 from ObjectDetectionAnalyzer.tasks.TasksView import TasksView
 from ObjectDetectionAnalyzer.upload.UploadModels import Models, Dataset
 
@@ -41,6 +42,16 @@ class TestTasksView(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data, "Model does not exist yet")
+
+    def test_task_view_with_running_task(self):
+        dataset = Dataset.objects.create(name="dataset_name", userId=self.user)
+        model = Models.objects.create(name="model_name", userId=self.user)
+        Tasks.objects.create(name="some_task", datasetId=dataset, modelId=model, userId=self.user)
+
+        response = self.client.post(self.url, data=self.parameters)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, "A task with this name is running already")
 
     @patch('ObjectDetectionAnalyzer.tasks.TasksView.TasksView.execute_task')
     def test_task_view(self, execute_task):

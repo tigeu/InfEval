@@ -54,6 +54,10 @@ class TasksView(APIView):
             return Response("Model does not exist yet", status=status.HTTP_404_NOT_FOUND)
         model = model.first()
 
+        task = Tasks.objects.filter(name=task_name, userId=user)
+        if task:
+            return Response("A task with this name is running already", status=status.HTTP_400_BAD_REQUEST)
+
         self.execute_task(dataset, desc, file_name, model, task_name, user)
 
         return Response("Task finished successfully", status=status.HTTP_200_OK)
