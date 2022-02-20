@@ -26,6 +26,10 @@ export class TasksListComponent implements OnInit {
       );
   }
 
+  ngOnDestroy(): void {
+    this.tasksListSubscription.unsubscribe();
+  }
+
   getTasksList(): void {
     this.tasksListService.getTasksList()
       .subscribe((tasksList: TasksFile[]) => {

@@ -57,4 +57,11 @@ describe('TasksListComponent', () => {
     expect(component.tasksList).toBe(taskFiles);
   });
 
+  it('#ngOnDestroy unsubscribes from tasks subscription', () => {
+    const tasksListSubscriptionSpy = spyOn(component.tasksListSubscription, 'unsubscribe');
+
+    component.ngOnDestroy();
+
+    expect(tasksListSubscriptionSpy).toHaveBeenCalled();
+  });
 });
