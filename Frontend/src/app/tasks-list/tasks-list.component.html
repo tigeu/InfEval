@@ -1,0 +1,23 @@
+<div class="tasks-list">
+  <h1>Started tasks</h1>
+  <ul class="list-group">
+    <li *ngFor="let task of tasksList" class="list-group-item d-flex justify-content-between align-items-start">
+      <div class="ms-2 me-auto">
+        <h2>{{task.name}}</h2>
+        <div *ngIf="task.description"><span class="fw-bold">Description:</span> {{task.description}}</div>
+        <div><span class="fw-bold">File name:</span> {{task.fileName}}</div>
+        <div><span class="fw-bold">Started:</span> {{task.started}}</div>
+        <div *ngIf="task.finished"><span class="fw-bold">Finished:</span> {{task.finished}}</div>
+        <div *ngIf="!task.finished">
+          <div *ngIf="task.progress > 0" class="progress-bar" role="progressbar"
+               aria-valuemin="0" aria-valuemax="100">
+            {{task.progress}} %
+          </div>
+          <div *ngIf="task.progress == 0">
+            <span class="spinner-border text-primary" role="status"></span> Loading model
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

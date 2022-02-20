@@ -29,6 +29,7 @@ import {PredictionListComponent} from './prediction-list/prediction-list.compone
 import {PredictionComponent} from './prediction/prediction.component';
 import { ModelListComponent } from './model-list/model-list.component';
 import { TasksComponent } from './tasks/tasks.component';
+import { TasksListComponent } from './tasks-list/tasks-list.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { TasksComponent } from './tasks/tasks.component';
     PredictionComponent,
     ModelListComponent,
     TasksComponent,
+    TasksListComponent,
   ],
   imports: [
     BrowserModule,

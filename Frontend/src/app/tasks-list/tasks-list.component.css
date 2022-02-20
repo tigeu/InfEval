@@ -1,0 +1,4 @@
+.tasks-list {
+  max-height: inherit;
+  overflow: auto;
+}

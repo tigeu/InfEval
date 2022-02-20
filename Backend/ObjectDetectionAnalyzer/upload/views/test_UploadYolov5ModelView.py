@@ -47,7 +47,7 @@ class TestUploadYolov5ModelView(APITestCase):
 
         self.view.save_data(Path("tmp"), Path("target"), None, "model_name", None, None, user, "model")
 
-        save_data.assert_called_with(Path("tmp"), Path("target"), "model_name")
+        save_data.assert_called_with(Path("tmp"), Path("target"), "model")
         update.assert_called()
 
     @patch('django.db.models.query.QuerySet.create')
@@ -58,6 +58,6 @@ class TestUploadYolov5ModelView(APITestCase):
 
         self.view.save_data(Path("tmp"), Path("new_model_name"), None, "new_model_name", None, None, user, "model")
 
-        save_data.assert_called_with(Path("tmp"), Path("new_model_name"), "new_model_name")
+        save_data.assert_called_with(Path("tmp"), Path("new_model_name"), "model")
         create.assert_called_with(name="new_model_name",
                                   path=Path("new_model_name/new_model_name"), type='yolov5', userId=user)

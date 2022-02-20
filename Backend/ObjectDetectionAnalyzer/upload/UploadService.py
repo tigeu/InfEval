@@ -48,7 +48,7 @@ class UploadService:
         dir = self.save_compressed_model(tmp_file_path, tmp_dir, "")
         if not dir:
             return False
-        
+
         is_valid = TensorFlowValidator().is_valid(dir, is_tensor_flow_1)
         shutil.rmtree(dir)
 
@@ -71,7 +71,10 @@ class UploadService:
 
     def save_compressed_model(self, tmp_file_path, model_dir, model_name):
         extracted = False
-        target_path = os.path.join(model_dir, model_name)
+        target_path = Path(os.path.join(model_dir, model_name))
+        if target_path.exists() and not target_path.is_dir():
+            Path.unlink(target_path)
+
         with zipfile.ZipFile(tmp_file_path, 'r') as zip_ref:
             for file in zip_ref.namelist():
                 if 'saved_model/' in file:
@@ -86,5 +89,5 @@ class UploadService:
     def save_data(self, tmp_file_path, target_dir, file_name):
         path = target_dir / file_name
         shutil.copy(tmp_file_path, path)
-
+        
         return path

@@ -1,5 +1,22 @@
+.data-container {
+  overflow: hidden;
+  display: grid;
+  grid-column-gap: 10px;
+  grid-template-rows: auto;
+  grid-template-columns: 2fr 6fr 0.2fr 1.75fr 0.05fr;
+}
+
 .form-tasks {
   width: 100%;
   max-width: 850px;
   margin: auto;
+  grid-row-start: 1;
+  grid-column-start: 2;
+}
+
+app-tasks-list {
+  height: 90vh;
+  max-height: 90vh;
+  grid-row-start: 1;
+  grid-column-start: 4;
 }

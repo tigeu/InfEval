@@ -9,6 +9,7 @@ import {SelectedDatasetChangedService} from "../shared-services/selected-dataset
 import {SelectedModelChangedService} from "../shared-services/selected-model-changed.service";
 import {of, throwError} from "rxjs";
 import {TasksService} from "./tasks.service";
+import {TasksListComponent} from "../tasks-list/tasks-list.component";
 
 describe('TasksComponent', () => {
   let component: TasksComponent;
@@ -24,7 +25,8 @@ describe('TasksComponent', () => {
       declarations: [
         TasksComponent,
         DatasetListComponent,
-        ModelListComponent
+        ModelListComponent,
+        TasksListComponent
       ]
     })
       .compileComponents();

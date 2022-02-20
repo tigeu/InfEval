@@ -28,8 +28,8 @@ class UploadTensorFlow2ModelView(UploadBaseView):
     def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, model, user, file_name):
         model_type = str(ModelTypes.TENSORFLOW2)
         model_path = self.upload_service.save_compressed_model(tmp_file_path, target_dir, model_name)
-        model = Models.objects.filter(name=model_name, type=model_type, userId=user)
+        model = Models.objects.filter(name=model_name, userId=user)
         if model:
-            model.update(uploaded_at=timezone.now())
+            model.update(path=model_path, type=model_type, uploaded_at=timezone.now())
         else:
             Models.objects.create(name=model_name, path=model_path, type=model_type, userId=user)

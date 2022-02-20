@@ -148,6 +148,23 @@ class TestUploadService(TestCase):
     @patch("builtins.open")
     @patch("zipfile.ZipFile")
     @patch("zipfile.is_zipfile")
+    @patch("pathlib.Path.unlink")
+    @patch("pathlib.Path.is_dir")
+    @patch("pathlib.Path.exists")
+    def test_save_compressed_model_when_file_saved(self, exists, is_dir, unlink, is_zipfile, ZipFile, open, extract):
+        exists.return_value = True
+        is_dir.return_value = False
+        is_zipfile.return_value = True
+        ZipFile.return_value.__enter__.return_value.namelist.return_value = ["some/file", "an/other/file"]
+
+        result = self.upload_service.save_compressed_model("tmp", "model_dir", "model_name")
+
+        self.assertEqual(result, "")
+
+    @patch("zipfile.ZipFile.extract")
+    @patch("builtins.open")
+    @patch("zipfile.ZipFile")
+    @patch("zipfile.is_zipfile")
     def test_save_compressed_model_without_saved_model(self, is_zipfile, ZipFile, open, extract):
         is_zipfile.return_value = True
         ZipFile.return_value.__enter__.return_value.namelist.return_value = ["some/file", "an/other/file"]
