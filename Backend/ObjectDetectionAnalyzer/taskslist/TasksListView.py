@@ -40,3 +40,11 @@ class TasksListView(APIView):
         serializer = TasksListSerializer(response_data, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, task):
+        user = request.user
+
+        task = Tasks.objects.filter(userId=user, name=task).first()
+        task.delete()
+
+        return Response("Successfully deleted task", status=status.HTTP_200_OK)

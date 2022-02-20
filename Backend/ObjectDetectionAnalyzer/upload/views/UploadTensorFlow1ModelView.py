@@ -26,7 +26,7 @@ class UploadTensorFlow1ModelView(UploadBaseView):
         return model_dir
 
     def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, model, user, file_name):
-        model_type = str(ModelTypes.TENSORFLOW1)
+        model_type = ModelTypes.TENSORFLOW1.value
         model_path = self.upload_service.save_compressed_model(tmp_file_path, target_dir, model_name)
         model = Models.objects.filter(name=model_name, userId=user)
         if model:

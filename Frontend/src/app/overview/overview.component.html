@@ -1,0 +1,131 @@
+<div class="data-container">
+  <div class="card datasets">
+    <div class="card-body">
+      <h3>Datasets</h3>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Ground truth</th>
+          <th scope="col">Predictions</th>
+          <th scope="col">Uploaded</th>
+          <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let dataset of datasetList">
+          <td>{{dataset.name}}</td>
+          <td>
+            <mat-icon class="check" *ngIf="dataset.groundTruth">check</mat-icon>
+            <mat-icon class="close" *ngIf="!dataset.groundTruth">close</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="check" *ngIf="dataset.predictions">check</mat-icon>
+            <mat-icon class="close" *ngIf="!dataset.predictions">close</mat-icon>
+          </td>
+          <td>{{dataset.uploaded}}</td>
+          <td>
+            <button [disabled]="deleting" class="btn btn-danger btn-sm" (click)="deleteDataset(dataset.name)">
+              <mat-icon class="delete">delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card predictions">
+    <div class="card-body">
+      <h3>Predictions</h3>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Dataset</th>
+          <th scope="col">Uploaded</th>
+          <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let prediction of predictionList">
+          <td>{{prediction.name}}</td>
+          <td>{{prediction.dataset}}</td>
+          <td>{{prediction.uploaded}}</td>
+          <td>
+            <button [disabled]="deleting" class="btn btn-danger btn-sm" (click)="deletePrediction(prediction.name)">
+              <mat-icon class="delete">delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card models">
+    <div class="card-body">
+      <h3>Models</h3>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Label map</th>
+          <th scope="col">Uploaded</th>
+          <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let model of modelList">
+          <td>{{model.name}}</td>
+          <td>{{model.type}}</td>
+          <td>
+            <mat-icon class="check" *ngIf="model.labelMap">check</mat-icon>
+            <mat-icon class="close" *ngIf="!model.labelMap">close</mat-icon>
+          </td>
+          <td>{{model.uploaded}}</td>
+          <td>
+            <button [disabled]="deleting" class="btn btn-danger btn-sm" (click)="deleteModel(model.name)">
+              <mat-icon class="delete">delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card tasks">
+    <div class="card-body">
+      <h3>Tasks</h3>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Progress</th>
+          <th scope="col">File name</th>
+          <th scope="col">Started</th>
+          <th scope="col">Finished</th>
+          <th scope="col">Dataset</th>
+          <th scope="col">Model</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let task of tasksList">
+          <td>{{task.name}}</td>
+          <td>{{task.description}}</td>
+          <td>{{task.progress}} %</td>
+          <td>{{task.started}}</td>
+          <td>{{task.finished}}</td>
+          <td>{{task.dataset}}</td>
+          <td>{{task.model}}</td>
+          <td>
+            <button [disabled]="deleting" class="btn btn-danger btn-sm" (click)="deleteTask(task.name)">
+              <mat-icon class="delete">delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

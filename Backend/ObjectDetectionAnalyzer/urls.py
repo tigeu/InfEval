@@ -9,6 +9,7 @@ from ObjectDetectionAnalyzer.image.ImageView import ImageView
 from ObjectDetectionAnalyzer.imagefiles.ImageFilesView import ImageFilesView
 from ObjectDetectionAnalyzer.main.HeartbeatView import HeartbeatView
 from ObjectDetectionAnalyzer.modellist.ModelListView import ModelListView
+from ObjectDetectionAnalyzer.overview.OverviewView import OverviewView
 from ObjectDetectionAnalyzer.prediction.PredictionView import PredictionView
 from ObjectDetectionAnalyzer.predictionlist.PredictionListView import PredictionListView
 from ObjectDetectionAnalyzer.register.RegisterView import RegisterView
@@ -43,13 +44,17 @@ urlpatterns = [
     path('upload/yolov5/<str:file_name>', UploadYolov5ModelView.as_view(), name="upload"),
 
     path('dataset-list', DatasetListView.as_view(), name="dataset-list"),
+    path('dataset-list/<str:dataset>', DatasetListView.as_view(), name="dataset-list"),
     path('prediction-list/<str:dataset>', PredictionListView.as_view(), name="prediction-list"),
     path('model-list', ModelListView.as_view(), name="model-list"),
+    path('model-list/<str:model>', ModelListView.as_view(), name="model-list"),
+    path('tasks-list', TasksListView.as_view(), name="tasks-list"),
+    path('tasks-list/<str:task>', TasksListView.as_view(), name="tasks-list"),
+
+    path('overview', OverviewView.as_view(), name="overview"),
 
     path('ground-truth/<str:dataset>/<str:image_name>', GroundTruthView.as_view(), name="ground-truth"),
     path('prediction/<str:dataset>/<str:prediction>/<str:image_name>', PredictionView.as_view(), name="prediction"),
-
-    path('tasks-list', TasksListView.as_view(), name="tasks-list"),
     path('tasks/<str:task_name>', TasksView.as_view(), name="tasks"),
 
     path('register/', RegisterView.as_view(), name="register"),

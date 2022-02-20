@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -6,6 +8,7 @@ from rest_framework.views import APIView
 from ObjectDetectionAnalyzer.datasetlist.DatasetListSerializer import DatasetListSerializer
 from ObjectDetectionAnalyzer.services.CSVParseService import CSVParseService
 from ObjectDetectionAnalyzer.services.ColorService import ColorService
+from ObjectDetectionAnalyzer.services.PathService import PathService
 from ObjectDetectionAnalyzer.settings import GROUND_TRUTH_INDICES
 from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
@@ -21,6 +24,7 @@ class DatasetListView(APIView):
         super().__init__(**kwargs)
         self.csv_parse_service = CSVParseService()
         self.color_service = ColorService()
+        self.path_service = PathService()
 
     def get(self, request):
         """
@@ -52,3 +56,12 @@ class DatasetListView(APIView):
         serializer = DatasetListSerializer(response_data, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, dataset):
+        user = request.user
+
+        dataset = Dataset.objects.filter(name=dataset, userId=user).first()
+        self.path_service.delete(Path(dataset.path))
+        dataset.delete()
+
+        return Response("Successfully deleted dataset", status=status.HTTP_200_OK)

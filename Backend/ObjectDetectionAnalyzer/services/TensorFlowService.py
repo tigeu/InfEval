@@ -2,6 +2,8 @@ import numpy as np
 import tensorflow as tf
 from PIL import Image
 
+from ObjectDetectionAnalyzer.tasks.TasksModels import Tasks
+
 
 class TensorFlowService:
     def get_detections_for_task_images(self, model_path, image_paths, task, is_tensor_flow_1=False):
@@ -12,6 +14,8 @@ class TensorFlowService:
         for image_path in image_paths:
             detections[image_path] = self.get_detections(saved_model, image_path)
             task.progress = task.progress + progress_step
+            if not Tasks.objects.get(pk=task.id):
+                return None
             task.save()
 
         return detections

@@ -26,7 +26,7 @@ class UploadPyTorchModelView(UploadBaseView):
         return model_dir
 
     def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, model, user, file_name):
-        model_type = str(ModelTypes.PYTORCH)
+        model_type = ModelTypes.PYTORCH.value
         model_path = self.upload_service.save_data(tmp_file_path, target_dir, model_name)
         model = Models.objects.filter(name=model_name, userId=user)
         if model:

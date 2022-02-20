@@ -26,7 +26,7 @@ class UploadYolov3ModelView(UploadBaseView):
         return model_dir
 
     def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, model, user, file_name):
-        model_type = str(ModelTypes.YOLOV3)
+        model_type = ModelTypes.YOLOV3.value
         model_path = self.upload_service.save_data(tmp_file_path, target_dir, file_name)
         model = Models.objects.filter(name=model_name, userId=user)
         if model:

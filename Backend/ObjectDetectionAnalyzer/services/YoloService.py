@@ -1,5 +1,7 @@
 import torch
 
+from ObjectDetectionAnalyzer.tasks.TasksModels import Tasks
+
 
 class YoloService:
     def get_detections_for_task_images(self, yolo_dir, weight_path, image_paths, task):
@@ -11,6 +13,8 @@ class YoloService:
             results = model(image_path)
             detections[str(image_path)] = self.extract_predictions(results)  # use string to avoid unhashable exception
             task.progress = task.progress + progress_step
+            if not Tasks.objects.get(pk=task.id):
+                return None
             task.save()
 
         return detections

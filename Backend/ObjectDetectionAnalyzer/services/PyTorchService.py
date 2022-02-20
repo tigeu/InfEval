@@ -3,6 +3,8 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 
+from ObjectDetectionAnalyzer.tasks.TasksModels import Tasks
+
 
 class PyTorchService:
     def get_detections_for_task_images(self, model_path, image_paths, task):
@@ -18,6 +20,8 @@ class PyTorchService:
         for image_path in image_paths:
             detections[image_path] = self.get_detections(model, device, image_path, transform)
             task.progress = task.progress + progress_step
+            if not Tasks.objects.get(pk=task.id):
+                return None
             task.save()
 
         return detections

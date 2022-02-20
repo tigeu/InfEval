@@ -58,7 +58,10 @@ class TasksView(APIView):
         if task:
             return Response("A task with this name is running already", status=status.HTTP_400_BAD_REQUEST)
 
-        self.execute_task(dataset, desc, file_name, model, task_name, user)
+        try:
+            self.execute_task(dataset, desc, file_name, model, task_name, user)
+        except AttributeError:
+            return Response("Task has been deleted", status=status.HTTP_204_NO_CONTENT)
 
         return Response("Task finished successfully", status=status.HTTP_200_OK)
 
@@ -69,6 +72,8 @@ class TasksView(APIView):
                                                         'modelId': model})[0]
         image_files = self.path_service.get_image_files_from_dir(dataset.path, IMAGE_ENDINGS)
         model_predictions = self.get_detections(image_files, model, task)
+        if model_predictions is None:
+            raise AttributeError()
 
         if model.label_map_path:
             label_map = self.json_service.read_label_map(model.label_map_path)
@@ -90,13 +95,13 @@ class TasksView(APIView):
         Predictions.objects.update_or_create(name=file_name, path=file_path, datasetId=dataset, userId=user)
 
     def get_detections(self, image_files, model, task):
-        if model.type == str(ModelTypes.TENSORFLOW1):
+        if model.type == ModelTypes.TENSORFLOW1.value:
             detections = self.tensor_flow_service.get_detections_for_task_images(model.path, image_files, task, True)
-        elif model.type == str(ModelTypes.TENSORFLOW2):
+        elif model.type == ModelTypes.TENSORFLOW2.value:
             detections = self.tensor_flow_service.get_detections_for_task_images(model.path, image_files, task)
-        elif model.type == str(ModelTypes.PYTORCH):
+        elif model.type == ModelTypes.PYTORCH.value:
             detections = self.pytorch_service.get_detections_for_task_images(model.path, image_files, task)
-        elif model.type == str(ModelTypes.YOLOV3):
+        elif model.type == ModelTypes.YOLOV3.value:
             detections = self.yolo_service.get_detections_for_task_images(YOLOV3_DIR, model.path, image_files, task)
         else:
             detections = self.yolo_service.get_detections_for_task_images(YOLOV5_DIR, model.path, image_files, task)
