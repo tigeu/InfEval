@@ -56,4 +56,4 @@ class PredictionListView(APIView):
         self.path_service.delete(Path(prediction.path))
         prediction.delete()
 
-        return Response("Successfully deleted dataset", status=status.HTTP_200_OK)
+        return Response("Successfully deleted prediction", status=status.HTTP_200_OK)

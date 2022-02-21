@@ -28,15 +28,18 @@ class TestPyTorchService(TestCase):
         self.assertEqual(result['path1'], [1, 2, 3])
         self.assertEqual(result['path2'], [1, 2, 3])
 
+    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.get')
     @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.get_detections')
     @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.load_model')
-    def test_get_detections_for_task_images(self, load_model, get_detections):
+    def test_get_detections_for_task_images(self, load_model, get_detections, get):
         get_detections.return_value = [1, 2, 3]
         load_model.return_value = lambda x: x
+        get.return_value = True
 
         class Task:
             def __init__(self):
                 self.progress = 0
+                self.name = "name"
 
             def save(self):
                 pass
@@ -48,6 +51,25 @@ class TestPyTorchService(TestCase):
         self.assertEqual(result['path1'], [1, 2, 3])
         self.assertEqual(result['path2'], [1, 2, 3])
         self.assertEqual(task.progress, 100)
+
+    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.get')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.get_detections')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.load_model')
+    def test_get_detections_for_task_images_with_cancel(self, load_model, get_detections, get):
+        get_detections.return_value = [1, 2, 3]
+        load_model.return_value = lambda x: x
+        get.return_value = False
+
+        class Task:
+            def __init__(self):
+                self.progress = 0
+                self.name = "name"
+
+        task = Task()
+
+        result = self.pytorch_service.get_detections_for_task_images("model_path", ["path1", "path2"], task)
+
+        self.assertEqual(result, None)
 
     @patch("torch.load")
     def test_load_model(self, load):

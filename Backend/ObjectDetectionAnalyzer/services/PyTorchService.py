@@ -20,7 +20,8 @@ class PyTorchService:
         for image_path in image_paths:
             detections[image_path] = self.get_detections(model, device, image_path, transform)
             task.progress = task.progress + progress_step
-            if not Tasks.objects.get(pk=task.id):
+            # make sure task was deleted, even if instantly readded
+            if not Tasks.objects.get(name=task.name, progress=task.progress - progress_step):
                 return None
             task.save()
 

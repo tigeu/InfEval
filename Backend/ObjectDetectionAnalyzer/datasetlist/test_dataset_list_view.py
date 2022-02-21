@@ -15,6 +15,7 @@ class TestDatasetListView(APITestCase):
 
     def setUp(self):
         self.url = reverse('dataset-list')
+        self.delete_url = reverse('dataset-list', kwargs={'dataset': 'dataset'})
         self.dataset1 = Dataset(name="dataset1")
         self.dataset2 = Dataset(name="dataset2")
         self.dataset3 = Dataset(name="dataset3")
@@ -104,3 +105,18 @@ class TestDatasetListView(APITestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @patch('ObjectDetectionAnalyzer.upload.UploadModels.Dataset.delete')
+    @patch('ObjectDetectionAnalyzer.services.PathService.PathService.delete')
+    def test_delete(self, path_delete, delete):
+        user = User.objects.create_user("test", "test@test.test", "test")
+        self.client.force_authenticate(user=user)
+
+        Dataset.objects.create(name="dataset", userId=user)
+
+        response = self.client.delete(self.delete_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, "Successfully deleted dataset")
+        path_delete.assert_called()
+        delete.assert_called()

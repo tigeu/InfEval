@@ -48,3 +48,16 @@ class TestPredictionListView(APITestCase):
         self.assertEqual(response.data[1]['name'], "prediction2")
         self.assertEqual(response.data[1]['classes'], ["class1", "class2"])
         self.assertEqual(response.data[1]['colors'], ["color1", "color2"])
+
+    @patch('ObjectDetectionAnalyzer.upload.UploadModels.Predictions.delete')
+    @patch('ObjectDetectionAnalyzer.services.PathService.PathService.delete')
+    def test_delete(self, path_delete, delete):
+        dataset = Dataset.objects.create(name="dataset", userId=self.user)
+        Predictions.objects.create(name="dataset", datasetId=dataset, userId=self.user)
+
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, "Successfully deleted prediction")
+        path_delete.assert_called()
+        delete.assert_called()

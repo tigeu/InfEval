@@ -99,6 +99,26 @@ class TestPathService(TestCase):
 
         self.assertEqual(result, None)
 
+    @patch('shutil.rmtree')
+    @patch('pathlib.Path.is_dir')
+    def test_delete_with_dir(self, is_dir, rmtree):
+        is_dir.return_value = True
+
+        dir = Path("some_path")
+        self.path_service.delete(dir)
+
+        rmtree.assert_called_with(dir)
+
+    @patch('pathlib.Path.unlink')
+    @patch('pathlib.Path.is_dir')
+    def test_delete_with_file(self, is_dir, unlink):
+        is_dir.return_value = False
+
+        file = Path("some_path")
+        self.path_service.delete(file)
+
+        unlink.assert_called_with(file)
+
     @patch('pathlib.Path.unlink')
     def test_delete_tmp_file(self, unlink):
         self.path_service.delete_tmp_file("tmp_file_path")

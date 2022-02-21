@@ -42,4 +42,4 @@ class ModelListView(APIView):
         self.path_service.delete(Path(model.path))
         model.delete()
 
-        return Response("Successfully deleted dataset", status=status.HTTP_200_OK)
+        return Response("Successfully deleted model", status=status.HTTP_200_OK)

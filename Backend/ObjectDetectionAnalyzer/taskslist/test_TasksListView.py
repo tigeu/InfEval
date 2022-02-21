@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
@@ -15,6 +17,7 @@ class TestTasksListView(APITestCase):
 
     def setUp(self):
         self.url = reverse('tasks-list')
+        self.delete_url = reverse('tasks-list', kwargs={'task': 'task_name'})
         self.user = User.objects.create_user("test", "test@test.test", "test")
         self.client.force_authenticate(user=self.user)
         self.dataset = Dataset.objects.create(name="dataset", userId=self.user)
@@ -53,3 +56,14 @@ class TestTasksListView(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, [])
+
+    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.delete')
+    def test_delete(self, delete):
+        Tasks.objects.create(name="task_name", file_name="file1", progress=0,
+                             datasetId=self.dataset, modelId=self.model, userId=self.user)
+
+        response = self.client.delete(self.delete_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, "Successfully deleted task")
+        delete.assert_called()

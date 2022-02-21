@@ -64,6 +64,18 @@ class TestTasksView(APITestCase):
         self.assertEqual(response.data, "Task finished successfully")
         execute_task.assert_called_with(dataset, "desc", "file_name.csv", model, "some_task", self.user)
 
+    @patch('ObjectDetectionAnalyzer.tasks.TasksView.TasksView.execute_task')
+    def test_task_view_with_cancel(self, execute_task):
+        execute_task.side_effect = AttributeError()
+        dataset = Dataset.objects.create(name="dataset_name", userId=self.user)
+        model = Models.objects.create(name="model_name", userId=self.user)
+
+        response = self.client.post(self.url, data=self.parameters)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.data, "Task has been deleted")
+        execute_task.assert_called_with(dataset, "desc", "file_name.csv", model, "some_task", self.user)
+
     @patch('ObjectDetectionAnalyzer.tasks.TasksView.TasksView.write_model_predictions')
     @patch('ObjectDetectionAnalyzer.tasks.TasksService.TasksService.replace_class_names')
     @patch('ObjectDetectionAnalyzer.services.JSONService.JSONService.read_label_map')
@@ -82,6 +94,18 @@ class TestTasksView(APITestCase):
 
         replace_class_names.assert_called_with({"some_detections"}, {"some_label_map"})
         write_model_predictions.assert_called_with(dataset, "file_name", {"some_detections"}, self.user)
+
+    @patch('ObjectDetectionAnalyzer.tasks.TasksView.TasksView.get_detections')
+    @patch('ObjectDetectionAnalyzer.services.PathService.PathService.get_image_files_from_dir')
+    def test_execute_task_cancelled(self, get_image_files_from_dir, get_detections):
+        get_image_files_from_dir.return_value = ["image1.png", "image2.png"]
+        get_detections.return_value = None
+
+        dataset = Dataset.objects.create(name="dataset_name", userId=self.user)
+        model = Models.objects.create(name="test_model", label_map_path="some_path", type="tf2", userId=self.user)
+
+        with self.assertRaises(AttributeError):
+            self.tasks_view.execute_task(dataset, "desc", "file_name", model, "task_name", self.user)
 
     @patch('ObjectDetectionAnalyzer.tasks.TasksView.TasksView.write_model_predictions')
     @patch('ObjectDetectionAnalyzer.tasks.TasksView.TasksView.get_detections')
