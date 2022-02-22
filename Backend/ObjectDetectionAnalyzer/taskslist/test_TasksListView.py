@@ -1,3 +1,4 @@
+from datetime import timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
@@ -25,15 +26,15 @@ class TestTasksListView(APITestCase):
 
     def test_tasks_list(self):
         now = timezone.now()
-        self.task1 = Tasks.objects.create(name="task1", file_name="file1", progress=0,
+        now_task2 = now + timedelta(days=1)
+        now_task3 = now_task2 + timedelta(days=1)
+        self.task1 = Tasks.objects.create(name="task1", file_name="file1", progress=0, started=now,
                                           datasetId=self.dataset, modelId=self.model, userId=self.user)
-        self.task2 = Tasks.objects.create(name="task2", file_name="file2", progress=50,
+        self.task2 = Tasks.objects.create(name="task2", file_name="file2", progress=50, started=now_task2,
                                           datasetId=self.dataset, modelId=self.model, userId=self.user)
-        self.task3 = Tasks.objects.create(name="task3", file_name="file3", progress=100, finished=now,
-                                          datasetId=self.dataset, modelId=self.model, userId=self.user)
+        self.task3 = Tasks.objects.create(name="task3", file_name="file3", progress=100, started=now_task3,
+                                          finished=now, datasetId=self.dataset, modelId=self.model, userId=self.user)
 
-        expect_task1 = {'name': 'task1', 'description': '', 'fileName': 'file1', 'progress': '50',
-                        'dataset': '1', 'model': '1'}
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

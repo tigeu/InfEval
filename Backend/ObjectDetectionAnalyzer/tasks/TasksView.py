@@ -62,6 +62,8 @@ class TasksView(APIView):
             self.execute_task(dataset, desc, file_name, model, task_name, user)
         except AttributeError:
             return Response("Task has been deleted", status=status.HTTP_204_NO_CONTENT)
+        except FileNotFoundError:
+            return Response("Dataset has been deleted", status=status.HTTP_204_NO_CONTENT)
 
         return Response("Task finished successfully", status=status.HTTP_200_OK)
 

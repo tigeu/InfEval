@@ -27,10 +27,10 @@ class CSVParseService:
 
     def get_value(self, row, indices):
         value = {'class': row[indices['class']],
-                 'xmin': int(row[indices['xmin']]),
-                 'ymin': int(row[indices['ymin']]),
-                 'xmax': int(row[indices['xmax']]),
-                 'ymax': int(row[indices['ymax']])}
+                 'xmin': int(float(row[indices['xmin']])),
+                 'ymin': int(float(row[indices['ymin']])),
+                 'xmax': int(float(row[indices['xmax']])),
+                 'ymax': int(float(row[indices['ymax']]))}
         if 'confidence' in indices:
             value['confidence'] = round(float(row[indices['confidence']]) * 100)
 

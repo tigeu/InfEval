@@ -36,10 +36,10 @@ class YoloService:
         for name, conf, xmin, ymin, xmax, ymax in zip(det.name, det.confidence, det.xmin, det.ymin, det.xmax, det.ymax):
             prediction = {'class': name,
                           'confidence': conf,
-                          'xmin': xmin,
-                          'ymin': ymin,
-                          'xmax': xmax,
-                          'ymax': ymax}
+                          'xmin': round(xmin),
+                          'ymin': round(ymin),
+                          'xmax': round(xmax),
+                          'ymax': round(ymax)}
             if prediction['xmin'] < prediction['xmax'] and prediction['ymin'] < prediction['ymax']:
                 predictions.append(prediction)
 

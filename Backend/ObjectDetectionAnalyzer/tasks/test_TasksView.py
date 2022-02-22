@@ -76,6 +76,18 @@ class TestTasksView(APITestCase):
         self.assertEqual(response.data, "Task has been deleted")
         execute_task.assert_called_with(dataset, "desc", "file_name.csv", model, "some_task", self.user)
 
+    @patch('ObjectDetectionAnalyzer.tasks.TasksView.TasksView.execute_task')
+    def test_task_view_with_cancel_file(self, execute_task):
+        execute_task.side_effect = FileNotFoundError()
+        dataset = Dataset.objects.create(name="dataset_name", userId=self.user)
+        model = Models.objects.create(name="model_name", userId=self.user)
+
+        response = self.client.post(self.url, data=self.parameters)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.data, "Dataset has been deleted")
+        execute_task.assert_called_with(dataset, "desc", "file_name.csv", model, "some_task", self.user)
+
     @patch('ObjectDetectionAnalyzer.tasks.TasksView.TasksView.write_model_predictions')
     @patch('ObjectDetectionAnalyzer.tasks.TasksService.TasksService.replace_class_names')
     @patch('ObjectDetectionAnalyzer.services.JSONService.JSONService.read_label_map')
