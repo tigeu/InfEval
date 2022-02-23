@@ -6,4 +6,8 @@ export interface PredictionSettings {
   fontSize: number;
   classes: string[];
   colors: string[];
+  minConf: number;
+  maxConf: number;
+  iou: number;
+  score: number;
 }

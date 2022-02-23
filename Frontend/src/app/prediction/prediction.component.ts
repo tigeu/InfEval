@@ -34,7 +34,11 @@ export class PredictionComponent implements OnInit {
     showLabeled: true,
     fontSize: 35,
     classes: [],
-    colors: []
+    colors: [],
+    minConf: 0,
+    maxConf: 100,
+    iou: 0,
+    score: 0
   }
 
   constructor(private predictionService: PredictionService,
@@ -97,11 +101,39 @@ export class PredictionComponent implements OnInit {
   }
 
   selectionChanged() {
+    this.validateNumbers();
     if (!this.predictionSettings.showPrediction)
       this.predictionChangedService.publish("");
     else if (this.selectedDataset && this.selectedPrediction && this.selectedImage) {
       this.getPrediction()
     }
+  }
+
+  validateNumbers() {
+    this.validateConfidence();
+    this.validateIoU();
+    this.validateScore();
+  }
+
+  validateConfidence() {
+    this.predictionSettings.minConf = Math.max(0, this.predictionSettings.minConf);
+    this.predictionSettings.maxConf = Math.min(this.predictionSettings.maxConf, 100);
+    if (this.predictionSettings.minConf > this.predictionSettings.maxConf)
+      this.predictionSettings.minConf = this.predictionSettings.maxConf;
+  }
+
+  validateIoU() {
+    if (this.predictionSettings.iou < 0)
+      this.predictionSettings.iou = 0;
+    else if (this.predictionSettings.iou > 1)
+      this.predictionSettings.iou = 1;
+  }
+
+  validateScore() {
+    if (this.predictionSettings.score < 0)
+      this.predictionSettings.score = 0;
+    else if (this.predictionSettings.score > 1)
+      this.predictionSettings.score = 1;
   }
 
 }

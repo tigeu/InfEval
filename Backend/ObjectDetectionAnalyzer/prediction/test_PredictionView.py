@@ -6,6 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from ObjectDetectionAnalyzer.prediction.PredictionView import PredictionView
 from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 
@@ -15,7 +16,9 @@ class TestPredictionView(APITestCase):
         self.user = User.objects.create_user("test", "test@test.test", "test")
         self.client.force_authenticate(user=self.user)
         self.settings = {"stroke_size": 15, "show_colored": "true", "show_labeled": "true", "font_size": 35,
-                         "classes": ["class", "class2"], "colors": ["color1", "color2"]}
+                         "classes": ["class", "class2"], "colors": ["color1", "color2"], "min_conf": 10, "max_conf": 90,
+                         "iou": 0.5, "score": 0.5}
+        self.view = PredictionView()
 
     def test_prediction_view_without_dataset(self):
         response = self.client.get(self.url)
@@ -44,12 +47,15 @@ class TestPredictionView(APITestCase):
         self.assertEqual(response.data, "Image not found in dataset")
 
     @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_bounding_boxes')
+    @patch('ObjectDetectionAnalyzer.prediction.PredictionView.PredictionView.filter_predictions')
     @patch('ObjectDetectionAnalyzer.services.CSVParseService.CSVParseService.get_values_for_image')
     @patch('ObjectDetectionAnalyzer.services.PathService.PathService.get_files_from_dir')
-    def test_ground_truth_view_with_correct_image(self, get_files_from_dir, get_values_for_image, draw_bounding_boxes):
+    def test_ground_truth_view_with_correct_image(self, get_files_from_dir, get_values_for_image, filter_predictions,
+                                                  draw_bounding_boxes):
         get_files_from_dir.return_value = ["image.jpg", "image2.png"]
         values = [{'class': 'class1', 'confidence': 50, 'xmin': 0, 'ymin': 0, 'xmax': 10, 'ymax': 10}]
         get_values_for_image.return_value = values
+        filter_predictions.return_value = values
         draw_bounding_boxes.return_value = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
 
         dataset = Dataset.objects.create(name="dataset", userId=self.user)
@@ -59,3 +65,14 @@ class TestPredictionView(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'image.jpg')
+
+    @patch('ObjectDetectionAnalyzer.services.FilterPredictionsService.FilterPredictionsService.get_nms_predictions')
+    @patch(
+        'ObjectDetectionAnalyzer.services.FilterPredictionsService.FilterPredictionsService.get_interval_predictions')
+    def test_filter_predictions(self, get_interval_predictions, get_nms_predictions):
+        values = [{'class': 'class1', 'confidence': 50, 'xmin': 0, 'ymin': 0, 'xmax': 10, 'ymax': 10}]
+
+        self.view.filter_predictions(values, self.settings)
+
+        get_interval_predictions.assert_called()
+        get_nms_predictions.assert_called()

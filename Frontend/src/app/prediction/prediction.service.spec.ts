@@ -33,7 +33,11 @@ describe('PredictionService', () => {
       showLabeled: true,
       fontSize: 35,
       classes: [],
-      colors: []
+      colors: [],
+      minConf: 0,
+      maxConf: 0,
+      iou: 0,
+      score: 0
     }
 
     spyOn(http, 'get').and.returnValue(of(newImage));

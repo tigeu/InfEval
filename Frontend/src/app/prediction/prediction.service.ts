@@ -23,7 +23,11 @@ export class PredictionService {
         show_labeled: predictionSettings.showLabeled,
         font_size: predictionSettings.fontSize,
         classes: predictionSettings.classes.join(','),
-        colors: predictionSettings.colors.join(',')
+        colors: predictionSettings.colors.join(','),
+        min_conf: predictionSettings.minConf,
+        max_conf: predictionSettings.maxConf,
+        iou: predictionSettings.iou,
+        score: predictionSettings.score
       }
     });
   }

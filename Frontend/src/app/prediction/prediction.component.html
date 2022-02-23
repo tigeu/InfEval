@@ -51,14 +51,39 @@
             Show classes
           </button>
         </p>
-        <div class="collapse mb-1" id="collapsePredictionClasses"
-             *ngFor="let className of selectedPrediction.classes; let i = index">
-          <input class="form-check-input align-middle" type="checkbox" id="{{className}}"
-                 [(ngModel)]="showClasses[i]" (change)="selectionChanged()">
-          <label class="form-check-label ms-1" for="{{className}}}">{{className}}</label>
-          <input *ngIf="predictionSettings.showColored" [(ngModel)]="classColors[i]" (change)="selectionChanged()"
-                 type="color" class="form-control-color float-end" id="{{className}}">
+        <div class="collapse mb-1" id="collapsePredictionClasses">
+          <div class="card card-body">
+            <div *ngFor="let className of selectedPrediction.classes; let i = index">
+              <input class="form-check-input align-middle" type="checkbox" id="{{className}}"
+                     [(ngModel)]="showClasses[i]" (change)="selectionChanged()">
+              <label class="form-check-label ms-1" for="{{className}}}">{{className}}</label>
+              <input *ngIf="predictionSettings.showColored" [(ngModel)]="classColors[i]" (change)="selectionChanged()"
+                     type="color" class="form-control-color float-end" id="{{className}}">
+            </div>
+          </div>
         </div>
+        <div>
+          <p>
+            <label for="minConfidence" class="form-label">Minimum confidence:</label>
+            <input type="number" class="form-text float-end" id="minConfidence" min="0" max="100" step="10"
+                   [(ngModel)]="predictionSettings.minConf" (change)="selectionChanged()">
+          </p>
+          <p>
+            <label for="maxConfidence" class="form-label">Maximum confidence:</label>
+            <input type="number" class="form-text float-end" id="maxConfidence" min="0" max="100" step="10"
+                   [(ngModel)]="predictionSettings.maxConf" (change)="selectionChanged()">
+          </p>
+        </div>
+        <p>
+          <label for="iou" class="form-label">IoU:</label>
+          <input type="number" class="form-text float-end" id="iou" min="0" max="1" step="0.1"
+                 [(ngModel)]="predictionSettings.iou" (change)="selectionChanged()">
+        </p>
+        <p>
+          <label for="score" class="form-label">Score:</label>
+          <input type="number" class="form-text float-end" id="score" min="0" max="1" step="0.5"
+                 [(ngModel)]="predictionSettings.score" (change)="selectionChanged()">
+        </p>
       </div>
     </div>
   </div>
