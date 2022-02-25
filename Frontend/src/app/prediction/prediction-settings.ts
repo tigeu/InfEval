@@ -8,6 +8,8 @@ export interface PredictionSettings {
   colors: string[];
   minConf: number;
   maxConf: number;
-  iou: number;
-  score: number;
+  nmsIoU: number;
+  nmsScore: number;
+  onlyGroundTruth: boolean;
+  groundTruthIoU: number;
 }

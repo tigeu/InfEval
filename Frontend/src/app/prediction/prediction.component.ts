@@ -37,8 +37,10 @@ export class PredictionComponent implements OnInit {
     colors: [],
     minConf: 0,
     maxConf: 100,
-    iou: 0,
-    score: 0
+    nmsIoU: 0,
+    nmsScore: 0,
+    onlyGroundTruth: false,
+    groundTruthIoU: 0
   }
 
   constructor(private predictionService: PredictionService,
@@ -113,9 +115,14 @@ export class PredictionComponent implements OnInit {
     this.validateConfidence();
     this.validateIoU();
     this.validateScore();
+    this.validateGroundTruthIoU();
   }
 
   validateConfidence() {
+    if (this.predictionSettings.minConf == null)
+      this.predictionSettings.minConf = 0
+    if (this.predictionSettings.maxConf == null)
+      this.predictionSettings.maxConf = 100
     this.predictionSettings.minConf = Math.max(0, this.predictionSettings.minConf);
     this.predictionSettings.maxConf = Math.min(this.predictionSettings.maxConf, 100);
     if (this.predictionSettings.minConf > this.predictionSettings.maxConf)
@@ -123,17 +130,30 @@ export class PredictionComponent implements OnInit {
   }
 
   validateIoU() {
-    if (this.predictionSettings.iou < 0)
-      this.predictionSettings.iou = 0;
-    else if (this.predictionSettings.iou > 1)
-      this.predictionSettings.iou = 1;
+    if (this.predictionSettings.nmsIoU == null)
+      this.predictionSettings.nmsIoU = 0
+    else if (this.predictionSettings.nmsIoU < 0)
+      this.predictionSettings.nmsIoU = 0;
+    else if (this.predictionSettings.nmsIoU > 1)
+      this.predictionSettings.nmsIoU = 1;
   }
 
   validateScore() {
-    if (this.predictionSettings.score < 0)
-      this.predictionSettings.score = 0;
-    else if (this.predictionSettings.score > 1)
-      this.predictionSettings.score = 1;
+    if (this.predictionSettings.nmsScore == null)
+      this.predictionSettings.nmsScore = 0
+    else if (this.predictionSettings.nmsScore < 0)
+      this.predictionSettings.nmsScore = 0;
+    else if (this.predictionSettings.nmsScore > 1)
+      this.predictionSettings.nmsScore = 1;
+  }
+
+  validateGroundTruthIoU() {
+    if (this.predictionSettings.groundTruthIoU == null)
+      this.predictionSettings.groundTruthIoU = 0
+    else if (this.predictionSettings.groundTruthIoU < 0)
+      this.predictionSettings.groundTruthIoU = 0;
+    else if (this.predictionSettings.groundTruthIoU > 1)
+      this.predictionSettings.groundTruthIoU = 1;
   }
 
 }

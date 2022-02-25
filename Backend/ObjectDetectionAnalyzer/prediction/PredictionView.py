@@ -12,7 +12,7 @@ from ObjectDetectionAnalyzer.services.CSVParseService import CSVParseService
 from ObjectDetectionAnalyzer.services.DrawBoundingBoxService import DrawBoundingBoxService
 from ObjectDetectionAnalyzer.services.FilterPredictionsService import FilterPredictionsService
 from ObjectDetectionAnalyzer.services.PathService import PathService
-from ObjectDetectionAnalyzer.settings import PREDICTION_INDICES
+from ObjectDetectionAnalyzer.settings import PREDICTION_INDICES, GROUND_TRUTH_INDICES
 from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 
@@ -48,7 +48,7 @@ class PredictionView(APIView):
             predictions = self.csv_parse_service.get_values_for_image(pred.path, image_name, indices)
             predictions = self.filter_predictions(predictions, settings)
             image_path = Path(dataset.path) / image_name
-            pred_image = self.draw_bounding_box_service.draw_bounding_boxes(predictions, image_path, settings)
+            pred_image = self.draw_predictions(dataset, image_name, image_path, predictions, settings)
 
             with io.BytesIO() as output:
                 pred_image.save(output, format="PNG")
@@ -73,10 +73,12 @@ class PredictionView(APIView):
             'font_size': int(request.GET['font_size']),
             'classes': request.GET['classes'].split(','),
             'colors': request.GET['colors'].split(','),
-            'iou': float(request.GET['iou']),
-            'score': float(request.GET['score']),
+            'nms_iou': float(request.GET['nms_iou']),
+            'nms_score': float(request.GET['nms_score']),
             'min_conf': int(request.GET['min_conf']),
-            'max_conf': int(request.GET['max_conf'])
+            'max_conf': int(request.GET['max_conf']),
+            'only_ground_truth': request.GET['only_ground_truth'].lower() == "true",
+            'ground_truth_iou': float(request.GET['ground_truth_iou']),
         }
         return settings
 
@@ -85,8 +87,32 @@ class PredictionView(APIView):
             predictions = self.filter_predictions_service.get_interval_predictions(predictions,
                                                                                    settings['min_conf'],
                                                                                    settings['max_conf'])
-        if settings['iou'] > 0 or settings['score'] > 0:
+        if settings['nms_iou'] > 0 or settings['nms_score'] > 0:
             predictions = self.filter_predictions_service.get_nms_predictions(predictions,
-                                                                              settings['iou'],
-                                                                              settings['score'])
+                                                                              settings['nms_iou'],
+                                                                              settings['nms_score'])
         return predictions
+
+    def draw_predictions(self, dataset, image_name, image_path, predictions, settings):
+        # only draw ground truth boxes without predictions
+        if settings['only_ground_truth'] and settings['ground_truth_iou'] > 0:
+            pred_image = self.draw_ground_truth_matches(dataset, image_name, image_path, predictions, settings)
+        # draw predictions
+        else:
+            # first draw ground truth boxes, then predictions
+            if settings['ground_truth_iou'] > 0:
+                pred_image = self.draw_ground_truth_matches(dataset, image_name, image_path, predictions, settings)
+                pred_image = self.draw_bounding_box_service.draw_bounding_boxes(predictions, pred_image, settings,
+                                                                                False)
+            # only draw predictions
+            else:
+                pred_image = self.draw_bounding_box_service.draw_bounding_boxes(predictions, image_path, settings)
+        return pred_image
+
+    def draw_ground_truth_matches(self, dataset, image_name, pred_image, predictions, settings):
+        gt_indices = GROUND_TRUTH_INDICES
+        gts = self.csv_parse_service.get_values_for_image(dataset.ground_truth_path, image_name, gt_indices)
+        iou = settings['ground_truth_iou']
+        boxes = self.filter_predictions_service.get_ground_truth_results(gts, predictions, iou)
+        pred_image = self.draw_bounding_box_service.draw_gt_boxes(boxes, pred_image, settings)
+        return pred_image

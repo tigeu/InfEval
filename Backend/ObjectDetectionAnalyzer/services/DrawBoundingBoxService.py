@@ -2,13 +2,18 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 class DrawBoundingBoxService:
-    def draw_bounding_boxes(self, predictions, image, settings):
+    def draw_bounding_boxes(self, predictions, image, settings, create=True):
         predictions = list(filter(lambda pred: pred['class'] in settings['classes'], predictions))
-        with Image.open(image) as img:
-            width, height = img.size
-
-        transparent_image = Image.new('RGBA', (width, height), (255, 0, 0, 0))
-        draw = ImageDraw.Draw(transparent_image)
+        # create transparent image
+        if create:
+            with Image.open(image) as img:
+                width, height = img.size
+            image = Image.new('RGBA', (width, height), (255, 0, 0, 0))
+            draw = ImageDraw.Draw(image)
+        # use given (transparent) image
+        else:
+            width, height = image.size
+            draw = ImageDraw.Draw(image)
 
         for prediction in predictions:
             self.draw_bounding_box(draw, prediction, settings)
@@ -18,7 +23,27 @@ class DrawBoundingBoxService:
             for prediction in predictions:
                 self.draw_label(draw, prediction, settings, width)
 
+        return image
+
+    def draw_gt_boxes(self, gts, image, settings):
+        with Image.open(image) as img:
+            width, height = img.size
+
+        transparent_image = Image.new('RGBA', (width, height), (255, 0, 0, 0))
+        draw = ImageDraw.Draw(transparent_image)
+
+        gts.sort(key=lambda val: (val['xmax'] - val['xmin']) * (val['ymax'] - val['ymin']), reverse=True)
+        for gt in gts:
+            self.draw_gt_bounding_box(draw, gt, settings)
         return transparent_image
+
+    def draw_gt_bounding_box(self, draw, gt, settings):
+        xmin, ymin, xmax, ymax = gt['xmin'], gt['ymin'], gt['xmax'], gt['ymax']
+        stroke_size = settings['stroke_size']
+        if gt['matched']:
+            draw.rectangle([xmin, ymin, xmax, ymax], fill=(0, 255, 0, 95), outline="green", width=stroke_size)
+        else:
+            draw.rectangle([xmin, ymin, xmax, ymax], fill=(255, 0, 0, 95), outline="red", width=stroke_size)
 
     def draw_bounding_box(self, draw, prediction, settings):
         xmin, ymin, xmax, ymax = prediction['xmin'], prediction['ymin'], prediction['xmax'], prediction['ymax']

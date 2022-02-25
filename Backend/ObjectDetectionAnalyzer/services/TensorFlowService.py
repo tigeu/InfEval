@@ -14,8 +14,7 @@ class TensorFlowService:
         for image_path in image_paths:
             detections[image_path] = self.get_detections(saved_model, image_path)
             task.progress = task.progress + progress_step
-            # make sure task was deleted, even if instantly readded
-            if not Tasks.objects.get(name=task.name, progress=task.progress - progress_step):
+            if not Tasks.objects.filter(id=task.id):
                 return None
             task.save()
 

@@ -26,8 +26,10 @@ export class PredictionService {
         colors: predictionSettings.colors.join(','),
         min_conf: predictionSettings.minConf,
         max_conf: predictionSettings.maxConf,
-        iou: predictionSettings.iou,
-        score: predictionSettings.score
+        nms_iou: predictionSettings.nmsIoU,
+        nms_score: predictionSettings.nmsScore,
+        only_ground_truth: predictionSettings.onlyGroundTruth,
+        ground_truth_iou: predictionSettings.groundTruthIoU
       }
     });
   }

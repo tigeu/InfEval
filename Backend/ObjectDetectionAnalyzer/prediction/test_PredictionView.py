@@ -17,7 +17,7 @@ class TestPredictionView(APITestCase):
         self.client.force_authenticate(user=self.user)
         self.settings = {"stroke_size": 15, "show_colored": "true", "show_labeled": "true", "font_size": 35,
                          "classes": ["class", "class2"], "colors": ["color1", "color2"], "min_conf": 10, "max_conf": 90,
-                         "iou": 0.5, "score": 0.5}
+                         "nms_iou": 0.5, "nms_score": 0.5, "only_ground_truth": False, "ground_truth_iou": 0}
         self.view = PredictionView()
 
     def test_prediction_view_without_dataset(self):
@@ -76,3 +76,65 @@ class TestPredictionView(APITestCase):
 
         get_interval_predictions.assert_called()
         get_nms_predictions.assert_called()
+
+    @patch('ObjectDetectionAnalyzer.prediction.PredictionView.PredictionView.draw_ground_truth_matches')
+    def test_draw_predictions_only_ground_truth(self, draw_ground_truth_matches):
+        settings = {"stroke_size": 15, "show_colored": "true", "show_labeled": "true", "font_size": 35,
+                    "classes": ["class", "class2"], "colors": ["color1", "color2"], "min_conf": 10,
+                    "max_conf": 90,
+                    "nms_iou": 0.5, "nms_score": 0.5, "only_ground_truth": True, "ground_truth_iou": 0.5}
+        draw_ground_truth_matches.return_value = "some_image"
+        values = [{'class': 'class1', 'confidence': 50, 'xmin': 0, 'ymin': 0, 'xmax': 10, 'ymax': 10}]
+        dataset = Dataset.objects.create(name="dataset", userId=self.user)
+
+        result = self.view.draw_predictions(dataset, "image.jpg", "some_image", values, settings)
+
+        self.assertEqual(result, "some_image")
+
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_bounding_boxes')
+    @patch('ObjectDetectionAnalyzer.prediction.PredictionView.PredictionView.draw_ground_truth_matches')
+    def test_draw_predictions_ground_truth_iou(self, draw_ground_truth_matches, draw_bounding_boxes):
+        settings = {"stroke_size": 15, "show_colored": "true", "show_labeled": "true", "font_size": 35,
+                    "classes": ["class", "class2"], "colors": ["color1", "color2"], "min_conf": 10,
+                    "max_conf": 90,
+                    "nms_iou": 0.5, "nms_score": 0.5, "only_ground_truth": False, "ground_truth_iou": 0.5}
+
+        draw_ground_truth_matches.return_value = "some_image"
+        draw_bounding_boxes.return_value = "pred_image"
+        dataset = Dataset.objects.create(name="dataset", userId=self.user)
+        values = [{'class': 'class1', 'confidence': 50, 'xmin': 0, 'ymin': 0, 'xmax': 10, 'ymax': 10}]
+
+        result = self.view.draw_predictions(dataset, "image.jpg", "some_image", values, settings)
+
+        self.assertEqual(result, "pred_image")
+
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_bounding_boxes')
+    def test_draw_predictions_without_ground_truth(self, draw_bounding_boxes):
+        settings = {"stroke_size": 15, "show_colored": "true", "show_labeled": "true", "font_size": 35,
+                    "classes": ["class", "class2"], "colors": ["color1", "color2"], "min_conf": 10,
+                    "max_conf": 90,
+                    "nms_iou": 0.5, "nms_score": 0.5, "only_ground_truth": False, "ground_truth_iou": 0}
+
+        draw_bounding_boxes.return_value = "pred_image"
+        dataset = Dataset.objects.create(name="dataset", userId=self.user)
+        values = [{'class': 'class1', 'confidence': 50, 'xmin': 0, 'ymin': 0, 'xmax': 10, 'ymax': 10}]
+
+        result = self.view.draw_predictions(dataset, "image.jpg", "some_image", values, settings)
+
+        self.assertEqual(result, "pred_image")
+
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_gt_boxes')
+    @patch(
+        'ObjectDetectionAnalyzer.services.FilterPredictionsService.FilterPredictionsService.get_ground_truth_results')
+    @patch('ObjectDetectionAnalyzer.services.CSVParseService.CSVParseService.get_values_for_image')
+    def test_draw_ground_truth_matches(self, get_values_for_image, get_ground_truth_results, draw_gt_boxes):
+        values = [{'class': 'class1', 'confidence': 50, 'xmin': 0, 'ymin': 0, 'xmax': 10, 'ymax': 10}]
+        get_values_for_image.return_value = values
+        get_ground_truth_results.return_value = values
+        draw_gt_boxes.return_value = "pred_image"
+
+        dataset = Dataset.objects.create(name="dataset", userId=self.user)
+
+        result = self.view.draw_ground_truth_matches(dataset, "image.jpg", "image_path", "some_image", self.settings)
+
+        self.assertEqual(result, "pred_image")

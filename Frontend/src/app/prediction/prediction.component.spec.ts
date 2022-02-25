@@ -181,16 +181,28 @@ describe('PredictionsComponent', () => {
     expect(selectedPredictionChangesSpy).toHaveBeenCalled();
   });
 
-  it('#validateNumbers should call validation methods for confidence, iou and score', () => {
+  it('#validateNumbers should call validation methods for confidence, iou, score and gtIoU', () => {
     const confSpy = spyOn(component, "validateConfidence");
     const iouSpy = spyOn(component, "validateIoU");
     const scoreSpy = spyOn(component, "validateScore");
+    const gtIouSpy = spyOn(component, "validateGroundTruthIoU");
 
     component.validateNumbers();
 
     expect(confSpy).toHaveBeenCalled();
     expect(iouSpy).toHaveBeenCalled();
     expect(scoreSpy).toHaveBeenCalled();
+    expect(gtIouSpy).toHaveBeenCalled();
+  });
+
+  it('#validateConfidence should min to 0 if null and max to 100 if null', () => {
+    component.predictionSettings.minConf = undefined!;
+    component.predictionSettings.maxConf = undefined!;
+
+    component.validateConfidence();
+
+    expect(component.predictionSettings.minConf).toBe(0);
+    expect(component.predictionSettings.maxConf).toBe(100);
   });
 
   it('#validateConfidence should set too low numbers to 0 and too high numbers to 100', () => {
@@ -213,35 +225,75 @@ describe('PredictionsComponent', () => {
     expect(component.predictionSettings.maxConf).toBe(50);
   });
 
-  it('#validateIoU should set too low numbers to 0', () => {
-    component.predictionSettings.iou = -1;
+  it('#validateIoU should set to 0 if null', () => {
+    component.predictionSettings.nmsIoU = undefined!;
 
     component.validateIoU();
 
-    expect(component.predictionSettings.iou).toBe(0);
+    expect(component.predictionSettings.nmsIoU).toBe(0);
+  });
+
+  it('#validateIoU should set too low numbers to 0', () => {
+    component.predictionSettings.nmsIoU = -1;
+
+    component.validateIoU();
+
+    expect(component.predictionSettings.nmsIoU).toBe(0);
   });
 
   it('#validateIoU should set too high numbers to 1', () => {
-    component.predictionSettings.iou = 2;
+    component.predictionSettings.nmsIoU = 2;
 
     component.validateIoU();
 
-    expect(component.predictionSettings.iou).toBe(1);
+    expect(component.predictionSettings.nmsIoU).toBe(1);
+  });
+
+  it('#validateScore should set to 0 if null', () => {
+    component.predictionSettings.nmsScore = undefined!;
+
+    component.validateScore();
+
+    expect(component.predictionSettings.nmsScore).toBe(0);
   });
 
   it('#validateScore should set too low numbers to 0', () => {
-    component.predictionSettings.score = -1;
+    component.predictionSettings.nmsScore = -1;
 
     component.validateScore();
 
-    expect(component.predictionSettings.score).toBe(0);
+    expect(component.predictionSettings.nmsScore).toBe(0);
   });
 
   it('#validateScore should set too high numbers to 1', () => {
-    component.predictionSettings.score = 2;
+    component.predictionSettings.nmsScore = 2;
 
     component.validateScore();
 
-    expect(component.predictionSettings.score).toBe(1);
+    expect(component.predictionSettings.nmsScore).toBe(1);
+  });
+
+  it('#validateGroundTruthIoU should set to 0 if null', () => {
+    component.predictionSettings.groundTruthIoU = undefined!;
+
+    component.validateGroundTruthIoU();
+
+    expect(component.predictionSettings.groundTruthIoU).toBe(0);
+  });
+
+  it('#validategroundTruthIoU should set too low numbers to 0', () => {
+    component.predictionSettings.groundTruthIoU = -1;
+
+    component.validateGroundTruthIoU();
+
+    expect(component.predictionSettings.groundTruthIoU).toBe(0);
+  });
+
+  it('#validategroundTruthIoU should set too high numbers to 1', () => {
+    component.predictionSettings.groundTruthIoU = 2;
+
+    component.validateGroundTruthIoU();
+
+    expect(component.predictionSettings.groundTruthIoU).toBe(1);
   });
 });

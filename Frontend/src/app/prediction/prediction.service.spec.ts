@@ -36,8 +36,10 @@ describe('PredictionService', () => {
       colors: [],
       minConf: 0,
       maxConf: 0,
-      iou: 0,
-      score: 0
+      nmsIoU: 0,
+      nmsScore: 0,
+      onlyGroundTruth: false,
+      groundTruthIoU: 0
     }
 
     spyOn(http, 'get').and.returnValue(of(newImage));

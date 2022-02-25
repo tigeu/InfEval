@@ -62,7 +62,9 @@
             </div>
           </div>
         </div>
+        <hr>
         <div>
+          <h3>Confidence interval:</h3>
           <p>
             <label for="minConfidence" class="form-label">Minimum confidence:</label>
             <input type="number" class="form-text float-end" id="minConfidence" min="0" max="100" step="10"
@@ -74,16 +76,34 @@
                    [(ngModel)]="predictionSettings.maxConf" (change)="selectionChanged()">
           </p>
         </div>
-        <p>
-          <label for="iou" class="form-label">IoU:</label>
-          <input type="number" class="form-text float-end" id="iou" min="0" max="1" step="0.1"
-                 [(ngModel)]="predictionSettings.iou" (change)="selectionChanged()">
-        </p>
-        <p>
-          <label for="score" class="form-label">Score:</label>
-          <input type="number" class="form-text float-end" id="score" min="0" max="1" step="0.5"
-                 [(ngModel)]="predictionSettings.score" (change)="selectionChanged()">
-        </p>
+        <hr>
+        <div>
+          <h3>Non max suppression:</h3>
+          <p>
+            <label for="iou" class="form-label">IoU threshold:</label>
+            <input type="number" class="form-text float-end" id="iou" min="0" max="1" step="0.1"
+                   [(ngModel)]="predictionSettings.nmsIoU" (change)="selectionChanged()">
+          </p>
+          <p>
+            <label for="score" class="form-label">Score threshold:</label>
+            <input type="number" class="form-text float-end" id="score" min="0" max="1" step="0.1"
+                   [(ngModel)]="predictionSettings.nmsScore" (change)="selectionChanged()">
+          </p>
+        </div>
+        <hr>
+        <div>
+          <h3>Ground truth matches:</h3>
+          <p>
+            <label for="iou-threshold" class="form-label">IoU threshold:</label>
+            <input type="number" class="form-text float-end" id="iou-threshold" min="0" max="1" step="0.1"
+                   [(ngModel)]="predictionSettings.groundTruthIoU" (change)="selectionChanged()">
+          </p>
+          <p *ngIf="predictionSettings.groundTruthIoU > 0">
+            <input class="form-check-input" type="checkbox" id="flexSwitchOnlyGt"
+                   [(ngModel)]="predictionSettings.onlyGroundTruth" (change)="selectionChanged()">
+            <label class="form-check-label ms-1" for="flexSwitchOnlyGt">Only show matches</label>
+          </p>
+        </div>
       </div>
     </div>
   </div>

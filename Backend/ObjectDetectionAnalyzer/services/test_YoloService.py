@@ -25,18 +25,19 @@ class TestYoloService(TestCase):
         self.assertEqual(result['path1'], [1, 2, 3])
         self.assertEqual(result['path2'], [1, 2, 3])
 
-    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.get')
+    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.filter')
     @patch('ObjectDetectionAnalyzer.services.YoloService.YoloService.extract_predictions')
     @patch("torch.hub.load")
-    def test_get_detections_for_task_images(self, load, extract_predictions, get):
+    def test_get_detections_for_task_images(self, load, extract_predictions, filter):
         load.return_value = lambda x: x
         extract_predictions.return_value = [1, 2, 3]
-        get.return_value = True
+        filter.return_value = True
 
         class Task:
             def __init__(self):
                 self.progress = 0
                 self.name = "name"
+                self.id = 1
 
             def save(self):
                 pass
@@ -49,18 +50,19 @@ class TestYoloService(TestCase):
         self.assertEqual(result['path2'], [1, 2, 3])
         self.assertEqual(task.progress, 100)
 
-    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.get')
+    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.filter')
     @patch('ObjectDetectionAnalyzer.services.YoloService.YoloService.extract_predictions')
     @patch("torch.hub.load")
-    def test_get_detections_for_task_images_with_cancel(self, load, extract_predictions, get):
+    def test_get_detections_for_task_images_with_cancel(self, load, extract_predictions, filter):
         load.return_value = lambda x: x
         extract_predictions.return_value = [1, 2, 3]
-        get.return_value = False
+        filter.return_value = False
 
         class Task:
             def __init__(self):
                 self.progress = 0
                 self.name = "name"
+                self.id = 1
 
         task = Task()
 

@@ -28,18 +28,19 @@ class TestPyTorchService(TestCase):
         self.assertEqual(result['path1'], [1, 2, 3])
         self.assertEqual(result['path2'], [1, 2, 3])
 
-    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.get')
+    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.filter')
     @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.get_detections')
     @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.load_model')
-    def test_get_detections_for_task_images(self, load_model, get_detections, get):
+    def test_get_detections_for_task_images(self, load_model, get_detections, filter):
         get_detections.return_value = [1, 2, 3]
         load_model.return_value = lambda x: x
-        get.return_value = True
+        filter.return_value = True
 
         class Task:
             def __init__(self):
                 self.progress = 0
                 self.name = "name"
+                self.id = 1
 
             def save(self):
                 pass
@@ -52,18 +53,19 @@ class TestPyTorchService(TestCase):
         self.assertEqual(result['path2'], [1, 2, 3])
         self.assertEqual(task.progress, 100)
 
-    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.get')
+    @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.filter')
     @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.get_detections')
     @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.load_model')
-    def test_get_detections_for_task_images_with_cancel(self, load_model, get_detections, get):
+    def test_get_detections_for_task_images_with_cancel(self, load_model, get_detections, filter):
         get_detections.return_value = [1, 2, 3]
         load_model.return_value = lambda x: x
-        get.return_value = False
+        filter.return_value = False
 
         class Task:
             def __init__(self):
                 self.progress = 0
                 self.name = "name"
+                self.id = 1
 
         task = Task()
 
