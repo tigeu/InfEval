@@ -39,6 +39,49 @@ class TestDrawBoundingBoxService(TestCase):
 
     @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_label')
     @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_bounding_box')
+    def test_draw_bounding_boxes_without_create(self, draw_bounding_box, draw_label):
+        image = Image.new('RGBA', (1000, 1000), (255, 0, 0, 0))
+        self.draw_bounding_box_service.draw_bounding_boxes(self.predictions, image, self.settings, False)
+
+        self.assertEqual(draw_bounding_box.call_count, 3)
+        self.assertEqual(draw_label.call_count, 3)
+
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_gt_bounding_box')
+    @patch('PIL.Image.open')
+    def test_draw_gt_boxes(self, open, draw_gt_bounding_box):
+        image = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
+        open.return_value = image
+        gts = [{'class': 'class1', 'confidence': 50, 'xmin': 50, 'ymin': 50, 'xmax': 75, 'ymax': 75},
+               {'class': 'class1', 'confidence': 25, 'xmin': 25, 'ymin': 25, 'xmax': 60, 'ymax': 60},
+               {'class': 'class2', 'confidence': 10, 'xmin': 10, 'ymin': 30, 'xmax': 30, 'ymax': 75}]
+
+        result = self.draw_bounding_box_service.draw_gt_boxes(gts, image, self.settings)
+
+        self.assertEqual(result, image)
+        self.assertEqual(draw_gt_bounding_box.call_count, 3)
+
+    @patch('PIL.ImageDraw.ImageDraw.rectangle')
+    def test_draw_gt_bounding_box(self, rectangle):
+        image = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
+        draw = ImageDraw.Draw(image)
+        gt = {'matched': True, 'confidence': 50, 'xmin': 50, 'ymin': 50, 'xmax': 75, 'ymax': 75}
+
+        self.draw_bounding_box_service.draw_gt_bounding_box(draw, gt, self.settings)
+
+        rectangle.assert_called_with([50, 50, 75, 75], fill=(0, 255, 0, 95), outline="green", width=15)
+
+    @patch('PIL.ImageDraw.ImageDraw.rectangle')
+    def test_draw_gt_bounding_box_no_match(self, rectangle):
+        image = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
+        draw = ImageDraw.Draw(image)
+        gt = {'matched': False, 'confidence': 50, 'xmin': 50, 'ymin': 50, 'xmax': 75, 'ymax': 75}
+
+        self.draw_bounding_box_service.draw_gt_bounding_box(draw, gt, self.settings)
+
+        rectangle.assert_called_with([50, 50, 75, 75], fill=(255, 0, 0, 95), outline="red", width=15)
+
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_label')
+    @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService.draw_bounding_box')
     @patch('PIL.Image.open')
     def test_draw_bounding_boxes_not_labeled(self, open, draw_bounding_box, draw_label):
         open.return_value = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
