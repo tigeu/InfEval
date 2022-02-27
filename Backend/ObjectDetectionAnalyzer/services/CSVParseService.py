@@ -3,14 +3,11 @@ import csv
 
 class CSVParseService:
     def get_values(self, file, indices):
-        values = {}
+        values = []
         with open(file, newline='') as csv_file:
             reader = csv.reader(csv_file, delimiter=' ', quotechar='|')
             for row in reader:
-                file_name = row[indices['file_name']]
-                if file_name not in values:
-                    values[file_name] = []
-                values[file_name].append(self.get_value(row, indices))
+                values.append(self.get_value(row, indices))
 
             return values
 
@@ -26,7 +23,8 @@ class CSVParseService:
             return values
 
     def get_value(self, row, indices):
-        value = {'class': row[indices['class']],
+        value = {'file_name': row[indices['file_name']],
+                 'class': row[indices['class']],
                  'xmin': int(float(row[indices['xmin']])),
                  'ymin': int(float(row[indices['ymin']])),
                  'xmax': int(float(row[indices['xmax']])),

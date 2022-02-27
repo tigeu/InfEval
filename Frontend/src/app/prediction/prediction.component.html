@@ -104,6 +104,58 @@
             <label class="form-check-label ms-1" for="flexSwitchOnlyGt">Only show matches</label>
           </p>
         </div>
+        <hr>
+        <div>
+          <h3>Calculate metric:</h3>
+          <select class="form-select" aria-label="Select metric" #select [(ngModel)]="predictionSettings.metric">
+            <option value="" selected disabled hidden>Select metric</option>
+            <option value="coco">COCO</option>
+            <option value="pascal">Pascal VOC</option>
+          </select>
+          <p *ngIf="predictionSettings.metric">
+            <button *ngIf="!calculatingMetric" class="btn btn-primary mt-3" (click)="calculateMetric(false)">
+              Calculate metric for image
+            </button>
+            <button *ngIf="calculatingMetric" class="btn btn-primary mt-3" type="button" disabled>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="false"></span>
+              Calculating metric
+            </button>
+          </p>
+          <p *ngIf="predictionSettings.metric">
+            <button *ngIf="!calculatingMetric" class="btn btn-danger mt-3" (click)="calculateMetric(true)">
+              Calculate metric for dataset
+            </button>
+            <button *ngIf="calculatingMetric" class="btn btn-danger mt-3" type="button" disabled>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="false"></span>
+              Calculating metric
+            </button>
+          </p>
+          <div *ngIf="cocoMetric">
+            <h3>{{metricHeader}}</h3>
+            <div *ngFor="let className of cocoMetric.summary | keyvalue">
+              <div>{{className.key}}: <span class="float-end">{{className.value}} %</span></div>
+            </div>
+            <p></p>
+            <div *ngFor="let className of cocoMetric.classes | keyvalue">
+              <div class="fw-bold">{{className.key}}</div>
+              <div>Average Precision: <span class="float-end">{{className.value['AP']}} %</span></div>
+              <div>Total Positives: <span class="float-end">{{className.value['positives']}}</span></div>
+              <div>True Positives: <span class="float-end">{{className.value['TP']}}</span></div>
+              <div>False Positives: <span class="float-end">{{className.value['FP']}}</span></div>
+            </div>
+          </div>
+          <div *ngIf="pascalMetric">
+            <h3>{{metricHeader}}</h3>
+            <div class="fw-bold">mAP: {{pascalMetric.mAP}} %</div>
+            <div *ngFor="let className of pascalMetric.classes | keyvalue">
+              <div class="fw-bold">{{className.key}}</div>
+              <div>Average Precision: <span class="float-end">{{className.value['AP']}} %</span></div>
+              <div>Total Positives: <span class="float-end">{{className.value['positives']}}</span></div>
+              <div>True Positives: <span class="float-end">{{className.value['TP']}}</span></div>
+              <div>False Positives: <span class="float-end">{{className.value['FP']}}</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -8,6 +8,7 @@ from ObjectDetectionAnalyzer.groundtruth.GroundTruthView import GroundTruthView
 from ObjectDetectionAnalyzer.image.ImageView import ImageView
 from ObjectDetectionAnalyzer.imagefiles.ImageFilesView import ImageFilesView
 from ObjectDetectionAnalyzer.main.HeartbeatView import HeartbeatView
+from ObjectDetectionAnalyzer.metrics.MetricsView import MetricsView
 from ObjectDetectionAnalyzer.modellist.ModelListView import ModelListView
 from ObjectDetectionAnalyzer.overview.OverviewView import OverviewView
 from ObjectDetectionAnalyzer.prediction.PredictionView import PredictionView
@@ -55,6 +56,7 @@ urlpatterns = [
 
     path('ground-truth/<str:dataset>/<str:image_name>', GroundTruthView.as_view(), name="ground-truth"),
     path('prediction/<str:dataset>/<str:prediction>/<str:image_name>', PredictionView.as_view(), name="prediction"),
+    path('metrics/<str:dataset>/<str:prediction>', MetricsView.as_view(), name="metrics"),
     path('tasks/<str:task_name>', TasksView.as_view(), name="tasks"),
 
     path('register/', RegisterView.as_view(), name="register"),

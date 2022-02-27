@@ -4,3 +4,6 @@
 [submodule "Backend/YOLO/yolov5"]
 	path = Backend/YOLO/yolov5
 	url = https://github.com/ultralytics/yolov5.git
+[submodule "Backend/metrics/review_object_detection_metrics"]
+	path = Backend/metrics/review_object_detection_metrics
+	url = https://github.com/rafaelpadilla/review_object_detection_metrics.git

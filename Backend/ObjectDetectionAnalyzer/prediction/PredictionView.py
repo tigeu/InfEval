@@ -83,14 +83,12 @@ class PredictionView(APIView):
         return settings
 
     def filter_predictions(self, predictions, settings):
-        if settings['max_conf'] > 0:
-            predictions = self.filter_predictions_service.get_interval_predictions(predictions,
-                                                                                   settings['min_conf'],
-                                                                                   settings['max_conf'])
-        if settings['nms_iou'] > 0 or settings['nms_score'] > 0:
-            predictions = self.filter_predictions_service.get_nms_predictions(predictions,
-                                                                              settings['nms_iou'],
-                                                                              settings['nms_score'])
+        min_conf, max_conf = settings['min_conf'], settings['max_conf']
+        if max_conf > 0:
+            predictions = self.filter_predictions_service.get_interval_predictions(predictions, min_conf, max_conf)
+        nms_iou, nms_score = settings['nms_iou'], settings['nms_score']
+        if nms_iou > 0 or nms_score > 0:
+            predictions = self.filter_predictions_service.get_nms_predictions(predictions, nms_iou, nms_score)
         return predictions
 
     def draw_predictions(self, dataset, image_name, image_path, predictions, settings):

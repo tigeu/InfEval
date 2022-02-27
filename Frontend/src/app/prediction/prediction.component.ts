@@ -9,6 +9,8 @@ import {PredictionChangedService} from "../shared-services/prediction-changed.se
 import {SelectedPredictionChangedService} from "../shared-services/selected-prediction-changed.service";
 import {DatasetFile} from "../dataset-list/dataset-file";
 import {PredictionFile} from "../prediction-list/prediction-file";
+import {PascalMetricFile} from "./pascal-metric-file";
+import {CocoMetricFile} from "./coco-metric-file";
 
 @Component({
   selector: 'app-prediction',
@@ -40,8 +42,15 @@ export class PredictionComponent implements OnInit {
     nmsIoU: 0,
     nmsScore: 0,
     onlyGroundTruth: false,
-    groundTruthIoU: 0
+    groundTruthIoU: 0,
+    metric: "",
+    IoU: 0
   }
+
+  calculatingMetric: boolean = false;
+  pascalMetric?: PascalMetricFile;
+  cocoMetric?: CocoMetricFile;
+  metricHeader: string = "";
 
   constructor(private predictionService: PredictionService,
               private selectedDatasetChangedService: SelectedDatasetChangedService,
@@ -85,6 +94,63 @@ export class PredictionComponent implements OnInit {
         this.predictionChangedService.publish(prediction);
         this.loading = false;
       })
+  }
+
+  calculateMetric(forDataset: boolean = false) {
+    this.setMetricHeader();
+    if (this.predictionSettings.metric == "coco")
+      this.calculateCocoMetric(forDataset);
+    else if (this.predictionSettings.metric == "pascal")
+      this.calculatePascalMetric(forDataset);
+  }
+
+  setMetricHeader(forDataset: boolean = false) {
+    if (forDataset)
+      this.metricHeader = `Results for ${this.selectedDataset.name}`;
+    else
+      this.metricHeader = `Results for ${this.selectedImage}`;
+  }
+
+  calculatePascalMetric(forDataset: boolean = false) {
+    this.resetMetric();
+    this.calculatingMetric = true;
+    let fileName = this.selectedImage;
+    if (forDataset)
+      fileName = "";
+    this.predictionService.getPascalMetric(this.selectedDataset.name, this.selectedPrediction.name, fileName, this.predictionSettings)
+      .subscribe({
+        next: (pascalMetricFile: PascalMetricFile) => {
+          this.pascalMetric = pascalMetricFile;
+          this.calculatingMetric = false;
+        },
+        error: () => {
+          this.calculatingMetric = false;
+        }
+      });
+  }
+
+  calculateCocoMetric(forDataset: boolean = false) {
+    this.resetMetric();
+    this.calculatingMetric = true;
+    let fileName = this.selectedImage;
+    if (forDataset)
+      fileName = "";
+
+    this.predictionService.getCocoMetric(this.selectedDataset.name, this.selectedPrediction.name, fileName, this.predictionSettings)
+      .subscribe({
+        next: (cocoMetricFile: CocoMetricFile) => {
+          this.cocoMetric = cocoMetricFile;
+          this.calculatingMetric = false;
+        },
+        error: () => {
+          this.calculatingMetric = false;
+        }
+      });
+  }
+
+  resetMetric() {
+    this.pascalMetric = undefined;
+    this.cocoMetric = undefined;
   }
 
   setClassColors() {

@@ -12,4 +12,6 @@ export interface PredictionSettings {
   nmsScore: number;
   onlyGroundTruth: boolean;
   groundTruthIoU: number;
+  metric: string;
+  IoU: number;
 }
