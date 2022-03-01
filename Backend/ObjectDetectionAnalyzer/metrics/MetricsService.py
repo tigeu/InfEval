@@ -1,9 +1,8 @@
-import src.evaluators.pascal_voc_evaluator as pascal_voc_evaluator
 from numpy import nan
 from src.bounding_box import BoundingBox
+from src.evaluators import coco_evaluator
+from src.evaluators import pascal_voc_evaluator
 from src.utils.enumerators import CoordinatesType, BBType, BBFormat, MethodAveragePrecision
-
-from metric.review_object_detection_metrics.src.evaluators import coco_evaluator
 
 
 class MetricsService:

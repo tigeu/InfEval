@@ -97,7 +97,7 @@ export class PredictionComponent implements OnInit {
   }
 
   calculateMetric(forDataset: boolean = false) {
-    this.setMetricHeader();
+    this.setMetricHeader(forDataset);
     if (this.predictionSettings.metric == "coco")
       this.calculateCocoMetric(forDataset);
     else if (this.predictionSettings.metric == "pascal")
@@ -135,7 +135,6 @@ export class PredictionComponent implements OnInit {
     let fileName = this.selectedImage;
     if (forDataset)
       fileName = "";
-
     this.predictionService.getCocoMetric(this.selectedDataset.name, this.selectedPrediction.name, fileName, this.predictionSettings)
       .subscribe({
         next: (cocoMetricFile: CocoMetricFile) => {

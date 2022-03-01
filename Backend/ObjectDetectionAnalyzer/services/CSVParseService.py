@@ -23,8 +23,8 @@ class CSVParseService:
             return values
 
     def get_value(self, row, indices):
-        value = {'file_name': row[indices['file_name']],
-                 'class': row[indices['class']],
+        value = {'class': row[indices['class']],
+                 'file_name': row[indices['file_name']],
                  'xmin': int(float(row[indices['xmin']])),
                  'ymin': int(float(row[indices['ymin']])),
                  'xmax': int(float(row[indices['xmax']])),

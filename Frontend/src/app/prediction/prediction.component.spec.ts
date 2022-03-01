@@ -2,13 +2,15 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PredictionComponent} from './prediction.component';
 import {HttpClientModule} from "@angular/common/http";
-import {of} from "rxjs";
+import {of, throwError} from "rxjs";
 import {SelectedDatasetChangedService} from "../shared-services/selected-dataset-changed.service";
 import {SelectedImageChangedService} from "../shared-services/selected-image-changed-service";
 import {Prediction} from "./prediction";
 import {PredictionService} from "./prediction.service";
 import {PredictionChangedService} from "../shared-services/prediction-changed.service";
 import {SelectedPredictionChangedService} from "../shared-services/selected-prediction-changed.service";
+import {CocoMetricFile} from "./coco-metric-file";
+import {PascalMetricFile} from "./pascal-metric-file";
 
 describe('PredictionsComponent', () => {
   let component: PredictionComponent;
@@ -295,5 +297,104 @@ describe('PredictionsComponent', () => {
     component.validateGroundTruthIoU();
 
     expect(component.predictionSettings.groundTruthIoU).toBe(1);
+  });
+
+  it('#calculateMetric should set metric header and call coco metric', () => {
+    const headerSpy = spyOn(component, "setMetricHeader");
+    const cocoMetricSpy = spyOn(component, "calculateCocoMetric");
+    component.predictionSettings.metric = "coco";
+
+    component.calculateMetric(true);
+
+    expect(headerSpy).toHaveBeenCalledWith(true);
+    expect(cocoMetricSpy).toHaveBeenCalledWith(true);
+  });
+
+  it('#calculateMetric should set metric header and call pascal metric', () => {
+    const headerSpy = spyOn(component, "setMetricHeader");
+    const pascalMetricSpy = spyOn(component, "calculatePascalMetric");
+    component.predictionSettings.metric = "pascal";
+
+    component.calculateMetric(true);
+
+    expect(headerSpy).toHaveBeenCalledWith(true);
+    expect(pascalMetricSpy).toHaveBeenCalledWith(true);
+  });
+
+  it('#setMetricHeader should set header to datasetname', () => {
+    component.selectedDataset.name = "test_dataset";
+
+    component.setMetricHeader(true);
+
+    expect(component.metricHeader).toEqual("Results for test_dataset");
+  });
+
+  it('#setMetricHeader should set header to image name', () => {
+    component.selectedImage = "test_image"
+
+    component.setMetricHeader(false);
+
+    expect(component.metricHeader).toEqual("Results for test_image");
+  });
+
+  it('#calculatePascalMetric should reset metric and call service', () => {
+    const predictionService = TestBed.inject(PredictionService);
+    const resetMetricSpy = spyOn(component, "resetMetric");
+    const metricFile: PascalMetricFile = {mAP: 0.5}
+    const spy = spyOn(predictionService, "getPascalMetric").and.returnValue(of(metricFile));
+
+    component.calculatePascalMetric(true);
+
+    expect(resetMetricSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(component.pascalMetric).toEqual(metricFile);
+    expect(component.calculatingMetric).not.toBeTruthy();
+  });
+
+  it('#calculatePascalMetric should reset metric and call service with error', () => {
+    const predictionService = TestBed.inject(PredictionService);
+    const resetMetricSpy = spyOn(component, "resetMetric");
+    const spy = spyOn(predictionService, "getPascalMetric").and.returnValue(throwError(() => "error"));
+
+    component.calculatePascalMetric(true);
+
+    expect(resetMetricSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(component.pascalMetric).toEqual(undefined);
+    expect(component.calculatingMetric).not.toBeTruthy();
+  });
+
+  it('#calculateCocoMetric should reset metric and call service', () => {
+    const predictionService = TestBed.inject(PredictionService);
+    const resetMetricSpy = spyOn(component, "resetMetric");
+    const metricFile: CocoMetricFile = {}
+    const spy = spyOn(predictionService, "getCocoMetric").and.returnValue(of(metricFile));
+
+    component.calculateCocoMetric(true);
+
+    expect(resetMetricSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(component.cocoMetric).toEqual(metricFile);
+    expect(component.calculatingMetric).not.toBeTruthy();
+  });
+
+  it('#calculateCocoMetric should reset metric and call service with error', () => {
+    const predictionService = TestBed.inject(PredictionService);
+    const resetMetricSpy = spyOn(component, "resetMetric");
+    const spy = spyOn(predictionService, "getCocoMetric").and.returnValue(throwError(() => "error"));
+
+    component.calculateCocoMetric(true);
+
+    expect(resetMetricSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(component.cocoMetric).toEqual(undefined);
+    expect(component.calculatingMetric).not.toBeTruthy();
+  });
+
+  it('#resetMetric should set both metric variables to undefined', () => {
+    component.resetMetric();
+
+    expect(component.pascalMetric).toBe(undefined);
+    expect(component.cocoMetric).toBe(undefined);
   });
 });
