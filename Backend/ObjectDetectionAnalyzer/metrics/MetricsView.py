@@ -44,6 +44,7 @@ class MetricsView(APIView):
             predictions = self.csv_parse_service.get_values(pred.path, PREDICTION_INDICES)
             gts = self.csv_parse_service.get_values(gt_path, GROUND_TRUTH_INDICES)
         predictions = self.filter_predictions(predictions, settings)
+        gts = self.filter_ground_truths(gts, settings)
         if settings['metric'] == 'coco':
             results = self.metrics_service.calculate_coco(gts, predictions, settings['classes'])
         else:
@@ -72,3 +73,10 @@ class MetricsView(APIView):
         if nms_iou > 0 or nms_score > 0:
             predictions = self.filter_predictions_service.get_nms_predictions(predictions, nms_iou, nms_score)
         return predictions
+
+    def filter_ground_truths(self, gts, settings):
+        filtered_gts = []
+        for gt in gts:
+            if gt['class'] in settings['classes']:
+                filtered_gts.append(gt)
+        return filtered_gts
