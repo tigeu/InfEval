@@ -1,6 +1,22 @@
 class ColorService:
+    """
+    Service that contains a set of colors and provides a method to get a color for each class that is given.
+
+    Attributes
+    ----------
+    colors : list
+        List containing hex codes of colors
+
+    Methods
+    -------
+    get_class_colors(classes)
+        Returns a list of colors in the same lengths as the given classes list
+    """
+
     def __init__(self):
-        # taken from https://github.com/theislab/DeepCollisionalCrossSection/blob/master/palettes.py
+        """
+        Sets colors list with colors taken from https://github.com/theislab/DeepCollisionalCrossSection/blob/master/palettes.py
+        """
         self.colors = [
             "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
             "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
@@ -21,6 +37,20 @@ class ColorService:
         ]
 
     def get_class_colors(self, classes):
+        """
+        Creates a list of unique hex color strings of the same length as the given classes list.
+        class_colors[i] should be used for classes[i].
+
+        Parameters
+        ----------
+        classes : list
+            List of classes that need a unique color
+
+        Returns
+        -------
+        list
+            List of unique hex colors
+        """
         class_colors = []
         for index, class_name in enumerate(classes):
             class_colors.append(self.colors[index])

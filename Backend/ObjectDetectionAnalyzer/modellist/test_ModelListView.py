@@ -8,9 +8,9 @@ from rest_framework.test import APITestCase
 from ObjectDetectionAnalyzer.upload.UploadModels import Models
 
 
-class TestDatasetListView(APITestCase):
+class TestModelListView(APITestCase):
     """
-    Test ImageFilesView
+    Test ModelListView
     """
 
     def setUp(self):
@@ -22,7 +22,7 @@ class TestDatasetListView(APITestCase):
         self.model_list = [self.model1, self.model2, self.model3]
 
     @patch('ObjectDetectionAnalyzer.upload.UploadModels.Models.objects.filter')
-    def test_dataset_list_with_datasets(self, filter):
+    def test_model_list_with_datasets(self, filter):
         """
         Test that correct image is returned
         """
@@ -38,7 +38,7 @@ class TestDatasetListView(APITestCase):
         self.assertEqual(response.data[2], {"name": "model3", "type": "yolov3"})
 
     @patch('ObjectDetectionAnalyzer.upload.UploadModels.Models.objects.filter')
-    def test_dataset_list_with_without_data(self, filter):
+    def test_model_list_with_without_data(self, filter):
         """
         Test that 404 not found is returned
         """
@@ -52,7 +52,7 @@ class TestDatasetListView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, [])
 
-    def test_dataset_list_with_no_authentication(self):
+    def test_model_list_with_no_authentication(self):
         """
         Test that user without authentication gets 401
         """

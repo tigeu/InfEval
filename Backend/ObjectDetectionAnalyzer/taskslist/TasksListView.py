@@ -10,15 +10,34 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Models
 
 class TasksListView(APIView):
     """
-    Handle requests sent to /tasks-list
+    View that handles requests sent to /tasks-list.
+    GET: Returns a list of all tasks for the requesting user.
+    DELETE: Delete a given task, together with all data related to it
+
+    Methods
+    -------
+    get(request)
+        Returns a list of all tasks for the requesting user.
+    delete(request, dataset)
+        Delete a given task, together with all data related to it
     """
 
     permission_classes = [IsAuthenticated]
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
     def get(self, request):
+        """
+        Returns a list of all tasks for the requesting user.
+
+        Parameters
+        ----------
+        request : HttpRequest
+            GET request
+
+        Returns
+        -------
+        Response
+            Requested data with status code
+        """
         user = request.user
 
         tasks = list(Tasks.objects.filter(userId=user))
@@ -42,6 +61,21 @@ class TasksListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, task):
+        """
+        Delete a given task, together with all data related to it
+
+        Parameters
+        ----------
+        request : HttpRequest
+            DELETE request
+        task : str
+            Name of task that should be deleted
+
+        Returns
+        -------
+        Response
+            Success message with status code
+        """
         user = request.user
 
         task = Tasks.objects.filter(userId=user, name=task).first()

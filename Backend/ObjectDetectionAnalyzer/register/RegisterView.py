@@ -8,10 +8,29 @@ from ObjectDetectionAnalyzer.register.UserSerializer import UserSerializer
 
 class RegisterView(APIView):
     """
-    Handle requests sent to /register
+    View that handles requests sent to /register.
+    POST: Registers a new user based on the provided data
+
+    Methods
+    -------
+    post(request)
+        Registers a new user based on the provided data
     """
 
     def post(self, request):
+        """
+        Registers a new user based on the provided data
+
+        Parameters
+        ----------
+        request : HttpRequest
+            POST request
+
+        Returns
+        -------
+        Response
+            User data with status code or errors with status code
+        """
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             username = serializer.initial_data['username']

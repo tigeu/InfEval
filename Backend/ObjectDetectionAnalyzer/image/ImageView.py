@@ -11,12 +11,28 @@ from ObjectDetectionAnalyzer.settings import DATA_DIR
 
 class ImageView(APIView):
     """
-    Handle requests sent to /image
+    View that handles requests sent to /image.
+    GET: Returns the requested image
+
+    Attributes
+    ----------
+    path_service : PathService
+        Service for handling file system tasks
+    image_service : ImageService
+        Service for encoding image
+
+    Methods
+    -------
+    get(request)
+        Returns the requested image
     """
 
     permission_classes = [IsAuthenticated]
 
     def __init__(self, **kwargs):
+        """
+        Initialise required services
+        """
         super().__init__(**kwargs)
         self.path_service = PathService()
         self.image_service = ImageService()

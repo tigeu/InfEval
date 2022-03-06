@@ -6,6 +6,10 @@ from ObjectDetectionAnalyzer.upload.ModelTypes import ModelTypes
 
 
 class Dataset(models.Model):
+    """
+    Model for Dataset
+    """
+
     class Meta:
         unique_together = ("name", "userId")
 
@@ -17,6 +21,10 @@ class Dataset(models.Model):
 
 
 class Predictions(models.Model):
+    """
+    Model for Predictions
+    """
+
     class Meta:
         unique_together = ("name", "datasetId", "userId")
 
@@ -28,6 +36,10 @@ class Predictions(models.Model):
 
 
 class Models(models.Model):
+    """
+    Model for Models
+    """
+
     class Meta:
         unique_together = ("name", "type", "userId")
 

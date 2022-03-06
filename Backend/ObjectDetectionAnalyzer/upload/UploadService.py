@@ -13,10 +13,48 @@ from ObjectDetectionAnalyzer.upload.validators.YoloValidator import YoloValidato
 
 class UploadService:
     """
-    Service for checking file and saving uploaded data
+    Service that contains methods for validating files and saving data.
+
+    Methods
+    -------
+    is_zip_valid(tmp_file_path, image_endings)
+        Returns True if given zip is valid, False if zip is invalid
+    is_ground_truth_valid(tmp_file_path)
+        Returns True if given csv ground truth file is valid, False if file is invalid
+    is_label_map_valid(tmp_file_path)
+        Returns true if given txt label map file is valid, False if file is invalid
+    is_prediction_valid(tmp_file_path)
+        Returns True if given csv prediction file is valid, False if file is invalid
+    is_pytorch_valid(tmp_file_path)
+        Returns True if given PyTorch model is valid, False if file is invalid
+    is_tf_valid(tmp_file_path, tmp_dir, is_tensor_flow_1=False)
+        Returns True if given TensorFlow model is valid, False if file is invalid
+    is_yolo_valid(tmp_file_path, yolo_dir)
+        Returns True if given Yolo model is valid, False if file is invalid
+    save_compressed_data(tmp_file_path, dataset_dir, image_endings)
+        Save data from a zip file in dataset directory
+    save_compressed_model(tmp_file_path, model_dir, model_name)
+        Save model from a zip file in the model directory under the given model name
+    save_data(tmp_file_path, target_dir, file_name)
+        Save any file in target directory under given file name
     """
 
     def is_zip_valid(self, tmp_file_path: Path, image_endings: set) -> bool:
+        """
+        Returns True if given zip is valid, False if zip is invalid
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+        image_endings : list
+            List of image endings that should be considered
+
+        Returns
+        -------
+        bool
+            Indicates whether zip is valid
+        """
         contains_image = False
         if not zipfile.is_zipfile(tmp_file_path):
             return False
@@ -29,19 +67,88 @@ class UploadService:
                     break
         return contains_image
 
-    def is_ground_truth_valid(self, tmp_file_path: Path) -> bool:
+    def is_ground_truth_valid(self, tmp_file_path):
+        """
+        Returns True if given csv ground truth file is valid, False if file is invalid
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+
+        Returns
+        -------
+        bool
+            Indicates whether zip is valid
+        """
         return GroundTruthValidator().is_valid(tmp_file_path)
 
-    def is_label_map_valid(self, tmp_file_path: Path) -> bool:
+    def is_label_map_valid(self, tmp_file_path):
+        """
+        Returns true if given txt label map file is valid, False if file is invalid
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+
+        Returns
+        -------
+        bool
+            Indicates whether label map is valid
+        """
         return LabelMapValidator().is_valid(tmp_file_path)
 
-    def is_prediction_valid(self, tmp_file_path: Path) -> bool:
+    def is_prediction_valid(self, tmp_file_path):
+        """
+        Returns True if given csv prediction file is valid, False if file is invalid
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+
+        Returns
+        -------
+        bool
+            Indicates whether prediction is valid
+        """
         return PredictionsValidator().is_valid(tmp_file_path)
 
-    def is_pytorch_valid(self, tmp_file_path: Path) -> bool:
+    def is_pytorch_valid(self, tmp_file_path):
+        """
+        Returns True if given PyTorch model is valid, False if file is invalid
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+
+        Returns
+        -------
+        bool
+            Indicates whether model is valid
+        """
         return PyTorchValidator().is_valid(tmp_file_path)
 
-    def is_tf_valid(self, tmp_file_path: Path, tmp_dir: Path, is_tensor_flow_1: bool = False) -> bool:
+    def is_tf_valid(self, tmp_file_path, tmp_dir, is_tensor_flow_1=False):
+        """
+        Returns True if given TensorFlow model is valid, False if file is invalid
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+        tmp_dir : Path
+            Path of temporarily saved files
+        is_tensor_flow_1 : bool
+            Indicates whether model is TensorFlow1 or TensorFlow2
+
+        Returns
+        -------
+        bool
+            Indicates whether model is valid
+        """
         if not zipfile.is_zipfile(tmp_file_path):
             return False
 
@@ -54,10 +161,37 @@ class UploadService:
 
         return is_valid
 
-    def is_yolo_valid(self, tmp_file_path: Path, yolo_dir: Path):
+    def is_yolo_valid(self, tmp_file_path, yolo_dir):
+        """
+        Returns True if given Yolo model is valid, False if file is invalid
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+        yolo_dir : Path
+            Path of yolo directory which should be used for inference
+
+        Returns
+        -------
+        bool
+            Indicates whether model is valid
+        """
         return YoloValidator().is_valid(tmp_file_path, yolo_dir)
 
     def save_compressed_data(self, tmp_file_path, dataset_dir, image_endings):
+        """
+        Save data from a zip file in dataset directory
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+        dataset_dir : Path
+            Path of dataset directory where zip content should be saved
+        image_endings : list
+            List of image endings that should be saved
+        """
         with zipfile.ZipFile(tmp_file_path, 'r') as zip_ref:
             for member in zip_ref.namelist():
                 _, ext = os.path.splitext(member)
@@ -70,6 +204,23 @@ class UploadService:
                     shutil.copyfileobj(source, target)
 
     def save_compressed_model(self, tmp_file_path, model_dir, model_name):
+        """
+        Save model from a zip file in the model directory under the given model name
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+        model_dir : Path
+            Path of model directory where model should be saved
+        model_name : str
+            Name under which the model should be saved
+
+        Returns
+        -------
+        Path
+            Path of the saved model in model directory or an empty string if "saved_model" was not found
+        """
         extracted = False
         target_path = Path(os.path.join(model_dir, model_name))
         if target_path.exists() and not target_path.is_dir():
@@ -87,7 +238,24 @@ class UploadService:
         return ""
 
     def save_data(self, tmp_file_path, target_dir, file_name):
+        """
+        Save any file in target directory under given file name
+
+        Parameters
+        ----------
+        tmp_file_path : Path
+            Path of temporarily saved file
+        target_dir : Path
+            Path of target directory where file should be saved
+        file_name : str
+            Name under which the file should be saved
+
+        Returns
+        -------
+        Path
+            Path of the saved file in target directory
+        """
         path = target_dir / file_name
         shutil.copy(tmp_file_path, path)
-        
+
         return path

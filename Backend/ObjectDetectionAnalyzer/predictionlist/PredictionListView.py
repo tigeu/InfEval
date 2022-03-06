@@ -15,18 +15,57 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 class PredictionListView(APIView):
     """
-    Handle requests sent to /prediction-list
+    View that handles requests sent to /prediction-list.
+    GET: Returns a list of all prediction files for the requesting user together with other information such as
+         contained classes.
+    DELETE: Delete a given prediction file, together with all data related to it
+
+    Attributes
+    ----------
+    csv_path_service : CSVParseService
+        Service for parsing CSV-files
+    color_service : ColorService
+        Service for getting colors for drawing bounding boxs
+    path_service : PathService
+        Service for handling file system tasks
+
+    Methods
+    -------
+    get(request)
+        Returns a list of all prediction files for the requesting user together with other information such as
+        contained classes.
+    delete(request, dataset)
+        Delete a given prediction file, together with all data related to it
     """
 
     permission_classes = [IsAuthenticated]
 
     def __init__(self, **kwargs):
+        """
+        Initialise required services
+        """
         super().__init__(**kwargs)
         self.csv_parse_service = CSVParseService()
         self.color_service = ColorService()
         self.path_service = PathService()
 
     def get(self, request, dataset):
+        """
+        Returns a list of all prediction files for the requesting user together with other information such as
+        contained classes.
+
+        Parameters
+        ----------
+        request : HttpRequest
+            GET request
+        dataset : str
+            Name of dataset
+
+        Returns
+        -------
+        Response
+            Requested data with status code
+        """
         user = request.user
 
         filtered_dataset = Dataset.objects.filter(name=dataset, userId=user)
@@ -48,7 +87,22 @@ class PredictionListView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def delete(self, request, dataset):  # actually prediciton object, but needs to be named dataset because of get
+    def delete(self, request, dataset):  # actually prediction name, but needs to be named dataset because of get
+        """
+        Delete a given prediction file, together with all data related to it
+
+        Parameters
+        ----------
+        request : HttpRequest
+            GET request
+        dataset : str
+            Name of prediction
+
+        Returns
+        -------
+        Response
+            Requested data with status code
+        """
         prediction = dataset
         user = request.user
 

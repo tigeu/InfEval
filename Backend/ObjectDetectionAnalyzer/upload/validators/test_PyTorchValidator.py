@@ -13,7 +13,7 @@ class TestPyTorchValidator(TestCase):
     def setUp(self):
         self.validator = PyTorchValidator()
 
-    @patch('ObjectDetectionAnalyzer.upload.validators.PyTorchValidator.PyTorchValidator.create_test_image')
+    @patch('ObjectDetectionAnalyzer.upload.validators.PyTorchValidator.PyTorchValidator._create_test_image')
     @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.get_detections_for_images')
     def test_is_valid(self, get_detections_for_images, create_test_image):
         get_detections_for_images.return_value = []
@@ -23,7 +23,7 @@ class TestPyTorchValidator(TestCase):
 
         self.assertEqual(result, True)
 
-    @patch('ObjectDetectionAnalyzer.upload.validators.PyTorchValidator.PyTorchValidator.create_test_image')
+    @patch('ObjectDetectionAnalyzer.upload.validators.PyTorchValidator.PyTorchValidator._create_test_image')
     def test_is_valid_exception(self, create_test_image):
         create_test_image.return_value = io.BytesIO()
 
@@ -32,6 +32,6 @@ class TestPyTorchValidator(TestCase):
         self.assertEqual(result, False)
 
     def test_create_test_image(self):
-        result = self.validator.create_test_image()
+        result = self.validator._create_test_image()
 
         self.assertIsInstance(result, io.BytesIO)

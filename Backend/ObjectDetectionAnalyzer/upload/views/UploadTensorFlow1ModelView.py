@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from django.utils import timezone
 
 from ObjectDetectionAnalyzer.settings import DATA_DIR, TMP_DIR
@@ -10,13 +8,13 @@ from ObjectDetectionAnalyzer.upload.views.UploadBaseView import UploadBaseView
 
 class UploadTensorFlow1ModelView(UploadBaseView):
     """
-    Handle requests sent to /upload/tf1/
+    View that handles requests sent to /upload/tf1.
     """
 
     def requires_dataset(self):
         return False
 
-    def is_file_valid(self, tmp_file_path: Path) -> bool:
+    def is_file_valid(self, tmp_file_path):
         return self.upload_service.is_tf_valid(tmp_file_path, TMP_DIR, True)
 
     def get_target_dir(self, username, dataset_name, model_name):

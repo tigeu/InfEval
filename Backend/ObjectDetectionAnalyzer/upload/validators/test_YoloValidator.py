@@ -15,7 +15,7 @@ class TestYoloValidator(TestCase):
     def setUp(self):
         self.validator = YoloValidator()
 
-    @patch('ObjectDetectionAnalyzer.upload.validators.YoloValidator.YoloValidator.create_test_image')
+    @patch('ObjectDetectionAnalyzer.upload.validators.YoloValidator.YoloValidator._create_test_image')
     @patch('ObjectDetectionAnalyzer.services.YoloService.YoloService.get_detections_for_images')
     def test_is_valid(self, get_detections_for_images, create_test_image):
         get_detections_for_images.return_value = []
@@ -25,7 +25,7 @@ class TestYoloValidator(TestCase):
 
         self.assertEqual(result, True)
 
-    @patch('ObjectDetectionAnalyzer.upload.validators.YoloValidator.YoloValidator.create_test_image')
+    @patch('ObjectDetectionAnalyzer.upload.validators.YoloValidator.YoloValidator._create_test_image')
     def test_is_valid_exception(self, create_test_image):
         create_test_image.return_value = io.BytesIO()
 
@@ -34,6 +34,6 @@ class TestYoloValidator(TestCase):
         self.assertEqual(result, False)
 
     def test_create_test_image(self):
-        result = self.validator.create_test_image()
+        result = self.validator._create_test_image()
 
         self.assertIsInstance(result, PIL.PngImagePlugin.PngImageFile)

@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from django.utils import timezone
 
 from ObjectDetectionAnalyzer.settings import DATA_DIR, IMAGE_ENDINGS
@@ -8,19 +6,23 @@ from ObjectDetectionAnalyzer.upload.views.UploadBaseView import UploadBaseView
 
 
 class UploadDatasetView(UploadBaseView):
+    """
+    View that handles requests sent to /upload/dataset.
+    """
+
     def requires_dataset(self):
         return False
 
-    def is_file_valid(self, tmp_file_path: Path) -> bool:
+    def is_file_valid(self, tmp_file_path):
         return self.upload_service.is_zip_valid(tmp_file_path, IMAGE_ENDINGS)
 
-    def get_target_dir(self, username: str, dataset_name: str, model_name: str):
+    def get_target_dir(self, username, dataset_name, model_name):
         user_dir = self.path_service.get_combined_dir(DATA_DIR, username)
         dataset_dir = self.path_service.get_dataset_dir(user_dir, dataset_name)
 
         return dataset_dir
 
-    def create_dir(self, directory: Path) -> bool:
+    def create_dir(self, directory):
         return self.path_service.create_dir(directory, True)
 
     def save_data(self, tmp_file_path, target_dir, dataset_name, model_name, dataset, model, user, file_name):

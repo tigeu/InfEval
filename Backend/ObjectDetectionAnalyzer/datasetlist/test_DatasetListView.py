@@ -10,7 +10,7 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 class TestDatasetListView(APITestCase):
     """
-    Test ImageFilesView
+    Test DatasetListView
     """
 
     def setUp(self):

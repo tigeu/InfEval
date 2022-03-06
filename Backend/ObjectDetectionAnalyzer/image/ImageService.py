@@ -4,12 +4,27 @@ import os
 
 class ImageService:
     """
-    Service for encoding images
+    Service that contains a method for encoding an image in base64
+
+    Methods
+    -------
+    encode_image(image_name)
+        Encodes the given image in base64
     """
 
-    def encode_image(self, image_name: str) -> str:
+    def encode_image(self, image_name):
         """
-        Open image and encode it in base64
+        Encodes the given image in base64
+
+        Parameters
+        ----------
+        image_name : str
+            Image that should be encoded
+
+        Returns
+        -------
+        str
+            Base64 encoded image or None if no image_name given
         """
         if not os.path.exists(image_name):
             return None

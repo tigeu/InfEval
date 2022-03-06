@@ -17,8 +17,8 @@ class TestPyTorchService(TestCase):
     def setUp(self):
         self.pytorch_service = PyTorchService()
 
-    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.get_detections')
-    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.load_model')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService._get_detections')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService._load_model')
     def test_get_detections_for_images(self, load_model, get_detections):
         get_detections.return_value = [1, 2, 3]
         load_model.return_value = lambda x: x
@@ -29,8 +29,8 @@ class TestPyTorchService(TestCase):
         self.assertEqual(result['path2'], [1, 2, 3])
 
     @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.filter')
-    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.get_detections')
-    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.load_model')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService._get_detections')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService._load_model')
     def test_get_detections_for_task_images(self, load_model, get_detections, filter):
         get_detections.return_value = [1, 2, 3]
         load_model.return_value = lambda x: x
@@ -54,8 +54,8 @@ class TestPyTorchService(TestCase):
         self.assertEqual(task.progress, 100)
 
     @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.filter')
-    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.get_detections')
-    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.load_model')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService._get_detections')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService._load_model')
     def test_get_detections_for_task_images_with_cancel(self, load_model, get_detections, filter):
         get_detections.return_value = [1, 2, 3]
         load_model.return_value = lambda x: x
@@ -85,11 +85,11 @@ class TestPyTorchService(TestCase):
         model = Model()
         load.return_value = model
 
-        result = self.pytorch_service.load_model("model_path", "device")
+        result = self.pytorch_service._load_model("model_path", "device")
 
         self.assertEqual(result, model)
 
-    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService.extract_predictions')
+    @patch('ObjectDetectionAnalyzer.services.PyTorchService.PyTorchService._extract_predictions')
     def test_get_detections(self, extract_predictions):
         predictions = [
             {'class': 1, 'confidence': 0.9, 'xmin': 50, 'ymin': 20, 'xmax': 60, 'ymax': 30}
@@ -107,7 +107,7 @@ class TestPyTorchService(TestCase):
             transforms.ToTensor(),
         ])
 
-        result = self.pytorch_service.get_detections(model, device, file, transform)
+        result = self.pytorch_service._get_detections(model, device, file, transform)
 
         self.assertEqual(str(result[0]), str(predictions[0]))
         self.assertEqual(len(result), 1)
@@ -131,7 +131,7 @@ class TestPyTorchService(TestCase):
             {'class': 2, 'confidence': 0.5, 'xmin': 10, 'ymin': 60, 'xmax': 90, 'ymax': 100}
         ]
 
-        result = self.pytorch_service.extract_predictions(outputs)
+        result = self.pytorch_service._extract_predictions(outputs)
 
         self.assertEqual(str(result[0]), str(predictions[0]))
         self.assertEqual(str(result[1]), str(predictions[1]))

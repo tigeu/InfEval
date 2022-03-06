@@ -9,6 +9,10 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 
 class TestPredictionListView(APITestCase):
+    """
+    Test PredictionListView
+    """
+
     def setUp(self):
         self.url = reverse('prediction-list', kwargs={'dataset': 'dataset'})
 

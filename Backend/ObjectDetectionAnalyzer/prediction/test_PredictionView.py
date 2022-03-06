@@ -11,6 +11,10 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 
 class TestPredictionView(APITestCase):
+    """
+    Test PredictionView
+    """
+
     def setUp(self):
         self.url = reverse('prediction', kwargs={'dataset': 'dataset', 'prediction': 'pred', 'image_name': 'image.jpg'})
         self.user = User.objects.create_user("test", "test@test.test", "test")

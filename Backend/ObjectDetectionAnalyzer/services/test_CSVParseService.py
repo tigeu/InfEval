@@ -66,7 +66,7 @@ class TestCSVParseService(TestCase):
 
     def test_get_value(self, open):
         row = ['file1.jpg', 'class1', 0.55, 0, 0, 100, 100]
-        value = self.csv_parse_service.get_value(row, self.indices)
+        value = self.csv_parse_service._get_value(row, self.indices)
 
         self.assertEqual(value, {'class': 'class1', 'confidence': 55, 'file_name': 'file1.jpg', 'xmin': 0, 'ymin': 0,
                                  'xmax': 100, 'ymax': 100})

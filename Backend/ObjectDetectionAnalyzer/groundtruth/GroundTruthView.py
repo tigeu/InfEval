@@ -16,15 +16,54 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Dataset
 
 
 class GroundTruthView(APIView):
+    """
+    View that handles requests sent to /ground-truth.
+    GET: Returns a transparent image with all predictions drawn onto it, based on given settings
+
+    Attributes
+    ----------
+    path_service : PathService
+        Service for handling file system tasks
+    csv_path_service : CSVParseService
+        Service for parsing CSV-files
+    draw_bounding_box_service : DrawBoundingBoxService
+        Service for drawing bounding boxs
+
+    Methods
+    -------
+    get(request)
+        Returns a transparent image with all predictions drawn onto it, based on given settings
+    """
+
     parser_classes = [MultiPartParser]
 
     def __init__(self, **kwargs):
+        """
+        Initialise required services
+        """
         super().__init__(**kwargs)
         self.path_service = PathService()
         self.csv_parse_service = CSVParseService()
         self.draw_bounding_box_service = DrawBoundingBoxService()
 
     def get(self, request, dataset, image_name):
+        """
+        Returns a transparent image with all predictions drawn onto it, based on given settings
+
+        Parameters
+        ----------
+        request : HttpRequest
+            GET request
+        dataset : str
+            Name of current dataset
+        image_name : str
+            Name of image
+
+        Returns
+        -------
+        Response
+            Requested data with status code
+        """
         user = request.user
 
         filtered_dataset = Dataset.objects.filter(name=dataset, userId=user)

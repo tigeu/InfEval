@@ -4,12 +4,29 @@ from pathlib import Path
 
 class ImageFilesService:
     """
-    Service for getting image file names
+    Service that contains a method for getting image file names.
+
+    Methods
+    -------
+    get_image_file_names(directory, image_endings)
+        Returns a list of image file names that have the correct ending
     """
 
-    def get_image_file_names(self, directory: Path, image_endings: dict) -> list:
+    def get_image_file_names(self, directory, image_endings):
         """
-        Get file names of images with specific endings in a certain directory
+        Returns a list of image file names that have the correct ending
+
+        Parameters
+        ----------
+        directory : Path
+            Path where the image file names should be retrieved
+        image_endings : list
+            List containing the wanted image endings
+
+        Returns
+        -------
+        list
+            List of image file names with correct ending
         """
         if not os.path.exists(directory):
             return None

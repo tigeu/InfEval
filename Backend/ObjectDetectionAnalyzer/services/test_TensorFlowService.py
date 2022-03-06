@@ -16,8 +16,8 @@ class TestTensorFlowService(TestCase):
     def setUp(self):
         self.tensor_flow_service = TensorFlowService()
 
-    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService.get_detections')
-    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService.load_model')
+    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService._get_detections')
+    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService._load_model')
     def test_get_detections_for_images(self, load_model, get_detections):
         get_detections.return_value = [1, 2, 3]
 
@@ -27,8 +27,8 @@ class TestTensorFlowService(TestCase):
         self.assertEqual(result['path2'], [1, 2, 3])
 
     @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.filter')
-    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService.get_detections')
-    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService.load_model')
+    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService._get_detections')
+    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService._load_model')
     def test_get_detections_for_task_images(self, load_model, get_detections, filter):
         get_detections.return_value = [1, 2, 3]
         load_model.return_value = lambda x: x
@@ -52,8 +52,8 @@ class TestTensorFlowService(TestCase):
         self.assertEqual(task.progress, 100)
 
     @patch('ObjectDetectionAnalyzer.tasks.TasksModels.Tasks.objects.filter')
-    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService.get_detections')
-    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService.load_model')
+    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService._get_detections')
+    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService._load_model')
     def test_get_detections_for_task_images_with_cancel(self, load_model, get_detections, filter):
         get_detections.return_value = [1, 2, 3]
         load_model.return_value = lambda x: x
@@ -82,7 +82,7 @@ class TestTensorFlowService(TestCase):
         saved_model = SavedModel()
         load.return_value = saved_model
 
-        result = self.tensor_flow_service.load_model(True, "model_path")
+        result = self.tensor_flow_service._load_model(True, "model_path")
 
         self.assertEqual(result, func)
 
@@ -91,11 +91,11 @@ class TestTensorFlowService(TestCase):
         saved_model = lambda x: x
         load.return_value = saved_model
 
-        result = self.tensor_flow_service.load_model(False, "model_path")
+        result = self.tensor_flow_service._load_model(False, "model_path")
 
         self.assertEqual(result, saved_model)
 
-    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService.extract_predictions')
+    @patch('ObjectDetectionAnalyzer.services.TensorFlowService.TensorFlowService._extract_predictions')
     def test_get_detections(self, extract_predictions):
         predictions = [
             {'class': 1, 'confidence': 0.9, 'xmin': 50, 'ymin': 20, 'xmax': 60, 'ymax': 30}
@@ -109,7 +109,7 @@ class TestTensorFlowService(TestCase):
         image = Image.new('RGBA', size=(50, 50), color=(155, 0, 0))
         image.save(file, 'png')
 
-        result = self.tensor_flow_service.get_detections(saved_model, file)
+        result = self.tensor_flow_service._get_detections(saved_model, file)
 
         self.assertEqual(str(result[0]), str(predictions[0]))
         self.assertEqual(len(result), 1)
@@ -135,7 +135,7 @@ class TestTensorFlowService(TestCase):
             'detection_boxes': [boxes]
         }
 
-        result = self.tensor_flow_service.extract_predictions(detections, image_width, image_height)
+        result = self.tensor_flow_service._extract_predictions(detections, image_width, image_height)
 
         self.assertEqual(str(result[0]), str(predictions[0]))
         self.assertEqual(str(result[1]), str(predictions[1]))

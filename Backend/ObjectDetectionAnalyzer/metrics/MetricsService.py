@@ -6,33 +6,107 @@ from src.utils.enumerators import CoordinatesType, BBType, BBFormat, MethodAvera
 
 
 class MetricsService:
+    """
+    Service that contains methods for calculating pascal voc and coco detection metric
+
+    Methods
+    -------
+    calculate_pascal_voc(ground_truths, predictions, iou, classes)
+        Calculates pascal voc metric for given predictions
+    calculate_coco(ground_truths, predictions, classes)
+        Calculates coco detection metric for given predictions
+    _extract_results_per_class(classes, metrics, coco=False)
+        Extract results from metric calculation for each class
+    _extract_coco_summary(summary)
+        Extract results from coco summary
+    _convert_ground_truths(gts)
+        Convert ground truth values from dictionaries to metric compatible form
+    _convert_predictions(preds)
+        Convert predictions values from dictionaries to metric compatible form
+    _get_percent(value)
+        Calculate percent values up to two digits
+    """
+
     def calculate_pascal_voc(self, ground_truths, predictions, iou, classes):
-        ground_truths = self.convert_ground_truths(ground_truths)
-        predictions = self.convert_predictions(predictions)
+        """
+        Calculates coco detection metric for given predictions.
+
+        Parameters
+        ----------
+        ground_truths : list
+            List of dictionaries, each representing a single ground truth
+        predictions : list
+            List of dictionaries, each representing a single prediction
+        iou : float
+            Minium IoU value
+        classes : list
+            List of class names
+
+        Returns
+        -------
+        dict
+            Dictionary containing the most relevant values from pascal voc metric
+        """
+        ground_truths = self._convert_ground_truths(ground_truths)
+        predictions = self._convert_predictions(predictions)
 
         metrics = pascal_voc_evaluator.get_pascalvoc_metrics(ground_truths, predictions, iou, generate_table=False,
                                                              method=MethodAveragePrecision.ELEVEN_POINT_INTERPOLATION)
 
-        results = {'mAP': self.get_percent(metrics['mAP']),
-                   'classes': self.extract_results_per_class(classes, metrics['per_class'])}
+        results = {'mAP': self._get_percent(metrics['mAP']),
+                   'classes': self._extract_results_per_class(classes, metrics['per_class'])}
 
         return results
 
     def calculate_coco(self, ground_truths, predictions, classes):
-        ground_truths = self.convert_ground_truths(ground_truths)
-        predictions = self.convert_predictions(predictions)
+        """
+        Calculates coco detection metric for given predictions.
+
+        Parameters
+        ----------
+        ground_truths : list
+            List of dictionaries, each representing a single ground truth
+        predictions : list
+            List of dictionaries, each representing a single prediction
+        classes : list
+            List of class names
+
+        Returns
+        -------
+        dict
+            Dictionary containing the most relevant values from coco metric
+        """
+        ground_truths = self._convert_ground_truths(ground_truths)
+        predictions = self._convert_predictions(predictions)
 
         summary = coco_evaluator.get_coco_summary(ground_truths, predictions)
         metrics = coco_evaluator.get_coco_metrics(ground_truths, predictions)
 
         results = {
-            'summary': self.extract_coco_summary(summary),
-            'classes': self.extract_results_per_class(classes, metrics, True)
+            'summary': self._extract_coco_summary(summary),
+            'classes': self._extract_results_per_class(classes, metrics, True)
         }
 
         return results
 
-    def extract_results_per_class(self, classes, metrics, coco=False):
+    def _extract_results_per_class(self, classes, metrics, coco=False):
+        """
+        Extract results from metric calculation for each class.
+
+        Parameters
+        ----------
+        classes : list
+            List of class names
+        metrics : dict
+            Result of calculated metric
+        coco : bool
+            Indicates whether coco detection metric is calculated or pascal voc
+
+        Returns
+        -------
+        dict
+            Dictionary containing the most relevant values per class
+        """
         results = {}
         for class_ in classes:
             if class_ not in metrics:
@@ -41,7 +115,7 @@ class MetricsService:
             class_results = metrics[class_]
             results[class_] = {}
             # prevent nan values
-            results[class_]['AP'] = self.get_percent(class_results['AP']) if class_results['AP'] else -1
+            results[class_]['AP'] = self._get_percent(class_results['AP']) if class_results['AP'] else -1
             results[class_]['positives'] = class_results['total positives'] if class_results['total positives'] else 0
 
             if coco:
@@ -53,17 +127,43 @@ class MetricsService:
 
         return results
 
-    def extract_coco_summary(self, summary):
+    def _extract_coco_summary(self, summary):
+        """
+        Extract results from coco summary.
+
+        Parameters
+        ----------
+        summary : dict
+            Dictionary containing the results in coco summary
+
+        Returns
+        -------
+        dict
+            Dictionary containing the most relevant values
+        """
         result = {}
         for key, value in summary.items():
             if value is not nan:
-                result[key] = self.get_percent(value)
+                result[key] = self._get_percent(value)
             else:
                 result[key] = -1
 
         return result
 
-    def convert_ground_truths(self, gts):
+    def _convert_ground_truths(self, gts):
+        """
+        Convert ground truth values from dictionaries to metric compatible form.
+
+        Parameters
+        ----------
+        gts : list
+            List of dictionaries, each representing a single ground truth
+
+        Returns
+        -------
+        list
+            List of BoundingBox objects
+        """
         converted_gts = []
         for gt in gts:
             xmin, ymin, xmax, ymax = gt['xmin'], gt['ymin'], gt['xmax'], gt['ymax']
@@ -73,7 +173,20 @@ class MetricsService:
             converted_gts.append(box)
         return converted_gts
 
-    def convert_predictions(self, preds):
+    def _convert_predictions(self, preds):
+        """
+        Convert predictions values from dictionaries to metric compatible form.
+
+        Parameters
+        ----------
+        preds : list
+            List of dictionaries, each representing a single prediction
+
+        Returns
+        -------
+        list
+            List of BoundingBox objects
+        """
         converted_preds = []
         for pred in preds:
             xmin, ymin, xmax, ymax = pred['xmin'], pred['ymin'], pred['xmax'], pred['ymax']
@@ -83,5 +196,18 @@ class MetricsService:
             converted_preds.append(box)
         return converted_preds
 
-    def get_percent(self, value):
+    def _get_percent(self, value):
+        """
+        Calculate percent values up to two digits.
+
+        Parameters
+        ----------
+        value : float
+            Number that should be converted
+
+        Returns
+        -------
+        float
+            Converted value
+        """
         return round(value * 100, 2)

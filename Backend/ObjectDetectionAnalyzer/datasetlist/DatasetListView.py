@@ -15,12 +15,35 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 
 class DatasetListView(APIView):
     """
-    Handle requests sent to /dataset-list
+    View that handles requests sent to /dataset-list.
+    GET: Returns a list of all datasets for the requesting user together with other information such as availability of
+         ground truth, predictions and classes contained.
+    DELETE: Delete a given dataset, together with all data and files related to it
+
+    Attributes
+    ----------
+    csv_path_service : CSVParseService
+        Service for parsing CSV-files
+    color_service : ColorService
+        Service for getting colors for drawing bounding boxs
+    path_service : PathService
+        Service for handling file system tasks
+
+    Methods
+    -------
+    get(request)
+        Returns a list of all datasets for the requesting user together with other information such as availability of
+        ground truth, predictions and classes contained
+    delete(request, dataset)
+        Delete a given dataset, together with all data and files related to it
     """
 
     permission_classes = [IsAuthenticated]
 
     def __init__(self, **kwargs):
+        """
+        Initialise required services
+        """
         super().__init__(**kwargs)
         self.csv_parse_service = CSVParseService()
         self.color_service = ColorService()
@@ -28,7 +51,18 @@ class DatasetListView(APIView):
 
     def get(self, request):
         """
-        Send image with name image_name from data directory.
+        Returns a list of all datasets for the requesting user together with other information such as availability of
+        ground truth, predictions and classes contained
+
+        Parameters
+        ----------
+        request : HttpRequest
+            GET request
+
+        Returns
+        -------
+        Response
+            Requested data with status code
         """
         user = request.user
 
@@ -58,6 +92,21 @@ class DatasetListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, dataset):
+        """
+        Delete a given dataset, together with all data and files related to it
+
+        Parameters
+        ----------
+        request : HttpRequest
+            DELETE request
+        dataset : str
+            Name of dataset that should be deleted
+
+        Returns
+        -------
+        Response
+            Requested data with status code
+        """
         user = request.user
 
         dataset = Dataset.objects.filter(name=dataset, userId=user).first()

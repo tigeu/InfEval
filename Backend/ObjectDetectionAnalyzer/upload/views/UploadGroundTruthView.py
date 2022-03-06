@@ -1,15 +1,13 @@
-from pathlib import Path
-
 from ObjectDetectionAnalyzer.settings import DATA_DIR
 from ObjectDetectionAnalyzer.upload.views.UploadBaseView import UploadBaseView
 
 
 class UploadGroundTruthView(UploadBaseView):
     """
-    Handle requests sent to /upload/ground-truth/
+    View that handles requests sent to /upload/ground-truth.
     """
 
-    def is_file_valid(self, tmp_file_path: Path) -> bool:
+    def is_file_valid(self, tmp_file_path):
         return self.upload_service.is_ground_truth_valid(tmp_file_path)
 
     def get_target_dir(self, username, dataset_name, model_name):

@@ -7,7 +7,6 @@ from ObjectDetectionAnalyzer.datasetlist.DatasetListView import DatasetListView
 from ObjectDetectionAnalyzer.groundtruth.GroundTruthView import GroundTruthView
 from ObjectDetectionAnalyzer.image.ImageView import ImageView
 from ObjectDetectionAnalyzer.imagefiles.ImageFilesView import ImageFilesView
-from ObjectDetectionAnalyzer.main.HeartbeatView import HeartbeatView
 from ObjectDetectionAnalyzer.metrics.MetricsView import MetricsView
 from ObjectDetectionAnalyzer.modellist.ModelListView import ModelListView
 from ObjectDetectionAnalyzer.overview.OverviewView import OverviewView
@@ -30,7 +29,6 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('heartbeat/<int:count>', HeartbeatView.as_view(), name="heartbeat"),
     path('image/<str:dataset>/<str:image_name>', ImageView.as_view(), name="image"),
     path('image-files/<str:dataset>', ImageFilesView.as_view(), name="image-files"),
 

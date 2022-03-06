@@ -3,9 +3,9 @@ from unittest import TestCase
 from ObjectDetectionAnalyzer.services.FilterPredictionsService import FilterPredictionsService
 
 
-class TestNMSService(TestCase):
+class TestFilterPredictionsService(TestCase):
     """
-    Test NMSService
+    Test FilterPredictionsService
     """
 
     def setUp(self):
@@ -139,7 +139,7 @@ class TestNMSService(TestCase):
         box1 = {'xmin': 0, 'xmax': 10, 'ymin': 0, 'ymax': 10}
         box2 = {'xmin': 5, 'xmax': 15, 'ymin': 5, 'ymax': 15}
 
-        result = self.filter_predictions_service.calculate_iou(box1, box2)
+        result = self.filter_predictions_service._calculate_iou(box1, box2)
 
         self.assertAlmostEqual(result, 0.1429, delta=0.001)
 
@@ -147,7 +147,7 @@ class TestNMSService(TestCase):
         box1 = {'xmin': 10, 'xmax': 20, 'ymin': 0, 'ymax': 10}
         box2 = {'xmin': 5, 'xmax': 15, 'ymin': 5, 'ymax': 15}
 
-        result = self.filter_predictions_service.calculate_iou(box1, box2)
+        result = self.filter_predictions_service._calculate_iou(box1, box2)
 
         self.assertAlmostEqual(result, 0.1429, delta=0.001)
 
@@ -155,34 +155,34 @@ class TestNMSService(TestCase):
         box1 = {'xmin': 0, 'xmax': 10, 'ymin': 10, 'ymax': 20}
         box2 = {'xmin': 5, 'xmax': 15, 'ymin': 5, 'ymax': 15}
 
-        result = self.filter_predictions_service.calculate_iou(box1, box2)
+        result = self.filter_predictions_service._calculate_iou(box1, box2)
 
         self.assertAlmostEqual(result, 0.1429, delta=0.001)
 
     def test_calculate_iou_identical(self):
         box1 = {'xmin': 0, 'xmax': 10, 'ymin': 0, 'ymax': 10}
         box2 = {'xmin': 0, 'xmax': 10, 'ymin': 0, 'ymax': 10}
-        result = self.filter_predictions_service.calculate_iou(box1, box2)
+        result = self.filter_predictions_service._calculate_iou(box1, box2)
 
         self.assertEqual(result, 1.0)
 
     def test_calculate_iou_next_to_each_other(self):
         box1 = {'xmin': 0, 'xmax': 10, 'ymin': 0, 'ymax': 10}
         box2 = {'xmin': 10, 'xmax': 20, 'ymin': 10, 'ymax': 20}
-        result = self.filter_predictions_service.calculate_iou(box1, box2)
+        result = self.filter_predictions_service._calculate_iou(box1, box2)
 
         self.assertEqual(result, 0.0)
 
     def test_calculate_iou_not_overlapping(self):
         box1 = {'xmin': 0, 'xmax': 10, 'ymin': 0, 'ymax': 10}
         box2 = {'xmin': 100, 'xmax': 200, 'ymin': 100, 'ymax': 200}
-        result = self.filter_predictions_service.calculate_iou(box1, box2)
+        result = self.filter_predictions_service._calculate_iou(box1, box2)
 
         self.assertEqual(result, 0.0)
 
     def test_calculate_iou_contains_other(self):
         box1 = {'xmin': 0, 'xmax': 10, 'ymin': 0, 'ymax': 10}
         box2 = {'xmin': 2.5, 'xmax': 7.5, 'ymin': 2.5, 'ymax': 7.5}
-        result = self.filter_predictions_service.calculate_iou(box1, box2)
+        result = self.filter_predictions_service._calculate_iou(box1, box2)
 
         self.assertEqual(result, 0.25)

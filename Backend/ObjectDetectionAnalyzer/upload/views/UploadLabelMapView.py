@@ -1,12 +1,10 @@
-from pathlib import Path
-
 from ObjectDetectionAnalyzer.settings import DATA_DIR
 from ObjectDetectionAnalyzer.upload.views.UploadBaseView import UploadBaseView
 
 
 class UploadLabelMapView(UploadBaseView):
     """
-    Handle requests sent to /upload/label-map/
+    View that handles requests sent to /upload/label-map.
     """
 
     def requires_dataset(self):
@@ -15,7 +13,7 @@ class UploadLabelMapView(UploadBaseView):
     def requires_model(self):
         return True
 
-    def is_file_valid(self, tmp_file_path: Path) -> bool:
+    def is_file_valid(self, tmp_file_path):
         return self.upload_service.is_label_map_valid(tmp_file_path)
 
     def get_target_dir(self, username, dataset_name, model_name):

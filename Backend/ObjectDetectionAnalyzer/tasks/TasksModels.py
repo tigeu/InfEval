@@ -6,6 +6,10 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Models
 
 
 class Tasks(models.Model):
+    """
+    Model for Tasks
+    """
+
     class Meta:
         unique_together = ("name", "userId")
 

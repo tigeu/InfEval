@@ -10,15 +10,39 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions, Mo
 
 class OverviewView(APIView):
     """
-    Handle requests sent to /overview
+    View that handles requests sent to /overview.
+    GET: Returns a dictionary containing all user-specific data (datasets, predictions, models, tasks)
+
+    Methods
+    -------
+    get(request)
+        Returns a dictionary containing all user-specific data (datasets, predictions, models, tasks)
+    get_datasets(user)
+        Get all uploaded datasets for a specific user
+    get_predictions(user)
+        Get all uploaded prediction files for a specific user
+    get_models(user)
+        Get all uploaded models for a specific user
+    get_tasks(user)
+        Get all uploaded tasks for a specific user
     """
 
     permission_classes = [IsAuthenticated]
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
     def get(self, request):
+        """
+        Returns a dictionary containing all user-specific data (datasets, predictions, models, tasks)
+
+        Parameters
+        ----------
+        request : HttpRequest
+            GET request
+
+        Returns
+        -------
+        Response
+            Requested data with status code
+        """
         user = request.user
 
         response_data = {'datasets': self.get_datasets(user),
@@ -29,6 +53,19 @@ class OverviewView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
     def get_datasets(self, user):
+        """
+        Get all uploaded datasets for a specific user
+
+        Parameters
+        ----------
+        user : User
+            User that sent the GET request
+
+        Returns
+        -------
+        list
+            List of dictionaries, each representing a single dataset
+        """
         datasets = Dataset.objects.filter(userId=user)
         response_datasets = []
         for dataset in datasets:
@@ -41,6 +78,19 @@ class OverviewView(APIView):
         return response_datasets
 
     def get_predictions(self, user):
+        """
+        Get all uploaded prediction files for a specific user
+
+        Parameters
+        ----------
+        user : User
+            User that sent the GET request
+
+        Returns
+        -------
+        list
+            List of dictionaries, each representing a single prediction file
+        """
         predictions = Predictions.objects.filter(userId=user)
         response_predictions = []
         for prediction in predictions:
@@ -52,6 +102,19 @@ class OverviewView(APIView):
         return response_predictions
 
     def get_models(self, user):
+        """
+        Get all uploaded models for a specific user
+
+        Parameters
+        ----------
+        user : User
+            User that sent the GET request
+
+        Returns
+        -------
+        list
+            List of dictionaries, each representing a single model
+        """
         models = Models.objects.filter(userId=user)
         response_models = []
         for model in models:
@@ -64,6 +127,19 @@ class OverviewView(APIView):
         return response_models
 
     def get_tasks(self, user):
+        """
+        Get all uploaded tasks for a specific user
+
+        Parameters
+        ----------
+        user : User
+            User that sent the GET request
+
+        Returns
+        -------
+        list
+            List of dictionaries, each representing a single task
+        """
         tasks = Tasks.objects.filter(userId=user)
         response_tasks = []
         for task in tasks:

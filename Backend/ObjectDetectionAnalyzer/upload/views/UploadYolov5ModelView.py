@@ -10,7 +10,7 @@ from ObjectDetectionAnalyzer.upload.views.UploadBaseView import UploadBaseView
 
 class UploadYolov5ModelView(UploadBaseView):
     """
-    Handle requests sent to /upload/yolov5/
+    View that handles requests sent to /upload/yolov5.
     """
 
     def requires_dataset(self):

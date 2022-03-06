@@ -12,16 +12,46 @@ from ObjectDetectionAnalyzer.upload.UploadModels import Models
 
 class ModelListView(APIView):
     """
-    Handle requests sent to /model-list
+    View that handles requests sent to /model-list.
+    GET: Returns a list of all models for the requesting user.
+    DELETE: Delete a given model
+
+    Attributes
+    ----------
+    path_service : PathService
+        Service for handling file system tasks
+
+    Methods
+    -------
+    get(request)
+        Returns a list of all models for the requesting user
+    delete(request, dataset)
+        Delete a given model
     """
 
     permission_classes = [IsAuthenticated]
 
     def __init__(self, **kwargs):
+        """
+        Initialise required services
+        """
         super().__init__(**kwargs)
         self.path_service = PathService()
 
     def get(self, request):
+        """
+        Returns a list of all models for the requesting user
+
+        Parameters
+        ----------
+        request : HttpRequest
+            GET request
+
+        Returns
+        -------
+        Response
+            Requested data with status code
+        """
         user = request.user
 
         models = Models.objects.filter(userId=user)
@@ -36,6 +66,21 @@ class ModelListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, model):
+        """
+        Delete a given model
+
+        Parameters
+        ----------
+        request : HttpRequest
+            DELETE request
+        model : str
+            Name of model that should be deleted
+
+        Returns
+        -------
+        Response
+            Requested data with status code
+        """
         user = request.user
 
         model = Models.objects.filter(userId=user, name=model).first()

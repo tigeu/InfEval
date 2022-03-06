@@ -41,8 +41,8 @@ class TestMetricsView(APITestCase):
         self.assertEqual(response.data, "Prediction file does not exist yet")
 
     @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService.calculate_pascal_voc')
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsView.MetricsView.filter_ground_truths')
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsView.MetricsView.filter_predictions')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsView.MetricsView._filter_ground_truths')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsView.MetricsView._filter_predictions')
     @patch('ObjectDetectionAnalyzer.services.CSVParseService.CSVParseService.get_values_for_image')
     def test_metrics_view_with_image(self, get_values_for_image, filter_predictions, filter_ground_truths,
                                      calculate_pascal_voc):
@@ -66,8 +66,8 @@ class TestMetricsView(APITestCase):
         calculate_pascal_voc.assert_called_with(["gt1", "gt2"], ["pred1", "pred2"], 0.5, ["class1", "class2"])
 
     @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService.calculate_coco')
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsView.MetricsView.filter_ground_truths')
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsView.MetricsView.filter_predictions')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsView.MetricsView._filter_ground_truths')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsView.MetricsView._filter_predictions')
     @patch('ObjectDetectionAnalyzer.services.CSVParseService.CSVParseService.get_values')
     def test_metrics_view_without_image(self, get_values, filter_predictions, filter_ground_truths,
                                         calculate_coco):
@@ -96,7 +96,7 @@ class TestMetricsView(APITestCase):
         calculate_coco.assert_called_with(["gt1", "gt2"], ["pred1", "pred2"], ["class1", "class2"])
 
     def test_extract_prediction_settings(self):
-        results = self.view.extract_prediction_settings(self.request)
+        results = self.view._extract_prediction_settings(self.request)
 
         self.assertEqual(results, self.settings)
 
@@ -108,7 +108,7 @@ class TestMetricsView(APITestCase):
         get_interval_predictions.return_value = ["pred1", "pred2"]
         get_nms_predictions.return_value = ["pred1"]
 
-        results = self.view.filter_predictions(predictions, self.settings)
+        results = self.view._filter_predictions(predictions, self.settings)
 
         self.assertEqual(results, ["pred1"])
         get_interval_predictions.assert_called_with(predictions, 25, 75)
@@ -116,6 +116,6 @@ class TestMetricsView(APITestCase):
 
     def test_filter_ground_truths(self):
         gts = [{'class': 'class1'}, {'class': 'class2'}, {'class': 'class3'}, {'class': 'class3'}]
-        results = self.view.filter_ground_truths(gts, self.settings)
+        results = self.view._filter_ground_truths(gts, self.settings)
 
         self.assertEqual(results, [{'class': 'class1'}, {'class': 'class2'}])

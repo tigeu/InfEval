@@ -16,10 +16,10 @@ class TestMetricService(TestCase):
     def setUp(self):
         self.metric_service = MetricsService()
 
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService.extract_results_per_class')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService._extract_results_per_class')
     @patch('src.evaluators.pascal_voc_evaluator.get_pascalvoc_metrics')
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService.convert_predictions')
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService.convert_ground_truths')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService._convert_predictions')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService._convert_ground_truths')
     def test_calculate_pascal(self, convert_ground_truths, convert_predictions, get_pascalvoc_metrics,
                               extract_results_per_class):
         gts = ["gt1", "gt2"]
@@ -33,12 +33,12 @@ class TestMetricService(TestCase):
 
         self.assertEqual(results, {"mAP": 50.0, 'classes': {'class1': 'value1'}})
 
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService.extract_coco_summary')
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService.extract_results_per_class')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService._extract_coco_summary')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService._extract_results_per_class')
     @patch('src.evaluators.coco_evaluator.get_coco_metrics')
     @patch('src.evaluators.coco_evaluator.get_coco_summary')
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService.convert_predictions')
-    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService.convert_ground_truths')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService._convert_predictions')
+    @patch('ObjectDetectionAnalyzer.metrics.MetricsService.MetricsService._convert_ground_truths')
     def test_calculate_coco(self, convert_ground_truths, convert_predictions, get_coco_summary, get_coco_metrics,
                             extract_results_per_class, extract_coco_summary):
         gts = ["gt1", "gt2"]
@@ -61,7 +61,7 @@ class TestMetricService(TestCase):
         expected = {'class1': {'AP': 12.35, 'positives': 5, 'TP': 3, 'FP': 3},
                     'class2': {'AP': 98.77, 'positives': 4, 'TP': 4, 'FP': 4}}
 
-        results = self.metric_service.extract_results_per_class(classes, metrics)
+        results = self.metric_service._extract_results_per_class(classes, metrics)
 
         self.assertEqual(results, expected)
 
@@ -73,7 +73,7 @@ class TestMetricService(TestCase):
         expected = {'class1': {'AP': 12.35, 'positives': 5, 'TP': 3, 'FP': 3},
                     'class2': {'AP': 98.77, 'positives': 4, 'TP': 4, 'FP': 4}}
 
-        results = self.metric_service.extract_results_per_class(classes, metrics, True)
+        results = self.metric_service._extract_results_per_class(classes, metrics, True)
 
         self.assertEqual(results, expected)
 
@@ -81,7 +81,7 @@ class TestMetricService(TestCase):
         summary = {"key": 0.12345, "key2": 0.98765, "key3": nan}
         expected = {"key": 12.35, "key2": 98.77, "key3": -1}
 
-        results = self.metric_service.extract_coco_summary(summary)
+        results = self.metric_service._extract_coco_summary(summary)
 
         self.assertEqual(results, expected)
 
@@ -96,7 +96,7 @@ class TestMetricService(TestCase):
             BoundingBox(image_name="file2.png", class_id="class1", coordinates=(25, 25, 100, 100),
                         type_coordinates=CoordinatesType.ABSOLUTE, bb_type=BBType.GROUND_TRUTH, format=BBFormat.XYX2Y2)
         ]
-        results = self.metric_service.convert_ground_truths(ground_truths)
+        results = self.metric_service._convert_ground_truths(ground_truths)
 
         self.assertEqual(results[0], expected[0])
         self.assertEqual(results[1], expected[1])
@@ -114,12 +114,12 @@ class TestMetricService(TestCase):
             BoundingBox(image_name="file2.png", class_id="class1", confidence=43, coordinates=(25, 25, 100, 100),
                         type_coordinates=CoordinatesType.ABSOLUTE, bb_type=BBType.DETECTED, format=BBFormat.XYX2Y2)
         ]
-        results = self.metric_service.convert_predictions(predictions)
+        results = self.metric_service._convert_predictions(predictions)
 
         self.assertEqual(results[0], expected[0])
         self.assertEqual(results[1], expected[1])
 
     def test_get_percent(self):
-        result = self.metric_service.get_percent(0.123456789)
+        result = self.metric_service._get_percent(0.123456789)
 
         self.assertEqual(result, 12.35)

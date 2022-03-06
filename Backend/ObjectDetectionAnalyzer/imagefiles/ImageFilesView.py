@@ -11,23 +11,51 @@ from ObjectDetectionAnalyzer.settings import DATA_DIR, IMAGE_ENDINGS
 
 class ImageFilesView(APIView):
     """
-    Handle requests sent to /image-files
+    View that handles requests sent to /image-files.
+    GET: Returns a list of all image file names in a given dataset
+
+    Attributes
+    ----------
+    path_service : PathService
+        Service for handling file system tasks
+    image_file_service : ImageFilesService
+        Service for retrieving all image file names for a given dataset
+
+    Methods
+    -------
+    get(request)
+        Returns a list of all image file names in a given dataset
     """
 
     permission_classes = [IsAuthenticated]
 
     def __init__(self, **kwargs):
+        """
+        Initialise required services
+        """
         super().__init__(**kwargs)
         self.path_service = PathService()
         self.image_file_service = ImageFilesService()
 
     def get(self, request, dataset):
         """
-        Send image with name image_name from data directory.
+        Returns a list of all image file names in a given dataset
+
+        Parameters
+        ----------
+        request : HttpRequest
+            GET request
+        dataset : str
+            Dataset name for which the image file names are requestred
+
+        Returns
+        -------
+        Response
+            Requested data with status code
         """
         user_dir = self.path_service.get_combined_dir(DATA_DIR, request.user.username)
         dataset_dir = self.path_service.get_dataset_dir(user_dir, dataset)
-        
+
         image_names = self.image_file_service.get_image_file_names(dataset_dir, IMAGE_ENDINGS)
 
         if not image_names:

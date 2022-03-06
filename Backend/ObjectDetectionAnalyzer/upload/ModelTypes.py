@@ -2,6 +2,15 @@ from enum import Enum
 
 
 class ModelTypes(Enum):
+    """
+    Enum that contains definitions for all supported object detection models
+
+    Methods
+    -------
+    __str__()
+        Returns a pretty string of currently used model
+    """
+
     def __str__(self):
         if self.value == 'pytorch':
             return 'PyTorch'

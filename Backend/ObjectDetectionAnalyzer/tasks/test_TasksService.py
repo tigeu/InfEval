@@ -4,6 +4,10 @@ from ObjectDetectionAnalyzer.tasks.TasksService import TasksService
 
 
 class TestTasksService(TestCase):
+    """
+    Test TasksService
+    """
+
     def setUp(self):
         self.tasks_service = TasksService()
         self.label_map = {"1": "class1", "2": "class2"}
