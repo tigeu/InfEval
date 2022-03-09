@@ -39,18 +39,14 @@ class TestTasksListView(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # only compare most important properties
-        self.assertEqual(response.data[0]['name'], 'task3')
+        self.assertEqual(response.data[0]['name'], 'task2')
         self.assertEqual(response.data[0]['dataset'], 'dataset')
         self.assertEqual(response.data[0]['model'], 'model')
-        self.assertEqual(response.data[0]['finished'], now.strftime('%Y-%m-%d %H:%M:%S'))
-        self.assertEqual(response.data[1]['name'], 'task2')
+        self.assertEqual(response.data[0]['finished'], None)
+        self.assertEqual(response.data[1]['name'], 'task1')
         self.assertEqual(response.data[1]['dataset'], 'dataset')
         self.assertEqual(response.data[1]['model'], 'model')
         self.assertEqual(response.data[1]['finished'], None)
-        self.assertEqual(response.data[2]['name'], 'task1')
-        self.assertEqual(response.data[2]['dataset'], 'dataset')
-        self.assertEqual(response.data[2]['model'], 'model')
-        self.assertEqual(response.data[2]['finished'], None)
 
     def test_dataset_list_with_without_data(self):
         response = self.client.get(self.url)

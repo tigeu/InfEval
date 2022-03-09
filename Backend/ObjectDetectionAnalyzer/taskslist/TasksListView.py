@@ -54,7 +54,8 @@ class TasksListView(APIView):
                     'dataset': Dataset.objects.get(pk=task.datasetId.id).name,
                     'model': Models.objects.get(pk=task.modelId.id).name
                     }
-            response_data.append(data)
+            if not data['finished']:
+                response_data.append(data)
 
         serializer = TasksListSerializer(response_data, many=True)
 
