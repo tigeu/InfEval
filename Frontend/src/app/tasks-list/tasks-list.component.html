@@ -1,5 +1,5 @@
-<div class="tasks-list">
-  <h1>Started tasks</h1>
+<div *ngIf="tasksList.length>0" class="tasks-list">
+  <h1>Running tasks</h1>
   <ul class="list-group">
     <li *ngFor="let task of tasksList" class="list-group-item d-flex justify-content-between align-items-start">
       <div class="ms-2 me-auto">

@@ -94,7 +94,7 @@ export class TasksComponent implements OnInit {
   }
 
   validateTaskDescription(taskDescription: string): boolean {
-    const taskDescriptionRegExp = new RegExp(/^[a-z0-9]+$/i);
+    const taskDescriptionRegExp = new RegExp(/^[a-z0-9 ]+$/i);
     if (taskDescription && !taskDescriptionRegExp.test(taskDescription)) {
       this.taskDescriptionErrorMessage = "Description is not alphanumeric";
       return false;
