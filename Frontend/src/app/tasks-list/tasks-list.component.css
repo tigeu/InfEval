@@ -2,3 +2,7 @@
   max-height: inherit;
   overflow: auto;
 }
+
+.set-min-width {
+  min-width: 50px;
+}

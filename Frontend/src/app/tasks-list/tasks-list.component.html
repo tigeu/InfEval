@@ -9,8 +9,8 @@
         <div><span class="fw-bold">Started:</span> {{task.started}}</div>
         <div *ngIf="task.finished"><span class="fw-bold">Finished:</span> {{task.finished}}</div>
         <div *ngIf="!task.finished">
-          <div *ngIf="task.progress > 0" class="progress-bar" role="progressbar"
-               aria-valuemin="0" aria-valuemax="100">
+          <div *ngIf="task.progress > 0" class="progress-bar set-min-width" role="progressbar"
+               aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width : (task.progress + '%')}">
             {{task.progress}} %
           </div>
           <div *ngIf="task.progress == 0">
