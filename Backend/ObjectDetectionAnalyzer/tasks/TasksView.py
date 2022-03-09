@@ -104,7 +104,7 @@ class TasksView(APIView):
         model = model.first()
 
         task = Tasks.objects.filter(name=task_name, userId=user)
-        if task:
+        if task and not task.first().finished:
             return Response("A task with this name is running already", status=status.HTTP_400_BAD_REQUEST)
 
         try:
