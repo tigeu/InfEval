@@ -13,13 +13,6 @@
         <app-upload [uploadInformation]="groundTruthInformation"></app-upload>
       </ng-template>
     </mat-tab>
-    <mat-tab label="Label map">
-      <ng-template matTabContent>
-        <h1>Upload label map</h1>
-        <app-model-list class="w-50"></app-model-list>
-        <app-upload [uploadInformation]="labelMapInformation"></app-upload>
-      </ng-template>
-    </mat-tab>
     <mat-tab label="Predictions">
       <ng-template matTabContent>
         <h1>Upload predictions</h1>
@@ -31,6 +24,13 @@
       <ng-template matTabContent>
         <h1>Upload model</h1>
         <app-upload [uploadInformation]="modelInformation"></app-upload>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Label map">
+      <ng-template matTabContent>
+        <h1>Upload label map</h1>
+        <app-model-list class="w-50"></app-model-list>
+        <app-upload [uploadInformation]="labelMapInformation"></app-upload>
       </ng-template>
     </mat-tab>
   </mat-tab-group>

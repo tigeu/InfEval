@@ -27,6 +27,7 @@ export class UploadComponent implements OnInit {
   selectedModelChanged: Subscription;
 
   errorMessage: string = "";
+  successMessage: string = ""
 
   constructor(private uploadService: UploadService,
               private selectedDatasetChangedService: SelectedDatasetChangedService,
@@ -61,6 +62,7 @@ export class UploadComponent implements OnInit {
   upload() {
     if (this.file && this.fileName) {
       this.errorMessage = "";
+      this.successMessage = "";
       this.uploadSub = this.uploadService.upload(this.fileName, this.file, this.dataset.name, this.model.name, this.uploadInformation.apiEndpoint)
         .pipe(finalize(() => this.reset()))
         .subscribe({
@@ -77,6 +79,8 @@ export class UploadComponent implements OnInit {
   updateProgress(loaded: number, total: number) {
     if (total)
       this.uploadProgress = Math.round(100 * (loaded / total));
+    if (this.uploadProgress == 100)
+      this.successMessage = "File successfully uploaded";
   }
 
   cancelUpload() {
@@ -106,5 +110,6 @@ export class UploadComponent implements OnInit {
 
   setErrorMessage(res: HttpErrorResponse) {
     this.errorMessage = res.error;
+    this.successMessage = "";
   }
 }
