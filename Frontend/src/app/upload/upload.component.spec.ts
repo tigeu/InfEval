@@ -135,6 +135,13 @@ describe('UploadComponent', () => {
     expect(component.uploadProgress).not.toBeTruthy();
   });
 
+  it('#updateProgress should set succcessMessage if progress is 100', () => {
+    component.updateProgress(100, 100);
+
+    expect(component.uploadProgress).toBe(100);
+    expect(component.successMessage).toEqual("File successfully uploaded");
+  });
+
   it('#cancelUpload should unsubscribe and call reset', () => {
     component.uploadSub = new Subscription();
     spyOn(component, "reset");
