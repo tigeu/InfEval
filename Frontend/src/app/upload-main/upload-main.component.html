@@ -9,6 +9,11 @@
     <mat-tab label="Ground truth">
       <ng-template matTabContent>
         <h1>Upload ground truth values</h1>
+        <div class="alert alert-info" role="alert">
+          Required format for each ground truth value:
+          <p></p>
+          image_name class_name xmin ymin xmax ymax
+        </div>
         <app-dataset-list class="w-50"></app-dataset-list>
         <app-upload [uploadInformation]="groundTruthInformation"></app-upload>
       </ng-template>
@@ -16,6 +21,11 @@
     <mat-tab label="Predictions">
       <ng-template matTabContent>
         <h1>Upload predictions</h1>
+        <div class="alert alert-info" role="alert">
+          Required format for each prediction value:
+          <p></p>
+          image_name class_name confidence xmin ymin xmax ymax
+        </div>
         <app-dataset-list class="w-50"></app-dataset-list>
         <app-upload [uploadInformation]="predictionsInformation"></app-upload>
       </ng-template>
@@ -28,6 +38,13 @@
     </mat-tab>
     <mat-tab label="Label map">
       <ng-template matTabContent>
+        <div class="alert alert-info" role="alert">
+          <div class="alert alert-info" role="alert">
+            Required JSON format:
+            <p></p>
+            {{ '{' }} "1": "class1", "2": "class2" {{ '}' }}
+          </div>
+        </div>
         <h1>Upload label map</h1>
         <app-model-list class="w-50"></app-model-list>
         <app-upload [uploadInformation]="labelMapInformation"></app-upload>
