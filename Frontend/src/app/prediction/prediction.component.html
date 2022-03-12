@@ -130,6 +130,9 @@
               Calculating metric
             </button>
           </p>
+          <div *ngIf="showErrorMessage" class="alert alert-danger d-flex align-items-center mt-3" role="alert">
+            Metric could not be calculated. Make sure there are ground truth values and predictions selected.
+          </div>
           <div *ngIf="cocoMetric">
             <h3>{{metricHeader}}</h3>
             <div *ngFor="let className of cocoMetric.summary | keyvalue">

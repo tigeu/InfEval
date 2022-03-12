@@ -306,6 +306,7 @@ describe('PredictionsComponent', () => {
 
     component.calculateMetric(true);
 
+    expect(component.showErrorMessage).not.toBeTruthy();
     expect(headerSpy).toHaveBeenCalledWith(true);
     expect(cocoMetricSpy).toHaveBeenCalledWith(true);
   });
@@ -362,6 +363,7 @@ describe('PredictionsComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(component.pascalMetric).toEqual(undefined);
     expect(component.calculatingMetric).not.toBeTruthy();
+    expect(component.showErrorMessage).toBeTruthy();
   });
 
   it('#calculateCocoMetric should reset metric and call service', () => {
@@ -389,6 +391,7 @@ describe('PredictionsComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(component.cocoMetric).toEqual(undefined);
     expect(component.calculatingMetric).not.toBeTruthy();
+    expect(component.showErrorMessage).toBeTruthy();
   });
 
   it('#resetMetric should set both metric variables to undefined', () => {

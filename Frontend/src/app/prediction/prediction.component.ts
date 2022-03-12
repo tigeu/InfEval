@@ -48,6 +48,7 @@ export class PredictionComponent implements OnInit {
   }
 
   calculatingMetric: boolean = false;
+  showErrorMessage: boolean = false;
   pascalMetric?: PascalMetricFile;
   cocoMetric?: CocoMetricFile;
   metricHeader: string = "";
@@ -97,6 +98,7 @@ export class PredictionComponent implements OnInit {
   }
 
   calculateMetric(forDataset: boolean = false) {
+    this.showErrorMessage = false;
     this.setMetricHeader(forDataset);
     if (this.predictionSettings.metric == "coco")
       this.calculateCocoMetric(forDataset);
@@ -125,6 +127,7 @@ export class PredictionComponent implements OnInit {
         },
         error: () => {
           this.calculatingMetric = false;
+          this.showErrorMessage = true;
         }
       });
   }
@@ -143,6 +146,7 @@ export class PredictionComponent implements OnInit {
         },
         error: () => {
           this.calculatingMetric = false;
+          this.showErrorMessage = true;
         }
       });
   }
