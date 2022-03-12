@@ -1,8 +1,16 @@
 <app-dataset-list></app-dataset-list>
 <p></p>
-<div id="image-files" class="list-group overflow-auto">
-  <button type="button" class="list-group-item list-group-item-action" [class.active]="selectedImage == imageFile.name"
-          *ngFor="let imageFile of imageFiles" (click)="onSelectedImageFileChanged($event.target)">
-    {{imageFile.name}}
-  </button>
+<div class="mb-3" *ngIf="filteredImageFiles.length > 0">
+  <input #fileNameInput id="fileName" class="form-control"
+         (input)="filterFiles(fileNameInput.value)" type="text" aria-describedby="fileNameHelp">
+  <div id="fileNameHelp" class="form-text">Search by name</div>
+</div>
+<div class="image-files">
+  <div id="image-files" class="list-group overflow-auto">
+    <button type="button" class="list-group-item list-group-item-action"
+            [class.active]="selectedImage == imageFile.name"
+            *ngFor="let imageFile of filteredImageFiles" (click)="onSelectedImageFileChanged($event.target)">
+      {{imageFile.name}}
+    </button>
+  </div>
 </div>

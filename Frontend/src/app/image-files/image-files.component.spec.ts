@@ -124,4 +124,32 @@ describe('ImageFilesComponent', () => {
 
     expect(selectedDatasetChangedSpy).toHaveBeenCalled();
   });
+
+  it('#filterValues should filter list based on given string', () => {
+    const imageFiles: ImageFile[] = [
+      {name: "test_image1.jpg"},
+      {name: "test_image2.jpg"},
+      {name: "test_image3.jpg"},
+    ]
+    component.imageFiles = imageFiles;
+
+    component.filterFiles("iMaGe1");
+
+    expect(component.filteredImageFiles.length).toBe(1);
+    expect(component.filteredImageFiles[0].name).toEqual("test_image1.jpg");
+  });
+
+  it('#filterValues should filter list based on empty string', () => {
+    const imageFiles: ImageFile[] = [
+      {name: "test_image1.jpg"},
+      {name: "test_image2.jpg"},
+      {name: "test_image3.jpg"},
+    ]
+    component.imageFiles = imageFiles;
+
+    component.filterFiles("");
+
+    expect(component.filteredImageFiles.length).toBe(3);
+    expect(component.filteredImageFiles).toEqual(imageFiles);
+  });
 });

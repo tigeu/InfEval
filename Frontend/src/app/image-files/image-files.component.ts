@@ -15,8 +15,10 @@ import {DatasetFile} from "../dataset-list/dataset-file";
 export class ImageFilesComponent implements OnInit {
 
   imageFiles: ImageFile[] = [];
+  filteredImageFiles: ImageFile[] = [];
   selectedDatasetChanged: Subscription;
   selectedImage!: string;
+  filterName: string = "";
 
   constructor(private imageFilesService: ImageFilesService,
               private imageService: ImageService,
@@ -38,11 +40,20 @@ export class ImageFilesComponent implements OnInit {
     this.imageFilesService.getImageFiles(dataset)
       .subscribe((imageFiles: ImageFile[]) => {
         this.imageFiles = imageFiles
+        this.filterFiles(this.filterName);
       })
   }
 
   onSelectedImageFileChanged($event: any) {
     this.selectedImage = $event.innerText;
     this.selectedImageChangedService.publish($event.innerText);
+  }
+
+  filterFiles(value: string) {
+    this.filterName = value;
+    if (!value)
+      this.filteredImageFiles = this.imageFiles;
+    else
+      this.filteredImageFiles = this.imageFiles.filter(file => file.name.toLowerCase().includes(value.toLowerCase()))
   }
 }
