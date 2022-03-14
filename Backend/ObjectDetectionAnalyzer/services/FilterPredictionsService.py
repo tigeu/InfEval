@@ -15,9 +15,9 @@ class FilterPredictionsService:
     get_ground_truth_results(gts, predictions, iou)
         Update given ground truths indicating if that box was matched by a prediction for a given iou
     _extract_lists_from_predictions(image_predictions)
-        Converts prediction list into lists of boxes, scores and classes
-    _recreate_predictions(boxes, classes, scores, indices)
-        Creates list of predictions from lists of boxes, scores and classes
+        Converts prediction list into lists of file_names, boxes, scores and classes
+    _recreate_predictions(file_names, boxes, classes, scores, indices)
+        Creates list of predictions from lists of file_names, boxes, scores and classes
     _calculate_iou(box1, box2)
         Calculate IoU for two given boxes
     _get_overlap_coordinates
@@ -70,11 +70,11 @@ class FilterPredictionsService:
         if not predictions:
             return []
 
-        boxes, classes, scores = self._extract_lists_from_predictions(predictions)
+        file_names, boxes, classes, scores = self._extract_lists_from_predictions(predictions)
 
         indices = tf.image.non_max_suppression(boxes, scores, 100, iou, score).numpy().tolist()
 
-        nms_predictions = self._recreate_predictions(boxes, classes, scores, indices)
+        nms_predictions = self._recreate_predictions(file_names, boxes, classes, scores, indices)
         return nms_predictions
 
     def get_ground_truth_results(self, gts, predictions, iou):
@@ -114,7 +114,7 @@ class FilterPredictionsService:
 
     def _extract_lists_from_predictions(self, image_predictions):
         """
-        Converts prediction list into lists of boxes, scores and classes
+        Converts prediction list into lists of file_names, boxes, scores and classes
 
         Parameters
         ----------
@@ -124,27 +124,33 @@ class FilterPredictionsService:
         Returns
         -------
         list
+            List of file names
+        list
             List of bounding boxes
         list
             List of classes
         list
             List of scores
         """
+        file_names = []
         boxes = []
         scores = []
         classes = []
         for pred in image_predictions:
+            file_names.append(pred['file_name'])
             boxes.append([pred['ymin'], pred['xmin'], pred['ymax'], pred['xmax']])
             scores.append(pred['confidence'])
             classes.append(pred['class'])
-        return boxes, classes, scores
+        return file_names, boxes, classes, scores
 
-    def _recreate_predictions(self, boxes, classes, scores, indices):
+    def _recreate_predictions(self, file_names, boxes, classes, scores, indices):
         """
-        Creates list of predictions from lists of boxes, scores and classes
+        Creates list of predictions from lists of file_names, boxes, scores and classes
 
         Parameters
         ----------
+        file_names : list
+            List of file names
         boxes : list
             List of bounding boxes
         classes : list
@@ -164,8 +170,9 @@ class FilterPredictionsService:
         scores = np.array(scores)[indices].tolist()
 
         nms_image_predictions = []
-        for class_, box, score in zip(classes, boxes, scores):
+        for file_name, class_, box, score in zip(file_names, classes, boxes, scores):
             nms_image_predictions.append({'class': class_,
+                                          'file_name': file_name,
                                           'confidence': score,
                                           'xmin': box[1],
                                           'ymin': box[0],
