@@ -127,9 +127,15 @@ class DrawBoundingBoxService:
         xmin, ymin, xmax, ymax = gt['xmin'], gt['ymin'], gt['xmax'], gt['ymax']
         stroke_size = settings['stroke_size']
         if gt['matched']:
-            draw.rectangle([xmin, ymin, xmax, ymax], fill=(0, 255, 0, 95), outline="green", width=stroke_size)
+            if settings['ground_truth_transparent']:
+                draw.rectangle([xmin, ymin, xmax, ymax], outline="green", width=stroke_size)
+            else:
+                draw.rectangle([xmin, ymin, xmax, ymax], fill=(0, 255, 0, 95), outline="green", width=stroke_size)
         else:
-            draw.rectangle([xmin, ymin, xmax, ymax], fill=(255, 0, 0, 95), outline="red", width=stroke_size)
+            if settings['ground_truth_transparent']:
+                draw.rectangle([xmin, ymin, xmax, ymax], outline="red", width=stroke_size)
+            else:
+                draw.rectangle([xmin, ymin, xmax, ymax], fill=(255, 0, 0, 95), outline="red", width=stroke_size)
 
     def _draw_label(self, draw, prediction, settings, width):
         """

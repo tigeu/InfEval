@@ -142,6 +142,7 @@ class PredictionView(APIView):
             'max_conf': int(request.GET['max_conf']),
             'only_ground_truth': request.GET['only_ground_truth'].lower() == "true",
             'ground_truth_iou': float(request.GET['ground_truth_iou']),
+            'ground_truth_transparent': request.GET['ground_truth_transparent'].lower() == "true",
         }
         return settings
 

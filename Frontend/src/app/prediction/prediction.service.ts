@@ -32,7 +32,8 @@ export class PredictionService {
         nms_iou: predictionSettings.nmsIoU,
         nms_score: predictionSettings.nmsScore,
         only_ground_truth: predictionSettings.onlyGroundTruth,
-        ground_truth_iou: predictionSettings.groundTruthIoU
+        ground_truth_iou: predictionSettings.groundTruthIoU,
+        ground_truth_transparent: predictionSettings.groundTruthTransparent
       }
     });
   }

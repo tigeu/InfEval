@@ -21,7 +21,8 @@ class TestPredictionView(APITestCase):
         self.client.force_authenticate(user=self.user)
         self.settings = {"stroke_size": 15, "show_colored": "true", "show_labeled": "true", "font_size": 35,
                          "classes": ["class", "class2"], "colors": ["color1", "color2"], "min_conf": 10, "max_conf": 90,
-                         "nms_iou": 0.5, "nms_score": 0.5, "only_ground_truth": False, "ground_truth_iou": 0}
+                         "nms_iou": 0.5, "nms_score": 0.5, "only_ground_truth": False, "ground_truth_iou": 0,
+                         "ground_truth_transparent": False}
         self.view = PredictionView()
 
     def test_prediction_view_without_dataset(self):

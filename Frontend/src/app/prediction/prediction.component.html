@@ -99,6 +99,11 @@
                    [(ngModel)]="predictionSettings.groundTruthIoU" (change)="selectionChanged()">
           </p>
           <p *ngIf="predictionSettings.groundTruthIoU > 0">
+            <input class="form-check-input" type="checkbox" id="flexSwitchTransparent"
+                   [(ngModel)]="predictionSettings.groundTruthTransparent" (change)="selectionChanged()">
+            <label class="form-check-label ms-1" for="flexSwitchTransparent">Match transparent</label>
+          </p>
+          <p *ngIf="predictionSettings.groundTruthIoU > 0">
             <input class="form-check-input" type="checkbox" id="flexSwitchOnlyGt"
                    [(ngModel)]="predictionSettings.onlyGroundTruth" (change)="selectionChanged()">
             <label class="form-check-label ms-1" for="flexSwitchOnlyGt">Only show matches</label>

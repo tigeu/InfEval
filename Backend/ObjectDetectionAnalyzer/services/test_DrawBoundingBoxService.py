@@ -19,7 +19,17 @@ class TestDrawBoundingBoxService(TestCase):
             'show_labeled': True,
             'font_size': 35,
             'classes': ['class1', 'class2'],
-            'colors': ['color1', 'color2']
+            'colors': ['color1', 'color2'],
+            'ground_truth_transparent': False
+        }
+        self.transparent_settings = {
+            'stroke_size': 15,
+            'show_colored': True,
+            'show_labeled': True,
+            'font_size': 35,
+            'classes': ['class1', 'class2'],
+            'colors': ['color1', 'color2'],
+            'ground_truth_transparent': True
         }
         self.classes = {'class1': 0, 'class2': 1, 'class3': 2}
         self.predictions = [{'class': 'class1', 'confidence': 50, 'xmin': 50, 'ymin': 50, 'xmax': 75, 'ymax': 75},
@@ -71,6 +81,16 @@ class TestDrawBoundingBoxService(TestCase):
         rectangle.assert_called_with([50, 50, 75, 75], fill=(0, 255, 0, 95), outline="green", width=15)
 
     @patch('PIL.ImageDraw.ImageDraw.rectangle')
+    def test_draw_gt_bounding_box_transparent(self, rectangle):
+        image = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
+        draw = ImageDraw.Draw(image)
+        gt = {'matched': True, 'confidence': 50, 'xmin': 50, 'ymin': 50, 'xmax': 75, 'ymax': 75}
+
+        self.draw_bounding_box_service._draw_gt_bounding_box(draw, gt, self.transparent_settings)
+
+        rectangle.assert_called_with([50, 50, 75, 75], outline="green", width=15)
+
+    @patch('PIL.ImageDraw.ImageDraw.rectangle')
     def test_draw_gt_bounding_box_no_match(self, rectangle):
         image = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
         draw = ImageDraw.Draw(image)
@@ -79,6 +99,16 @@ class TestDrawBoundingBoxService(TestCase):
         self.draw_bounding_box_service._draw_gt_bounding_box(draw, gt, self.settings)
 
         rectangle.assert_called_with([50, 50, 75, 75], fill=(255, 0, 0, 95), outline="red", width=15)
+
+    @patch('PIL.ImageDraw.ImageDraw.rectangle')
+    def test_draw_gt_bounding_box_no_match_transparent(self, rectangle):
+        image = Image.new('RGBA', (100, 100), (255, 0, 0, 0))
+        draw = ImageDraw.Draw(image)
+        gt = {'matched': False, 'confidence': 50, 'xmin': 50, 'ymin': 50, 'xmax': 75, 'ymax': 75}
+
+        self.draw_bounding_box_service._draw_gt_bounding_box(draw, gt, self.transparent_settings)
+
+        rectangle.assert_called_with([50, 50, 75, 75], outline="red", width=15)
 
     @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService._draw_label')
     @patch('ObjectDetectionAnalyzer.services.DrawBoundingBoxService.DrawBoundingBoxService._draw_bounding_box')

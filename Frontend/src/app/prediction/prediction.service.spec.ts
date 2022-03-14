@@ -42,6 +42,7 @@ describe('PredictionService', () => {
       nmsScore: 0,
       onlyGroundTruth: false,
       groundTruthIoU: 0,
+      groundTruthTransparent: false,
       metric: "coco",
       IoU: 0
     }
@@ -71,6 +72,7 @@ describe('PredictionService', () => {
       nmsScore: 0,
       onlyGroundTruth: false,
       groundTruthIoU: 0,
+      groundTruthTransparent: false,
       metric: "pascal",
       IoU: 0
     }
@@ -100,6 +102,7 @@ describe('PredictionService', () => {
       nmsScore: 0,
       onlyGroundTruth: false,
       groundTruthIoU: 0,
+      groundTruthTransparent: false,
       metric: "coco",
       IoU: 0
     }

@@ -43,6 +43,7 @@ export class PredictionComponent implements OnInit {
     nmsScore: 0,
     onlyGroundTruth: false,
     groundTruthIoU: 0,
+    groundTruthTransparent: false,
     metric: "",
     IoU: 0
   }
