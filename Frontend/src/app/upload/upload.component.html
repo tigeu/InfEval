@@ -51,10 +51,11 @@
   <span class="spinner-border spinner-border-sm" role="status" aria-hidden="false"></span>
   Validating upload
 </button>
-<div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center mt-3" role="alert">
+<div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center mt-3"
+     role="alert">
   {{errorMessage}}
 </div>
-<div *ngIf="successMessage" class="alert alert-success d-flex align-items-center" role="alert">
+<div *ngIf="successMessage && uploadProgress != 100" class="alert alert-success d-flex align-items-center" role="alert">
   {{successMessage}}
 </div>
 
