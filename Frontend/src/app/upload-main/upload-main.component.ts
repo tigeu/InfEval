@@ -8,6 +8,23 @@ import {UploadInformation} from "../upload/UploadInformation";
   styleUrls: ['./upload-main.component.css']
 })
 export class UploadMainComponent implements OnInit {
+  /*
+  Component that gets a list of predictions from /prediction-list and displays them in a dropdown menu. Selected
+  prediction is sent to SelectedPredictionChangedService.
+
+  Attributes
+  ----------
+  datasetInformation : UploadInformation
+    Upload information for dataset
+  groundTruthInformation : UploadInformation
+    Upload information for ground truth
+  labelMapInformation : UploadInformation
+    Upload information for label map
+  predictionsInformation : UploadInformation
+    Upload information for predictions
+  modelInformation : UploadInformation
+    Upload information for model
+  */
   datasetInformation: UploadInformation = {
     isDataset: true,
     isModel: false,
