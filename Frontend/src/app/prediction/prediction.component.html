@@ -144,9 +144,17 @@
               <div>{{className.key}}: <span class="float-end">{{className.value}} %</span></div>
             </div>
             <p></p>
+            <div>Precision: <span class="float-end">{{cocoMetric.precision}} %</span></div>
+            <div>Recall: <span class="float-end">{{cocoMetric.recall}} %</span></div>
+            <div>Total Positives: <span class="float-end">{{cocoMetric.positives}}</span></div>
+            <div>True Positives: <span class="float-end">{{cocoMetric.TP}}</span></div>
+            <div>False Positives: <span class="float-end">{{cocoMetric.FP}}</span></div>
+            <p></p>
             <div *ngFor="let className of cocoMetric.classes | keyvalue">
               <div class="fw-bold">{{className.key}}</div>
               <div>Average Precision: <span class="float-end">{{className.value['AP']}} %</span></div>
+              <div>Precision: <span class="float-end">{{className.value['precision']}} %</span></div>
+              <div>Recall: <span class="float-end">{{className.value['recall']}} %</span></div>
               <div>Total Positives: <span class="float-end">{{className.value['positives']}}</span></div>
               <div>True Positives: <span class="float-end">{{className.value['TP']}}</span></div>
               <div>False Positives: <span class="float-end">{{className.value['FP']}}</span></div>
@@ -155,9 +163,17 @@
           <div *ngIf="pascalMetric">
             <h3>{{metricHeader}}</h3>
             <div class="fw-bold">mAP: {{pascalMetric.mAP}} %</div>
+            <p></p>
+            <div>Precision: <span class="float-end">{{pascalMetric.precision}} %</span></div>
+            <div>Recall: <span class="float-end">{{pascalMetric.recall}} %</span></div>
+            <div>Total Positives: <span class="float-end">{{pascalMetric.positives}}</span></div>
+            <div>True Positives: <span class="float-end">{{pascalMetric.TP}}</span></div>
+            <div>False Positives: <span class="float-end">{{pascalMetric.FP}}</span></div>
             <div *ngFor="let className of pascalMetric.classes | keyvalue">
               <div class="fw-bold">{{className.key}}</div>
               <div>Average Precision: <span class="float-end">{{className.value['AP']}} %</span></div>
+              <div>Precision: <span class="float-end">{{className.value['precision']}} %</span></div>
+              <div>Recall: <span class="float-end">{{className.value['recall']}} %</span></div>
               <div>Total Positives: <span class="float-end">{{className.value['positives']}}</span></div>
               <div>True Positives: <span class="float-end">{{className.value['TP']}}</span></div>
               <div>False Positives: <span class="float-end">{{className.value['FP']}}</span></div>

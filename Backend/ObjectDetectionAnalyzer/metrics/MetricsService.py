@@ -17,6 +17,8 @@ class MetricsService:
         Calculates coco detection metric for given predictions
     _extract_results_per_class(classes, metrics, coco=False)
         Extract results from metric calculation for each class
+    _get_overall_positives(self, classes)
+        Count all positives, true positives and false positives
     _extract_coco_summary(summary)
         Extract results from coco summary
     _convert_ground_truths(gts)
@@ -53,8 +55,17 @@ class MetricsService:
         metrics = pascal_voc_evaluator.get_pascalvoc_metrics(ground_truths, predictions, iou, generate_table=False,
                                                              method=MethodAveragePrecision.ELEVEN_POINT_INTERPOLATION)
 
+        classes = self._extract_results_per_class(classes, metrics['per_class'])
+        TP, FP, positives = self._get_overall_positives(classes)
+        precision = self._get_percent(TP / positives) if positives > 0 else -1
+        recall = self._get_percent(TP / (TP + FP)) if TP + FP > 0 else -1
         results = {'mAP': self._get_percent(metrics['mAP']),
-                   'classes': self._extract_results_per_class(classes, metrics['per_class'])}
+                   'classes': classes,
+                   'precision': precision,
+                   'recall': recall,
+                   'positives': positives,
+                   'TP': TP,
+                   'FP': FP}
 
         return results
 
@@ -82,9 +93,18 @@ class MetricsService:
         summary = coco_evaluator.get_coco_summary(ground_truths, predictions)
         metrics = coco_evaluator.get_coco_metrics(ground_truths, predictions)
 
+        classes = self._extract_results_per_class(classes, metrics, True)
+        TP, FP, positives = self._get_overall_positives(classes)
+        precision = self._get_percent(TP / positives) if positives > 0 else -1
+        recall = self._get_percent(TP / (TP + FP)) if TP + FP > 0 else -1
         results = {
             'summary': self._extract_coco_summary(summary),
-            'classes': self._extract_results_per_class(classes, metrics, True)
+            'classes': classes,
+            'precision': precision,
+            'recall': recall,
+            'positives': positives,
+            'TP': TP,
+            'FP': FP
         }
 
         return results
@@ -125,7 +145,42 @@ class MetricsService:
                 results[class_]['TP'] = class_results['total TP'] if class_results['total TP'] else 0
                 results[class_]['FP'] = class_results['total FP'] if class_results['total FP'] else 0
 
+            if results[class_]['TP'] > 0:
+                results[class_]['precision'] = self._get_percent(
+                    results[class_]['TP'] / (results[class_]['TP'] + results[class_]['FP']))
+            else:
+                results[class_]['precision'] = -1
+            if results[class_]['positives'] > 0:
+                results[class_]['recall'] = self._get_percent(results[class_]['TP'] / results[class_]['positives'])
+            else:
+                results[class_]['recall'] = -1
+
         return results
+
+    def _get_overall_positives(self, classes):
+        """
+        Count all positives, true positives and false positives
+
+        Parameters
+        ----------
+        classes : dict
+            Dictionary containing the classes and the values for each class
+
+        Returns
+        -------
+        int
+            True positives
+        int
+            False positives
+        int
+            Positives
+        """
+        TP, FP, positives = 0, 0, 0
+        for class_, values in classes.items():
+            TP += values['TP']
+            FP += values['FP']
+            positives += values['positives']
+        return TP, FP, positives
 
     def _extract_coco_summary(self, summary):
         """
