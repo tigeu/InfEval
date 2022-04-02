@@ -1,4 +1,5 @@
 from ObjectDetectionAnalyzer.services.CSVParseService import CSVParseService
+from ObjectDetectionAnalyzer.settings import GROUND_TRUTH_INDICES
 
 
 class GroundTruthValidator:
@@ -13,7 +14,7 @@ class GroundTruthValidator:
     Methods
     -------
     is_valid(file_path)
-        Parses the uploaded CSV-file and indicates whether it is valid
+        Parses the uploaded CSV-file and returns its content if it is valid
     """
 
     def __init__(self):
@@ -24,7 +25,7 @@ class GroundTruthValidator:
 
     def is_valid(self, file_path):
         """
-        Parses the uploaded CSV-file and indicates whether it is valid
+        Parses the uploaded CSV-file and returns its content if it is valid
 
         Parameters
         ----------
@@ -33,16 +34,15 @@ class GroundTruthValidator:
 
         Returns
         -------
-        bool
-            Indicates whether file is valid
+        list
+            List with valid values. List is empty if file is invalid.
         """
-        indices = {'file_name': 0, 'class': 1, 'xmin': 2, 'ymin': 3, 'xmax': 4, 'ymax': 5}
         try:
-            values = self.csv_parse_service.get_values(file_path, indices)
+            values = self.csv_parse_service.get_values(file_path, GROUND_TRUTH_INDICES)
         except Exception:
-            return False
+            return []
 
         if values:
-            return True
+            return values
 
-        return False
+        return []

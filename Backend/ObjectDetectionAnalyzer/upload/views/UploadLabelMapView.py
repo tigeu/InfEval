@@ -13,7 +13,7 @@ class UploadLabelMapView(UploadBaseView):
     def requires_model(self):
         return True
 
-    def is_file_valid(self, tmp_file_path):
+    def is_file_valid(self, tmp_file_path, dataset=None):
         return self.upload_service.is_label_map_valid(tmp_file_path)
 
     def get_target_dir(self, username, dataset_name, model_name):

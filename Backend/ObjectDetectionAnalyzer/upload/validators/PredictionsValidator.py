@@ -1,4 +1,5 @@
 from ObjectDetectionAnalyzer.services.CSVParseService import CSVParseService
+from ObjectDetectionAnalyzer.settings import PREDICTION_INDICES
 
 
 class PredictionsValidator:
@@ -13,7 +14,7 @@ class PredictionsValidator:
     Methods
     -------
     is_valid(file_path)
-        Parses the uploaded CSV-file and indicates whether it is valid
+        Parses the uploaded CSV-file and returns its content if it is valid
     """
 
     def __init__(self):
@@ -24,7 +25,7 @@ class PredictionsValidator:
 
     def is_valid(self, file_path):
         """
-        Parses the uploaded CSV-file and indicates whether it is valid
+        Parses the uploaded CSV-file and returns its content if it is valid
 
         Parameters
         ----------
@@ -33,16 +34,15 @@ class PredictionsValidator:
 
         Returns
         -------
-        bool
-            Indicates whether file is valid
+        list
+            List with valid values. List is empty if file is invalid.
         """
-        indices = {'file_name': 0, 'class': 1, 'confidence': 2, 'xmin': 3, 'ymin': 4, 'xmax': 5, 'ymax': 6}
         try:
-            values = self.csv_parse_service.get_values(file_path, indices)
+            values = self.csv_parse_service.get_values(file_path, PREDICTION_INDICES)
         except Exception:
-            return False
+            return []
 
         if values:
-            return True
+            return values
 
-        return False
+        return []

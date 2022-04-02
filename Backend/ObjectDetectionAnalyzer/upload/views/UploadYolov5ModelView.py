@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from django.utils import timezone
 
 from ObjectDetectionAnalyzer.settings import DATA_DIR, YOLOV5_DIR
@@ -16,7 +14,7 @@ class UploadYolov5ModelView(UploadBaseView):
     def requires_dataset(self):
         return False
 
-    def is_file_valid(self, tmp_file_path: Path) -> bool:
+    def is_file_valid(self, tmp_file_path, dataset=None):
         return self.upload_service.is_yolo_valid(tmp_file_path, YOLOV5_DIR)
 
     def get_target_dir(self, username, dataset_name, model_name):

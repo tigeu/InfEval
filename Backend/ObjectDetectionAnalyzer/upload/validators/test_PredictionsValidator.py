@@ -14,11 +14,11 @@ class TestPredictionsValidator(TestCase):
 
     @patch('ObjectDetectionAnalyzer.services.CSVParseService.CSVParseService.get_values')
     def test_is_valid(self, get_values):
-        get_values.return_value = {"file": [{"value"}]}
+        get_values.return_value = [{"file": [{"value"}]}]
 
         result = self.validator.is_valid("file_path")
 
-        self.assertEqual(result, True)
+        self.assertEqual(result, [{"file": [{"value"}]}])
 
     @patch('ObjectDetectionAnalyzer.services.CSVParseService.CSVParseService.get_values')
     def test_is_valid_without_values(self, get_values):
@@ -26,9 +26,9 @@ class TestPredictionsValidator(TestCase):
 
         result = self.validator.is_valid("file_path")
 
-        self.assertEqual(result, False)
+        self.assertEqual(result, [])
 
     def test_is_valid_with_exception(self):
         result = self.validator.is_valid("file_path")
 
-        self.assertEqual(result, False)
+        self.assertEqual(result, [])

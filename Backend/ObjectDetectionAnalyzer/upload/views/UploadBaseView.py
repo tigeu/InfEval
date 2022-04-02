@@ -31,7 +31,7 @@ class UploadBaseView(APIView):
         Returns True if dataset is required for current uploaded, False if dataset is not required
     requires_model()
         Returns True if model is required for current uploaded, False if model is not required
-    is_file_valid(tmp_file_path)
+    is_file_valid(tmp_file_path, dataset_path=None)
         Returns True if current uploaded file is valid, False if the file is invalid
     get_target_dir(username, dataset_name, model_name)
         Returns directory in which the uploaded file should be saved
@@ -88,7 +88,7 @@ class UploadBaseView(APIView):
                 self.path_service.delete_tmp_file(tmp_file_path)
                 return Response("Model does not exist yet", status=status.HTTP_400_BAD_REQUEST)
 
-        if not self.is_file_valid(tmp_file_path):
+        if not self.is_file_valid(tmp_file_path, dataset):
             self.path_service.delete_tmp_file(tmp_file_path)
             return Response("Invalid file uploaded", status=status.HTTP_400_BAD_REQUEST)
 
@@ -124,7 +124,7 @@ class UploadBaseView(APIView):
         """
         return False
 
-    def is_file_valid(self, tmp_file_path):
+    def is_file_valid(self, tmp_file_path, dataset=None):
         """
         Returns True if current uploaded file is valid, False if the file is invalid
 
@@ -132,6 +132,8 @@ class UploadBaseView(APIView):
         ----------
         tmp_file_path : Path
             Path of temporarily saved file
+        dataset : Dataset
+            Dataset for validating CSV entries
 
         Returns
         -------

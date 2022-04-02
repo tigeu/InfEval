@@ -3,6 +3,8 @@ from pathlib import Path
 from unittest import TestCase
 from unittest.mock import patch
 
+import PIL.Image
+
 from ObjectDetectionAnalyzer.upload.UploadService import UploadService
 
 
@@ -179,3 +181,27 @@ class TestUploadService(TestCase):
 
         self.assertEqual(result, Path("test_dataset/test_file"))
         copy.assert_called_with("tmp", Path("test_dataset/test_file"))
+
+    @patch("PIL.Image.open")
+    def test_has_invalid_bounding_boxes_valid(self, open):
+        open.return_value = PIL.Image.new('RGB', (100, 100))
+        values = [
+            {'class': 'class1', 'file_name': 'file1.jpg', 'xmin': 0, 'ymin': 0, 'xmax': 100, 'ymax': 100},
+            {'class': 'class1', 'file_name': 'file2.png', 'xmin': 25, 'ymin': 25, 'xmax': 100, 'ymax': 100}
+        ]
+        images = ["path1/file1.jpg", "path2/file2.png"]
+        result = self.upload_service.has_invalid_bounding_boxes(values, images)
+
+        self.assertEqual(result, True)
+
+    @patch("PIL.Image.open")
+    def test_has_invalid_bounding_boxes_invalid(self, open):
+        open.return_value = PIL.Image.new('RGB', (100, 100))
+        values = [
+            {'class': 'class1', 'file_name': 'file1.jpg', 'xmin': -1, 'ymin': 0, 'xmax': 100, 'ymax': 100},
+            {'class': 'class1', 'file_name': 'file2.png', 'xmin': 25, 'ymin': 25, 'xmax': 100, 'ymax': 100}
+        ]
+        images = ["path1/file1.jpg", "path2/file2.png"]
+        result = self.upload_service.has_invalid_bounding_boxes(values, images)
+
+        self.assertEqual(result, False)

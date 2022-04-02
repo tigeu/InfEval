@@ -3,6 +3,8 @@ import shutil
 import zipfile
 from pathlib import Path
 
+from PIL import Image
+
 from ObjectDetectionAnalyzer.upload.validators.GroundTruthValidator import GroundTruthValidator
 from ObjectDetectionAnalyzer.upload.validators.LabelMapValidator import LabelMapValidator
 from ObjectDetectionAnalyzer.upload.validators.PredictionsValidator import PredictionsValidator
@@ -20,7 +22,7 @@ class UploadService:
     is_zip_valid(tmp_file_path, image_endings)
         Returns True if given zip is valid, False if zip is invalid
     is_ground_truth_valid(tmp_file_path)
-        Returns True if given csv ground truth file is valid, False if file is invalid
+        Returns the read values if file is valid, an empty list if the file is not valid.
     is_label_map_valid(tmp_file_path)
         Returns true if given txt label map file is valid, False if file is invalid
     is_prediction_valid(tmp_file_path)
@@ -37,6 +39,8 @@ class UploadService:
         Save model from a zip file in the model directory under the given model name
     save_data(tmp_file_path, target_dir, file_name)
         Save any file in target directory under given file name
+    has_invalid_bounding_boxes(self, values, images)
+        Checks if all bounding boxes are inside of the image boundaries
     """
 
     def is_zip_valid(self, tmp_file_path: Path, image_endings: set) -> bool:
@@ -69,7 +73,7 @@ class UploadService:
 
     def is_ground_truth_valid(self, tmp_file_path):
         """
-        Returns True if given csv ground truth file is valid, False if file is invalid
+        Returns the read values if file is valid, an empty list if the file is not valid.
 
         Parameters
         ----------
@@ -78,8 +82,8 @@ class UploadService:
 
         Returns
         -------
-        bool
-            Indicates whether zip is valid
+        list
+            List with valid values. List is empty if file is invalid.
         """
         return GroundTruthValidator().is_valid(tmp_file_path)
 
@@ -259,3 +263,29 @@ class UploadService:
         shutil.copy(tmp_file_path, path)
 
         return path
+
+    def has_invalid_bounding_boxes(self, values, images):
+        """
+        Checks if all bounding boxes are inside of the image boundaries
+
+        Parameters
+        ----------
+        values : list
+            List of dictionaries, each representing a ground truth value or prediction
+        images : list
+            List of full paths of the dataset images
+
+        Returns
+        -------
+        bool
+            Indicator whether there were invalid bounding boxes
+        """
+        for image in images:
+            image_name = os.path.basename(image)
+            image_values = filter(lambda x: x['file_name'] == image_name, values)
+            width, height = Image.open(image).size
+            for value in image_values:
+                if value['xmin'] < 0 or value['ymin'] < 0 or value['xmax'] > width or value['ymax'] > height:
+                    return False
+
+        return True

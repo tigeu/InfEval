@@ -21,10 +21,16 @@ class TestUploadPredictionsView(APITestCase):
         result = self.view.requires_dataset()
         self.assertEqual(result, True)
 
+    @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.has_invalid_bounding_boxes')
+    @patch('ObjectDetectionAnalyzer.services.PathService.PathService.get_image_files_from_dir')
     @patch('ObjectDetectionAnalyzer.upload.UploadService.UploadService.is_prediction_valid')
-    def test_is_file_valid(self, is_prediction_valid):
+    def test_is_file_valid(self, is_prediction_valid, get_image_files_from_dir, has_invalid_bounding_boxes):
         is_prediction_valid.return_value = True
-        result = self.view.is_file_valid(Path("tmp_file_path"))
+        has_invalid_bounding_boxes.return_value = True
+        user = User.objects.create_user("test", "test@test.test", "test")
+        Dataset.objects.create(name="test", path="some_path/", userId=user)
+        datasets = Dataset.objects.filter(name="test", path="some_path/", userId=user)
+        result = self.view.is_file_valid(Path("tmp_file_path"), datasets)
         self.assertEqual(result, True)
 
     @patch('ObjectDetectionAnalyzer.services.PathService.PathService.get_predictions_dir')
