@@ -157,7 +157,7 @@ class DrawBoundingBoxService:
         font_size, stroke_size = settings['font_size'], settings['stroke_size']
 
         color, font_color = self._get_colors(data_class, settings)
-        font = ImageFont.truetype("arial", font_size)
+        font = ImageFont.truetype("DejaVuSans", font_size)
         label = data_class
         if 'confidence' in prediction:
             label += ": {0} %".format(str(prediction['confidence']))
