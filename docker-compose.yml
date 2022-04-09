@@ -2,18 +2,14 @@ version: "3.9"
    
 services:
   backend:
-    build: 
-      context: ./
-      dockerfile: dockerfile_backend
+    build: Backend/
     command: bash -c "python Backend/manage.py migrate && python Backend/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:
       - "8000:8000"
   frontend:
-    build: 
-      context: ./
-      dockerfile: dockerfile_frontend
+    build: Frontend/
     volumes:
       - .:/code
     ports:

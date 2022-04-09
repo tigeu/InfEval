@@ -1,8 +1,8 @@
 FROM python:3.9
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-COPY Backend/requirements.txt /code/
-COPY Backend/metric/review_object_detection_metrics/ /code/metric/
+COPY requirements.txt /code/
+COPY metric/review_object_detection_metrics/ /code/metric/
 WORKDIR /code
 RUN apt-get update
 RUN apt-get install ffmpeg libsm6 libxext6  -y
