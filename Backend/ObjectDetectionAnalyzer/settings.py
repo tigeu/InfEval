@@ -19,9 +19,9 @@ YOLOV5_DIR = "YOLO/yolov5"
 
 SECRET_KEY = 'django-insecure-j6i_zudz8xu@z4&y$l^31i5521hgq!atqy-v1e&p%f9d3n=-=)'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -59,7 +59,10 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost",
+    "https://localhost",
     "http://localhost:4200",
+    "https://localhost:4200"
 ]
 
 ROOT_URLCONF = 'ObjectDetectionAnalyzer.urls'
