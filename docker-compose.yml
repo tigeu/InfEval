@@ -12,3 +12,5 @@ services:
     build: Frontend/
     volumes:
       - .:/code
+    ports:
+      - "80:80"
