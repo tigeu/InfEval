@@ -64,10 +64,10 @@ export class GroundTruthComponent implements OnInit {
 
   groundTruthSettings: GroundTruthSettings = {
     showGroundTruth: false,
-    strokeSize: 10,
+    strokeSize: 2,
     showColored: true,
     showLabeled: true,
-    fontSize: 35,
+    fontSize: 10,
     classes: [],
     colors: []
   }

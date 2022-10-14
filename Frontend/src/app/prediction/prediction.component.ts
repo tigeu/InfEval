@@ -107,10 +107,10 @@ export class PredictionComponent implements OnInit {
 
   predictionSettings: PredictionSettings = {
     showPrediction: false,
-    strokeSize: 10,
+    strokeSize: 2,
     showColored: true,
     showLabeled: true,
-    fontSize: 35,
+    fontSize: 10,
     classes: [],
     colors: [],
     minConf: 0,
