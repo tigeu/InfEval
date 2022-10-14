@@ -30,7 +30,7 @@ class UploadDatasetView(UploadBaseView):
         dataset = Dataset.objects.filter(name=dataset_name, userId=user)
         if dataset:
             dataset.update(ground_truth_path="", uploaded_at=timezone.now())
-            predictions = Predictions.objects.get(datasetId=dataset.first(), userId=user)
+            predictions = Predictions.objects.filter(datasetId=dataset.first(), userId=user)
             if predictions:
                 predictions.delete()
         else:
