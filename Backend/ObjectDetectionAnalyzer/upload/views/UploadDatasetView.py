@@ -1,7 +1,7 @@
 from django.utils import timezone
 
 from ObjectDetectionAnalyzer.settings import DATA_DIR, IMAGE_ENDINGS
-from ObjectDetectionAnalyzer.upload.UploadModels import Dataset
+from ObjectDetectionAnalyzer.upload.UploadModels import Dataset, Predictions
 from ObjectDetectionAnalyzer.upload.views.UploadBaseView import UploadBaseView
 
 
@@ -29,6 +29,9 @@ class UploadDatasetView(UploadBaseView):
         self.upload_service.save_compressed_data(tmp_file_path, target_dir, IMAGE_ENDINGS)
         dataset = Dataset.objects.filter(name=dataset_name, userId=user)
         if dataset:
-            dataset.update(uploaded_at=timezone.now())
+            dataset.update(ground_truth_path="", uploaded_at=timezone.now())
+            predictions = Predictions.objects.get(datasetId=dataset.first(), userId=user)
+            if predictions:
+                predictions.delete()
         else:
             Dataset.objects.create(name=dataset_name, path=target_dir, userId=user)
