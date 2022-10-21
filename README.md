@@ -1,4 +1,4 @@
-# Object Detection Analyzer
+# InfEval: Application for Object Detection Analysis
 
 This project provides a tool that can be used to further analyze your object detection models. You can upload your 
 dataset and a model to start an inference task running on the backend, reporting the progress back to you. The result
