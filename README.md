@@ -106,3 +106,25 @@ be stopped, all predictions deleted etc.
 
 9. Run frontend server
    ```ng serve --open```
+
+## Demos
+### Upload Dataset
+https://user-images.githubusercontent.com/49535253/197328414-7c358b2c-23e2-4407-b925-d71ee291b382.mp4
+
+### Upload Ground Truth
+https://user-images.githubusercontent.com/49535253/197328704-cc500f55-8bad-4d61-99d3-d9aebc177f85.mp4
+
+### Design Ground Truth
+https://user-images.githubusercontent.com/49535253/197328630-ec8a24b9-ffc2-4e6e-a848-8da5b4747189.mp4
+
+### Upload Model
+https://user-images.githubusercontent.com/49535253/197328735-1e5c453b-17c7-49b4-8cef-da5eb660ca46.mp4
+
+### Upload Labelmap
+https://user-images.githubusercontent.com/49535253/197328764-64fd4f2b-0e7e-4670-aee0-db2d888b6189.mp4
+
+### Start inference task
+https://user-images.githubusercontent.com/49535253/197328659-6aab6450-cbca-44cc-a2de-85107b75bca0.mp4
+
+### Analyze predictions
+https://user-images.githubusercontent.com/49535253/197328557-45778ffe-2f62-4f3d-b28c-ce18f5d0f48d.mp4
