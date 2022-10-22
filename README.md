@@ -107,6 +107,32 @@ be stopped, all predictions deleted etc.
 9. Run frontend server
    ```ng serve --open```
 
+## Screenshots
+### Upload Dataset
+![UploadDataset](https://user-images.githubusercontent.com/49535253/197328848-1ed3c48c-3eaf-45f2-9cfc-00aad453f99d.png)
+
+### Upload Ground Truth
+![UploadGroundTruth](https://user-images.githubusercontent.com/49535253/197328890-5d72f29d-ba62-4ab5-945e-c45fcc3db810.png)
+
+### Upload Model
+![UploadPyTorchModel](https://user-images.githubusercontent.com/49535253/197328901-c4aedc6a-a917-4d90-a706-7bdb1876a4d0.png)
+
+### Upload Labelmap
+![UploadLabelMap](https://user-images.githubusercontent.com/49535253/197328912-894a88b1-bec4-45f5-a2bd-18c067bf4afc.png)
+
+### Start inference task
+![InferenceTask](https://user-images.githubusercontent.com/49535253/197328935-552caf22-949e-4e6a-b6f6-6ca55f541b70.png)
+
+### View Ground Truth
+![ViewGroundTruth](https://user-images.githubusercontent.com/49535253/197328956-bbebcc9f-3002-45d2-b604-59b722896003.png)
+
+### Filter Predictions 
+![FilterPredictions](https://user-images.githubusercontent.com/49535253/197328993-80b32a45-43da-48ce-b859-6f96f7b935a1.png)
+
+### Calculate Metric
+![CalculateMetric](https://user-images.githubusercontent.com/49535253/197328982-d8e714cd-00f6-4921-a5e3-13104253688d.png)
+
+
 ## Demos
 ### Upload Dataset
 https://user-images.githubusercontent.com/49535253/197328414-7c358b2c-23e2-4407-b925-d71ee291b382.mp4
