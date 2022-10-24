@@ -5,6 +5,43 @@ dataset and a model to start an inference task running on the backend, reporting
 can be further analyzed in the main view using several filtering options. If you uploaded a label map and ground truth
 file as well, you can also calculate the COCO detection metric and pascal voc metric basen on your selected settings.
 
+## Installation
+
+1. Clone this repository using HTTPS<br>
+   ```https://github.com/tigeu/ObjectDetectionAnalyzer.git```
+   <br>or SSH<br>
+   ```git@github.com:tigeu/ObjectDetectionAnalyzer.git```
+
+2. Install [Python 3.9](https://www.python.org/downloads/release/python-390/)
+
+3. Install [NodeJS](https://nodejs.org/en/download/)
+
+4. Navigate to the ObjectDetectionAnalyzer 
+
+5. Clone submodules<br>
+   ```git submodule init && git submodule update```
+
+6. Install backend   
+   - Navigate to ObjectDetectionAnalyzer/Backend
+   - Install necessary libraries<br>
+   ```pip install -r requirements.txt```
+   - Navigate to ObjectDetectionAnalyzer/Backend/metric/review_object_detection_metrics and install the repository<br>
+   ```pip install . ```
+   - Navigate back to ObjectDetectionAnalyzer/Backend/
+   - Initialise SQLite database<br>
+   ```python manage.py migrate```
+
+7. Install Frontend
+   - Navigate to ObjectDetectionAnalyzer/Frontend
+   - Install necessary libraries<br>
+   ```npm install```
+
+8. Run backend server
+   ```python manage.py runserver```
+
+9. Run frontend server
+   ```ng serve --open```
+
 ## Components
 ### Register
 Click on the link below the login view in ordert o access the registration. An account is required in order to store 
@@ -70,56 +107,7 @@ This overview shows all your uploads for this user and also provides the ability
 icon on the right. Keep in mind that all related data will be deleted as well, so if you delete a dataset all tasks will
 be stopped, all predictions deleted etc.
 
-## Installation
-
-1. Clone this repository using HTTPS<br>
-   ```https://github.com/tigeu/ObjectDetectionAnalyzer.git```
-   <br>or SSH<br>
-   ```git@github.com:tigeu/ObjectDetectionAnalyzer.git```
-
-2. Install [Python 3.9](https://www.python.org/downloads/release/python-390/)
-
-3. Install [NodeJS](https://nodejs.org/en/download/)
-
-4. Navigate to the ObjectDetectionAnalyzer 
-
-5. Clone submodules<br>
-   ```git submodule init && git submodule update```
-
-6. Install backend   
-   - Navigate to ObjectDetectionAnalyzer/Backend
-   - Install necessary libraries<br>
-   ```pip install -r requirements.txt```
-   - Navigate to ObjectDetectionAnalyzer/Backend/metric/review_object_detection_metrics and install the repository<br>
-   ```pip install . ```
-   - Navigate back to ObjectDetectionAnalyzer/Backend/
-   - Initialise SQLite database<br>
-   ```python manage.py migrate```
-
-7. Install Frontend
-   - Navigate to ObjectDetectionAnalyzer/Frontend
-   - Install necessary libraries<br>
-   ```npm install```
-
-8. Run backend server
-   ```python manage.py runserver```
-
-9. Run frontend server
-   ```ng serve --open```
-
 ## Screenshots
-### Upload Dataset
-![UploadDataset](https://user-images.githubusercontent.com/49535253/197328848-1ed3c48c-3eaf-45f2-9cfc-00aad453f99d.png)
-
-### Upload Ground Truth
-![UploadGroundTruth](https://user-images.githubusercontent.com/49535253/197328890-5d72f29d-ba62-4ab5-945e-c45fcc3db810.png)
-
-### Upload Model
-![UploadPyTorchModel](https://user-images.githubusercontent.com/49535253/197328901-c4aedc6a-a917-4d90-a706-7bdb1876a4d0.png)
-
-### Upload Labelmap
-![UploadLabelMap](https://user-images.githubusercontent.com/49535253/197328912-894a88b1-bec4-45f5-a2bd-18c067bf4afc.png)
-
 ### Start inference task
 ![InferenceTask](https://user-images.githubusercontent.com/49535253/197328935-552caf22-949e-4e6a-b6f6-6ca55f541b70.png)
 
@@ -134,20 +122,11 @@ be stopped, all predictions deleted etc.
 
 
 ## Demos
-### Upload Dataset
-https://user-images.githubusercontent.com/49535253/197328414-7c358b2c-23e2-4407-b925-d71ee291b382.mp4
-
-### Upload Ground Truth
-https://user-images.githubusercontent.com/49535253/197328704-cc500f55-8bad-4d61-99d3-d9aebc177f85.mp4
-
 ### Design Ground Truth
 https://user-images.githubusercontent.com/49535253/197328630-ec8a24b9-ffc2-4e6e-a848-8da5b4747189.mp4
 
 ### Upload Model
 https://user-images.githubusercontent.com/49535253/197328735-1e5c453b-17c7-49b4-8cef-da5eb660ca46.mp4
-
-### Upload Labelmap
-https://user-images.githubusercontent.com/49535253/197328764-64fd4f2b-0e7e-4670-aee0-db2d888b6189.mp4
 
 ### Start inference task
 https://user-images.githubusercontent.com/49535253/197328659-6aab6450-cbca-44cc-a2de-85107b75bca0.mp4
