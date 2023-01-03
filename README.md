@@ -42,6 +42,17 @@ file as well, you can also calculate the COCO detection metric and pascal voc me
 9. Run frontend server
    ```ng serve --open```
 
+## System Architecture
+The system architecture used here is a server-client architecture represented by back end and front end. The communication between those two main components uses entirely HTTP requests. For user authentication and authorization PyJWT is used. Alongside TensorFlow1/2 and PyTorch, the application also allows YOLOv3 and YOLOv5 models (implementations by ultralytics). For calculating the COCO and PascalVOC metrics we use the implementation of rafaelpadilla (https://github.com/rafaelpadilla/review\_object\_detection\_metrics.git).
+
+### Backend
+The back end is implemented in Python 3.9 using the Django REST framework. As the most machine learning frameworks are written in Python, this choice allows us to easily include those into our project.
+The implementation supports multiple different users, each with its personal folder structure for uploads. In order to keep track of all uploaded files for every user there is an SQLite3 database to store user information alongside meta data i.e. path to the data set or the availability of its according ground truth values for faster processing of requests of the administered data. Using this meta data, the file system does not have to be accessed for every HTTP request.
+
+### Frontend
+The front end is implemented in TypeScript using the Angular framework. It allows a modular build-up providing an own component for each contributed functionality. Individual components have a corresponding unit to contact with using the RESTful API. A modular design allows a straightforward extension and an easy maintainability. 
+The GUI is designed with Bootstrap 5 and Angular Material UI. Those frameworks make it very easy to create a powerful, responsive web design with the ability to adapt to different screen sizes and scale its components. They also support cross-browser compatibility which is a great advantage in case different browsers are in use.
+
 ## Components
 ### Register
 Click on the link below the login view in ordert o access the registration. An account is required in order to store 
