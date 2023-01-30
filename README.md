@@ -5,6 +5,54 @@ dataset and a model to start an inference task running on the backend, reporting
 can be further analyzed in the main view using several filtering options. If you uploaded a label map and ground truth
 file as well, you can also calculate the COCO detection metric and pascal voc metric basen on your selected settings.
 
+## Installation
+
+1. Clone this repository using HTTPS<br>
+   ```https://github.com/tigeu/ObjectDetectionAnalyzer.git```
+   <br>or SSH<br>
+   ```git@github.com:tigeu/ObjectDetectionAnalyzer.git```
+
+2. Install [Python 3.9](https://www.python.org/downloads/release/python-390/)
+
+3. Install [NodeJS](https://nodejs.org/en/download/)
+
+4. Navigate to the ObjectDetectionAnalyzer 
+
+5. Clone submodules<br>
+   ```git submodule init && git submodule update```
+
+6. Install backend   
+   - Navigate to ObjectDetectionAnalyzer/Backend
+   - Install necessary libraries<br>
+   ```pip install -r requirements.txt```
+   - Navigate to ObjectDetectionAnalyzer/Backend/metric/review_object_detection_metrics and install the repository<br>
+   ```pip install . ```
+   - Navigate back to ObjectDetectionAnalyzer/Backend/
+   - Initialise SQLite database<br>
+   ```python manage.py migrate```
+
+7. Install Frontend
+   - Navigate to ObjectDetectionAnalyzer/Frontend
+   - Install necessary libraries<br>
+   ```npm install```
+
+8. Run backend server
+   ```python manage.py runserver```
+
+9. Run frontend server
+   ```ng serve --open```
+
+## System Architecture
+The system architecture used here is a server-client architecture represented by back end and front end. The communication between those two main components uses entirely HTTP requests. For user authentication and authorization PyJWT is used. Alongside TensorFlow1/2 and PyTorch, the application also allows YOLOv3 and YOLOv5 models (implementations by ultralytics). For calculating the COCO and PascalVOC metrics we use the implementation of rafaelpadilla (https://github.com/rafaelpadilla/review\_object\_detection\_metrics.git).
+
+### Backend
+The back end is implemented in Python 3.9 using the Django REST framework. As the most machine learning frameworks are written in Python, this choice allows us to easily include those into our project.
+The implementation supports multiple different users, each with its personal folder structure for uploads. In order to keep track of all uploaded files for every user there is an SQLite3 database to store user information alongside meta data i.e. path to the data set or the availability of its according ground truth values for faster processing of requests of the administered data. Using this meta data, the file system does not have to be accessed for every HTTP request.
+
+### Frontend
+The front end is implemented in TypeScript using the Angular framework. It allows a modular build-up providing an own component for each contributed functionality. Individual components have a corresponding unit to contact with using the RESTful API. A modular design allows a straightforward extension and an easy maintainability. 
+The GUI is designed with Bootstrap 5 and Angular Material UI. Those frameworks make it very easy to create a powerful, responsive web design with the ability to adapt to different screen sizes and scale its components. They also support cross-browser compatibility which is a great advantage in case different browsers are in use.
+
 ## Components
 ### Register
 Click on the link below the login view in ordert o access the registration. An account is required in order to store 
@@ -70,39 +118,29 @@ This overview shows all your uploads for this user and also provides the ability
 icon on the right. Keep in mind that all related data will be deleted as well, so if you delete a dataset all tasks will
 be stopped, all predictions deleted etc.
 
-## Installation
+## Screenshots
+### Start inference task
+![InferenceTask](https://user-images.githubusercontent.com/49535253/197328935-552caf22-949e-4e6a-b6f6-6ca55f541b70.png)
 
-1. Clone this repository using HTTPS<br>
-   ```https://github.com/tigeu/ObjectDetectionAnalyzer.git```
-   <br>or SSH<br>
-   ```git@github.com:tigeu/ObjectDetectionAnalyzer.git```
+### View Ground Truth
+![ViewGroundTruth](https://user-images.githubusercontent.com/49535253/197328956-bbebcc9f-3002-45d2-b604-59b722896003.png)
 
-2. Install [Python 3.9](https://www.python.org/downloads/release/python-390/)
+### Filter Predictions 
+![FilterPredictions](https://user-images.githubusercontent.com/49535253/197328993-80b32a45-43da-48ce-b859-6f96f7b935a1.png)
 
-3. Install [NodeJS](https://nodejs.org/en/download/)
+### Calculate Metric
+![CalculateMetric](https://user-images.githubusercontent.com/49535253/197328982-d8e714cd-00f6-4921-a5e3-13104253688d.png)
 
-4. Navigate to the ObjectDetectionAnalyzer 
 
-5. Clone submodules<br>
-   ```git submodule init && git submodule update```
+## Demos
+### Design Ground Truth
+https://user-images.githubusercontent.com/49535253/197328630-ec8a24b9-ffc2-4e6e-a848-8da5b4747189.mp4
 
-6. Install backend   
-   - Navigate to ObjectDetectionAnalyzer/Backend
-   - Install necessary libraries<br>
-   ```pip install -r requirements.txt```
-   - Navigate to ObjectDetectionAnalyzer/Backend/metric/review_object_detection_metrics and install the repository<br>
-   ```pip install . ```
-   - Navigate back to ObjectDetectionAnalyzer/Backend/
-   - Initialise SQLite database<br>
-   ```python manage.py migrate```
+### Upload Model
+https://user-images.githubusercontent.com/49535253/197328735-1e5c453b-17c7-49b4-8cef-da5eb660ca46.mp4
 
-7. Install Frontend
-   - Navigate to ObjectDetectionAnalyzer/Frontend
-   - Install necessary libraries<br>
-   ```npm install```
+### Start inference task
+https://user-images.githubusercontent.com/49535253/197328659-6aab6450-cbca-44cc-a2de-85107b75bca0.mp4
 
-8. Run backend server
-   ```python manage.py runserver```
-
-9. Run frontend server
-   ```ng serve --open```
+### Analyze predictions
+https://user-images.githubusercontent.com/49535253/197328557-45778ffe-2f62-4f3d-b28c-ce18f5d0f48d.mp4
