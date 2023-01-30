@@ -282,6 +282,9 @@ class UploadService:
         """
         for image in images:
             image_name = os.path.basename(image)
+            # skip hidden files
+            if image_name.startswith('.'):
+                continue
             image_values = filter(lambda x: x['file_name'] == image_name, values)
             width, height = Image.open(image).size
             for value in image_values:
