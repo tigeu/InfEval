@@ -207,7 +207,7 @@ export class TasksComponent implements OnInit {
       return false;
     }
     if (taskName && !taskNameRegExp.test(taskName)) {
-      this.taskNameErrorMessage = "Task name is not alphanumeric";
+      this.taskNameErrorMessage = "Task name is not alphanumeric (only letters and numbers are allowed)";
       return false;
     }
     this.taskNameErrorMessage = "";

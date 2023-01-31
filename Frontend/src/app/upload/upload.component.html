@@ -31,7 +31,7 @@
   <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
     <mat-icon>attach_file</mat-icon>
   </button>
-  {{fileName || "No file uploaded yet."}}
+  {{fileName || "No file selected yet."}}
   <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="fileName">delete_forever</mat-icon>
 </div>
 <p class="mt-3">

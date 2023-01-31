@@ -199,8 +199,8 @@ class UploadService:
         with zipfile.ZipFile(tmp_file_path, 'r') as zip_ref:
             for member in zip_ref.namelist():
                 _, ext = os.path.splitext(member)
-                if ext.lower() not in image_endings:
-                    continue  # skip non-image files
+                if ext.lower() not in image_endings or member.startswith('.'):
+                    continue  # skip non-image files and hidden images files
                 filename = os.path.basename(member)
                 source = zip_ref.open(member)
                 target = open(os.path.join(dataset_dir, filename), "wb")
@@ -282,9 +282,6 @@ class UploadService:
         """
         for image in images:
             image_name = os.path.basename(image)
-            # skip hidden files
-            if image_name.startswith('.'):
-                continue
             image_values = filter(lambda x: x['file_name'] == image_name, values)
             width, height = Image.open(image).size
             for value in image_values:
