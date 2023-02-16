@@ -199,9 +199,9 @@ class UploadService:
         with zipfile.ZipFile(tmp_file_path, 'r') as zip_ref:
             for member in zip_ref.namelist():
                 _, ext = os.path.splitext(member)
-                if ext.lower() not in image_endings or member.startswith('.'):
-                    continue  # skip non-image files and hidden images files
                 filename = os.path.basename(member)
+                if ext.lower() not in image_endings or filename.startswith('.'):
+                    continue  # skip non-image files and hidden images files
                 source = zip_ref.open(member)
                 target = open(os.path.join(dataset_dir, filename), "wb")
                 with source, target:
