@@ -1,0 +1,5 @@
+.DS_Store 
+.idea/ 
+Backend/.DS_Store 
+Backend/ObjectDetectionAnalyzer/.DS_Store 
+venv/
