@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
+from matplotlib import font_manager
 
 
 class DrawBoundingBoxService:
@@ -157,7 +158,8 @@ class DrawBoundingBoxService:
         font_size, stroke_size = settings['font_size'], settings['stroke_size']
 
         color, font_color = self._get_colors(data_class, settings)
-        font = ImageFont.truetype("DejaVuSans", font_size)
+        file = font_manager.findfont('DejaVuSans')
+        font = ImageFont.truetype(file, font_size)
         label = data_class
         if 'confidence' in prediction:
             label += ": {0} %".format(str(prediction['confidence']))
