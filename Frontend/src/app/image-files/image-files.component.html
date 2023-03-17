@@ -1,6 +1,6 @@
 <app-dataset-list></app-dataset-list>
 <p></p>
-<div class="mb-3" *ngIf="filteredImageFiles.length > 0">
+<div class="mb-3" *ngIf="filteredImageFiles.length >= 0">
   <input #fileNameInput id="fileName" class="form-control"
          (input)="filterFiles(fileNameInput.value)" type="text" aria-describedby="fileNameHelp">
   <div id="fileNameHelp" class="form-text">Search by name</div>
